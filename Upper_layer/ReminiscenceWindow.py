@@ -215,6 +215,8 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		self.hideButton()
 		self.set_date()
 		self.set_time()
+		self.onPhoto.connect(self.get_path)
+
 		#self.set_signals()
 		#self.upload_images()
 		#self.photo_buttons()
@@ -222,10 +224,12 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		#self.show()
 
 
-	#def set_signals(self):
+	#def onPho(self, f):
+
+		#self.onPhoto.connect(f)
 
 		
-		#self.onPhoto.connect(self.get_path)
+		
 
 	
 
@@ -340,6 +344,8 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 	def hide_images(self,m):
 
+
+
 		self.controlButtons["upload"].hide()
 		self.controlButtons["photo1"].hide()
 		self.controlButtons["photo2"].hide()
@@ -358,19 +364,16 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 		if m == 1:
 			self.reminiscenceImage = self.path + "/" + self.photos[2]
-			self.onPhoto.emit()
 
 		elif m == 2:
 			self.reminiscenceImage = self.path + "/" + self.photos[3]
-			self.onPhoto.emit()
 
 		elif m ==3:
 			self.reminiscenceImage = self.path + "/" + self.photos[4]
-			self.onPhoto.emit()
 
 		elif m == 4:
 			self.reminiscenceImage = self.path + "/" + self.photos[5]
-			self.onPhoto.emit()
+
 
 		self.gxlabels["photomain"] = QtGui.QLabel(self)
 		self.gxlabels["photomain"].setGeometry(QtCore.QRect(self.winsize_h*0.52,self.winsize_v*0.17,self.winsize_h*0.6 ,self.winsize_v*0.6))
@@ -382,11 +385,24 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 
 
+
+		self.onPhoto.emit()
+		print('emitting onPhoto signal')
+
+
+
 	def get_path(self):
 
-		data = self.reminiscenceImage
+		print('GET PAAAAAAAAAAAAAAAATH')
 
-		return(data)
+		data = self.reminiscenceImage
+		#self.update_data()
+		print(data)
+
+	def update_data(self):
+		i = self.reminiscenceImage
+
+		return(i)
 
 
 

@@ -49,12 +49,20 @@ class Reminiscence_Therapy(object):
 
 		self.ReminiscenceWindow.photo_buttons()
 
-		a = self.ReminiscenceWindow.get_path()
+		#self. ReminiscenceWindow.set_signals(self.ReminiscenceWindow.get_path)
 
-		print(a)
+
+		#print('start a ')
+
+		#a = self.ReminiscenceWindow.update_data()
+
+
+		#print(a)
 
 
 		pass
+
+
 
 
 

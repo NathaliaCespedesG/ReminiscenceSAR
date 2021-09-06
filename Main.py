@@ -2,6 +2,7 @@ import Upper_layer.MenuWindow as MenuWindow
 import Upper_layer.RegisterWindow as RegisterWindow
 import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 import Middle_layer.SpeechAvatar as SpeechAvatar
+import Lower_layer.Lowerlevel_Main as Lower_level
 import threading
 import time
 import threading
@@ -48,6 +49,8 @@ class Reminiscence_Therapy(object):
 	def on_start(self):
 
 		self.ReminiscenceWindow.photo_buttons()
+
+		self.ReminiscenceWindow.set_Photo1()
 
 		#self. ReminiscenceWindow.set_signals(self.ReminiscenceWindow.get_path)
 

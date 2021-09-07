@@ -5,6 +5,7 @@ import Middle_layer.SpeechAvatar as Avatar
 import Lower_layer.Lowerlevel_Main as Lowerlevel
 import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 import sys
+from collections import Counter
 
 
 class TherapyPlugin(object):
@@ -84,15 +85,42 @@ class TherapyPlugin(object):
 	def onStart(self):
 
 		# Setting lower layer modules:
+		
+
+		#self.ReminiscenceWindow.set_recognImage()
 
 		self.Avatar.commenting_photos()
-		m = self.Lowerlevel.get_data()
+
+		time.sleep(5)
+
 		self.ReminiscenceWindow.set_recognImage()
 
-		#self.SensorCaptureThread.start()
+		m = self.Lowerlevel.get_data()
+
+		# Getting the objects
+
+		m_objects = m['Objects']
+
+		number_objects = self.counting_objects(m_objects)
+
+		# Getthing the color
+		m_color = m['Color']
+
+		numpersons = int(number_objects['person'])
+
+
+		
+		#time.sleep(1.5)
+
+		self.Avatar.set_personrecognized(numpersons)
+
+		time.sleep(0.5)
+
+		self.Avatar.who_questions()
+
 
 		self.AvatarCaptureThread.start()
-		
+
 
 
 	
@@ -108,6 +136,30 @@ class TherapyPlugin(object):
 		#print(self.imageData)
 		'''
 
+	def randomizing_topic(self):
+
+
+
+
+		pass
+
+
+	def counting_objects(self, m):
+
+		cont_persons = m.count('person')
+		cont_dog = m.count('dog')
+		cont_wineglass = m.count('wine glass')
+		cont_cat = m.count('cat')
+
+		cont = {'person': cont_persons,'cat':cont_dog,'dog': cont_dog, 'wine glass':cont_wineglass }
+
+		return(cont)
+
+
+
+
+
+
 		
 
 
@@ -118,7 +170,7 @@ class TherapyPlugin(object):
 
 
 class AvatarCaptureThread(QtCore.QThread):
-    def __init__(self, parent = None, sample = 5, interface = None):
+    def __init__(self, parent = None, sample = 1, interface = None):
         super(AvatarCaptureThread,self).__init__()
         self.Ts = sample
         self.ON = True
@@ -127,7 +179,8 @@ class AvatarCaptureThread(QtCore.QThread):
     def run(self):
         #self.interface.robotController.posture.goToPosture("StandZero", 1.0)
         while self.ON:
-            d = self.interface.Lowerlevel.update_data()
+            d = self.interface.Lowerlevel.update_sounddata()
+            print('data from thread',d)
             self.interface.Avatar.set_Whosentences(d)
             time.sleep(self.Ts)
             

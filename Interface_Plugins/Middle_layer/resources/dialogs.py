@@ -23,14 +23,14 @@ class Dialogs(object):
 
         self.image_validationgreat = "Cool !, your photos are great!"
         self.image_validationgreat1 = "Let's continue with the reminiscence"
-        self.choose_photo = "Please choose a photo"
+        self.choose_photo = "Please choose one"
 
-        self.commenting_photo = "Wow!, you have chose a great image."
-        self.analizing_photo = "Let me analize the photo, then I will talk with you about this photo"
+        self.commenting_photo = " you have chose a great image!"
+        self.analizing_photo = "Let me analize the photo, then I will talk with you about it"
 
-        self.numpersons = ["I see XX  in the photo", "I recognize XX person in the photo, am I right?"]
-        self.whoquestions = "Can you tell me who are they?"
-        self.connective_dialogueswho = ["Seems interesting! Can you tell me more", "I see, they are close to you? "]
+        self.numpersons = ["I see XX  in the photo", "I recognize XX people in the photo", "There are XX people in the photo", "My eyes see XX people in the photo"]
+        self.whoquestions = ["Can you tell me who are they?", "Please, tell me more", "Who are they?"]
+        self.connective_dialogueswho = ["Seems interesting! Can you tell me more about the persons in the photo", "I see, is the person in the photo close to you?", ""]
 
 
     def get_numpersons_sentence(self):
@@ -42,6 +42,11 @@ class Dialogs(object):
 
         i = random.randint(0, len(self.connective_dialogueswho) - 1)
         return self.connective_dialogueswho[i]
+
+    def get_whoquestion(self):
+
+        i = random.randint(0, len(self.whoquestions) - 1)
+        return self.whoquestions[i]
 
 
 

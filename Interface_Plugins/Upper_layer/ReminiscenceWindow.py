@@ -406,6 +406,8 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 
 
+		self.set_recognImage()
+
 		'''
 		self.gxlabels["photomain"] = QtGui.QLabel(self)
 		self.gxlabels["photomain"].setGeometry(QtCore.QRect(self.winsize_h*0.52,self.winsize_v*0.17,self.winsize_h*0.6 ,self.winsize_v*0.6))

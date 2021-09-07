@@ -129,7 +129,7 @@ class Sound_Detection(object):
 
                 self.active = self.vad.is_speech(self.chunk,self.freq)
                 self.voice_activity.append(1 if self.active else 0)
-                print(self.active)
+                #print(self.active)
                 #sys.stdout.write('1' if self.active else '_')
 
                 ring_buffer_flags[ring_buffer_index] = 1 if self.active else 0

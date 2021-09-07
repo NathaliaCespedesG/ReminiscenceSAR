@@ -23,9 +23,12 @@ class Avatar_Speech(object):
 
 		self.dialogs = dialogs.Dialogs()
 
+		self.counter = 0
+
+		self.who = 0
 
 
-		#self.set_properties()
+		self.set_properties()
 
 		#self.get_properties()
 
@@ -107,6 +110,13 @@ class Avatar_Speech(object):
 			self.engine.runAndWait()
 
 
+	def who_questions(self):
+
+		s = self.dialogs.get_whoquestion()
+		self.engine.say(s)
+		self.engine.runAndWait()
+
+
 
 
 
@@ -133,19 +143,41 @@ class Avatar_Speech(object):
 	def set_Whosentences(self, data):
 
 		self.sound_data = data
-
+		print('data from avatar', data)
 		
 
+		if self.sound_data == False: 
 
-		if self.sound_data == True: 
-			s = self.get_connectivewho
-			self.engine.say(s)
-			self.engine.runAndWait()
+			print('First if')
+
+			self.counter = self.counter +1
+			print('counter', self.counter)
+
+			if (self.counter == 8 and self.sound_data == False):
+
+				print('Second if')
+
+				s = self.dialogs.get_connectivewho()
+				print(s)
+				self.engine.say(s)
+				self.engine.runAndWait()
+				self.counter = 0
+				self.who = self.who +1
+
+
+				if self.who ==1:
+					pass
 
 
 
 
 
+
+
+
+
+
+'''
 
 def main():
 
@@ -159,7 +191,7 @@ def main():
 
 A = main()
 
-
+'''
 
 
 

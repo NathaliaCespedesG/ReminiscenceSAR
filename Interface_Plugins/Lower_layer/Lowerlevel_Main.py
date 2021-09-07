@@ -74,18 +74,21 @@ class LowerLevel(object):
 
 		return(self.img_data)
 
-	def update_data(self):
-		print('	Updating data from main')
+	def update_sounddata(self):
+		#print('	Updating data from main')
 
 		if self.SND:
-			self.data = self.speech.getData()
-			print(self.data)
+			self.sound_data = self.speech.getData()
+			#print(self.data)
+
+		return(self.sound_data)
 
 	def storaging(self):
 		pass
 
 
 	def get_data(self):
+
 
 		data = self.workspace.data_extraction()
 

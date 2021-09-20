@@ -92,7 +92,22 @@ class LowerLevel(object):
 
 		data = self.workspace.data_extraction()
 
-		return(data)
+		persons = data['Objects'].count('person')
+		dog = data['Objects'].count('dog')
+		cat = data['Objects'].count('cat')
+		bird = data['Objects'].count('bird')
+		wine_glass = data['Objects'].count('wine glass')
+		cup = data['Objects'].count('cup')
+		car = data['Objects'].count('car')
+		bus = data['Objects'].count('bus')
+		book = data['Objects'].count('book')
+
+		
+
+		count_data =  {'person': persons,'cat': cat ,'dog': dog,'bird': bird, 'wine glass':wine_glass, 'cup': cup, "car": car, "bus": bus, "book": book}
+
+
+		return(count_data)
 
 
 '''

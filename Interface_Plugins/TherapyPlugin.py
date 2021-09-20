@@ -6,6 +6,7 @@ import Lower_layer.Lowerlevel_Main as Lowerlevel
 import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 import sys
 from collections import Counter
+import numpy as np
 
 
 class TherapyPlugin(object):
@@ -91,32 +92,19 @@ class TherapyPlugin(object):
 
 		self.Avatar.commenting_photos()
 
-		time.sleep(5)
+
+
 
 		self.ReminiscenceWindow.set_recognImage()
 
 		m = self.Lowerlevel.get_data()
 
-		# Getting the objects
+		time.sleep(5)
 
-		m_objects = m['Objects']
+		self.Avatar.conversation_topics(m)
 
-		number_objects = self.counting_objects(m_objects)
+		self.Avatar.coversation_beginning()
 
-		# Getthing the color
-		m_color = m['Color']
-
-		numpersons = int(number_objects['person'])
-
-
-		
-		#time.sleep(1.5)
-
-		self.Avatar.set_personrecognized(numpersons)
-
-		time.sleep(0.5)
-
-		self.Avatar.who_questions()
 
 
 		self.AvatarCaptureThread.start()
@@ -138,22 +126,38 @@ class TherapyPlugin(object):
 
 	def randomizing_topic(self):
 
-
-
-
 		pass
 
 
-	def counting_objects(self, m):
+	'''	
 
-		cont_persons = m.count('person')
-		cont_dog = m.count('dog')
-		cont_wineglass = m.count('wine glass')
-		cont_cat = m.count('cat')
+	def who_conversation(self, m):
 
-		cont = {'person': cont_persons,'cat':cont_dog,'dog': cont_dog, 'wine glass':cont_wineglass }
+		persons = int(m['person'])
+		dog = int(m['dog'])
+		cat = int(m['cat'])
 
-		return(cont)
+		if persons > 0:
+
+			flag_persons = 1
+
+			self.
+
+
+
+
+		who = {"persons": persons, "dog": dog, "cat": cat}
+
+	'''
+
+
+
+
+
+	
+
+
+
 
 
 
@@ -170,7 +174,7 @@ class TherapyPlugin(object):
 
 
 class AvatarCaptureThread(QtCore.QThread):
-    def __init__(self, parent = None, sample = 1, interface = None):
+    def __init__(self, parent = None, sample = 0.5, interface = None):
         super(AvatarCaptureThread,self).__init__()
         self.Ts = sample
         self.ON = True
@@ -180,8 +184,8 @@ class AvatarCaptureThread(QtCore.QThread):
         #self.interface.robotController.posture.goToPosture("StandZero", 1.0)
         while self.ON:
             d = self.interface.Lowerlevel.update_sounddata()
-            print('data from thread',d)
-            self.interface.Avatar.set_Whosentences(d)
+            #print('data from thread',d)
+            self.interface.Avatar.set_Dialog(d)
             time.sleep(self.Ts)
             
                 

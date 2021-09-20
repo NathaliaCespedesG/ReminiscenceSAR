@@ -28,22 +28,34 @@ class Dialogs(object):
         self.commenting_photo = " you have chose a great image!"
         self.analizing_photo = "Let me analize the photo, then I will talk with you about it"
 
-        self.numpersons = ["I see XX  in the photo", "I recognize XX people in the photo", "There are XX people in the photo", "My eyes see XX people in the photo"]
-        self.whoquestions = ["Can you tell me who are they?", "Please, tell me more", "Who are they?"]
-        self.connective_dialogueswho = ["Seems interesting! Can you tell me more about the persons in the photo", "I see, is the person in the photo close to you?", ""]
+        self.oneperson = ["I see XX  person in the photo", "There is one person in the photo", "I can recognize XX person in the photo", "My eyes see XX person in the photo"]
+        self.persons = ["I see XX people in the photo", "There are XX people in the photo", "I can recognize XX people in the photo"]
+        
+        self.whoquestion = ["Can you tell me who is it?"]
+        self.whoquestions = ["Can you tell me who are they?", "Who are they?"]
+        self.connective_dialogueswho1 = ["Seems interesting! Can you tell me more about the people in the photo"]
+        self.connective_dialogueswho2 = ["I see, is the people in the photo close to you?"]
+
+
+    def get_person_sentence(self):
+
+        i = random.randint(0, len(self.oneperson) - 1)
+        return self.oneperson[i]
 
 
     def get_numpersons_sentence(self):
 
-        i = random.randint(0, len(self.numpersons) - 1)
-        return self.numpersons[i]
+        i = random.randint(0, len(self.persons) - 1)
+        return self.persons[i]
 
-    def get_connectivewho(self):
-
-        i = random.randint(0, len(self.connective_dialogueswho) - 1)
-        return self.connective_dialogueswho[i]
 
     def get_whoquestion(self):
+
+        i = random.randint(0, len(self.whoquestion) - 1)
+        return self.whoquestion[i]
+
+
+    def get_whoquestions(self):
 
         i = random.randint(0, len(self.whoquestions) - 1)
         return self.whoquestions[i]

@@ -226,6 +226,10 @@ class Avatar_Speech(object):
 		self.engine.runAndWait()
 
 
+	def talk(self, s):
+		self.engine.say(s)
+		self.engine.runAndWait()
+
 
 	def set_Dialog(self, data):
 
@@ -250,33 +254,42 @@ class Avatar_Speech(object):
 
 					if ("persons" in self.whoVal):
 
-						print('Who, persons')
-
 						#Questions regarding WHO
-
 						if self.cont == 1:
-							#time.sleep(1)
+
+							time.sleep(1)
 							self.set_personrecognized(self.who['persons'])
 							#time.sleep(4)
 
+						
 						elif self.cont == 2:
 							#time.sleep(10)
-							s = self.dialogs.connective_dialogueswho1
-							print(s)
-							self.engine.say(s)
-							self.engine.runAndWait()
-							#time.sleep(4)
+
+							if self.who['persons'] ==1:
+								s = self.dialogs.get_whoquestion()
+								self.talk(s)
+							else:
+								s = self.dialogs.get_whoquestions()
+								self.talk(s)
+
 
 						elif self.cont == 3:
 
-							#time.sleep(1)
-							s = self.dialogs.connective_dialogueswho2
-							print(s)
-							self.engine.say(s)
-							self.engine.runAndWait()
-							#time.sleep(4)
+							if self.who['persons']==1:
+								s = self.dialogs.get_connectiveWho1()
+								self.talk(s)
+							else:
+								s = self.dialogs.get_connectiveWhos1()
+								self.talk(s)
+
+							
 
 						elif self.cont == 4:
+
+							pass
+
+
+							'''
 
 							s = self.dialogs.connective_dialogueswho2
 							print(s)
@@ -285,6 +298,10 @@ class Avatar_Speech(object):
 							#time.sleep(4)
 							self.flag_topic = "When"
 							self.cont = 0
+							'''
+
+
+
 
 				else:
 
@@ -399,96 +416,6 @@ class Avatar_Speech(object):
 
 
 			pass
-
-
-		'''
-		if (len(self.whoVal)>0):
-
-			if "persons" in self.whoVal:
-				if self.cont == 0:
-					time.sleep(1)
-					self.set_personrecognized(self.who['persons'])
-
-					self.cont =1000
-				elif self.cont == 1:
-					time.sleep(1)
-					s = self.dialogs.connective_dialogueswho1
-					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
-					time.sleep(5)
-
-	'''
-
-
-
-		#self.validation_dataWho()
-
-		#self.engine
-
-
-
-		'''
-		if (self.change == 2):
-
-			self.cont = self.cont + 1
-			print(self.cont)
-
-
-			if self.cont == 1:
-
-				time.sleep(1)
-				s = self.dialogs.connective_dialogueswho1
-				print(s)
-				self.engine.say(s)
-				self.engine.runAndWait()
-				time.sleep(5)
-
-			if self.cont == 2:
-
-				time.sleep(1)
-				s = self.dialogs.connective_dialogueswho2
-				print(s)
-				self.engine.say(s)
-				self.engine.runAndWait()
-				ime.sleep(5)
-
-		'''		
-
-
-
-
-
-		#print('FLag', flag)
-
-		'''
-		if(flag == True):
-
-			self.cont = self.cont + 1
-			print(self.cont)
-
-			if(self.cont == 1):
-				print('AQUIIIII1')
-
-				time.sleep(0.5)
-				s = self.dialogs.connective_dialogueswho1
-				print(s)
-				self.engine.say(s)
-				self.engine.runAndWait()
-
-			
-
-
-			if(self.cont == 2):
-
-				time.sleep(0.5)
-				s = self.dialogs.connective_dialogueswho2
-				print(s)
-				self.engine.say(s)
-				self.engine.runAndWait()
-			'''	
-		
-
 
 		
 

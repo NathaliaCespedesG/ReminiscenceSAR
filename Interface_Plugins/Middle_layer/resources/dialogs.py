@@ -31,10 +31,23 @@ class Dialogs(object):
         self.oneperson = ["I see XX  person in the photo", "There is one person in the photo", "I can recognize XX person in the photo", "My eyes see XX person in the photo"]
         self.persons = ["I see XX people in the photo", "There are XX people in the photo", "I can recognize XX people in the photo"]
         
-        self.whoquestion = ["Can you tell me who is it?"]
-        self.whoquestions = ["Can you tell me who are they?", "Who are they?"]
-        self.connective_dialogueswho1 = ["Seems interesting! Can you tell me more about the people in the photo"]
-        self.connective_dialogueswho2 = ["I see, is the people in the photo close to you?"]
+        self.whoquestion = ["Are you the person in the photo?", "What is the name of the person in the picture?", "Oh!, that person looks nice, who is it?"]
+        self.whoquestions = ["Are you in the photo?", "Can you tell me the names of the people in the photo?", "Oh!, that people look nice, who are they"]
+
+
+        
+        self.conective_dialogueswho1 = ["Seems interesting! Can you tell me more about you?"]
+        self.connective_dialogueswhos1 = ["Mmmm, Are they your family or your frieds?", "Mmmm, Is the people in the photo are your relatives?", "Ahhh, I see, Are they your family? "]
+
+        
+
+        self.connective_dialogueswho2 = ["Seems interesting! Can you tell me more about you?"]
+        self.connective_dialogueswhos2 = ["Mmmm, Are they your family or your frieds?", "Mmmm, Is the people in the photo are your relatives?", "Mmm"]
+
+
+
+        #self.connective_dialogueswho1 = ["Seems interesting! Can you tell me more about the people in the photo"]
+        #self.connective_dialogueswho2 = ["I see, is the people in the photo close to you?"]
 
 
     def get_person_sentence(self):
@@ -59,6 +72,29 @@ class Dialogs(object):
 
         i = random.randint(0, len(self.whoquestions) - 1)
         return self.whoquestions[i]
+
+
+    def get_connectiveWho1(self):
+        i = random.randint(0, len(self.conective_dialogueswho1) - 1)
+        return self.conective_dialogueswho1[i]
+
+    def get_connectiveWhos1(self):
+        i = random.randint(0, len(self.connective_dialogueswhos1) - 1)
+        return self.connective_dialogueswhos1[i]
+
+
+    def get_connectiveWho2(self):
+        i = random.randint(0, len(self.conective_dialogueswho2) - 1)
+        return self.whoquestion[i]
+
+    def get_connectiveWhos2(self):
+        i = random.randint(0, len(self.connective_dialogueswhos2) - 1)
+        return self.whoquestion[i]
+
+
+
+
+
 
 
 

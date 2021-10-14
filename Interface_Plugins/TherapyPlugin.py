@@ -1,3 +1,9 @@
+import os, sys
+ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Interface_Plugins'))
+sys.path.append(ab_path)
+
+
+
 from PyQt4 import QtCore, QtGui
 import time
 import threading
@@ -29,7 +35,7 @@ class TherapyPlugin(object):
 	
 	def launch_view(self):
 
-		self.image_processing()
+		#self.image_processing()
 
 		self.ReminiscenceWindow.show()
 		
@@ -42,6 +48,7 @@ class TherapyPlugin(object):
 		#  Avatar Interaction signals
 		self.ReminiscenceWindow.playButton(self.Avatar.welcome_sentence)
 		self.ReminiscenceWindow.playButton(self.SensorCaptureThread.start)
+		self.ReminiscenceWindow.playButton(self.AvatarGraphicsThread.start)
 
 
 		# Internal Signals
@@ -63,7 +70,7 @@ class TherapyPlugin(object):
 	def image_processing(self):
 
 
-		self.Lowerlevel.set_path('C:/Users/natha/Desktop/Reminiscence_Interface/Interface_Plugins/Lower_layer/Workspace_Understanding/Images/Photo_1.jpeg')
+		self.Lowerlevel.set_path('C:/Users/natha/Desktop/Reminiscence_Interface/Interface_Plugins/Lower_layer/Workspace_Understanding/Images/Photo_0.jpeg')
 		self.Lowerlevel.set_modules(work = True, sound = True)
 		self.Lowerlevel.launch_wsmodule()
 
@@ -74,6 +81,7 @@ class TherapyPlugin(object):
 	def launch_avatar(self):
 
 		self.AvatarCaptureThread = AvatarCaptureThread(interface = self)
+		self.AvatarGraphicsThread = AvatarGraphicsThread(f = self.update_AvatarGraphics, sample = 0.1)
 
 	def image_validation(self):
 
@@ -86,12 +94,12 @@ class TherapyPlugin(object):
 	def onStart(self):
 
 		# Setting lower layer modules:
-		
 
 		#self.ReminiscenceWindow.set_recognImage()
 
-		self.Avatar.commenting_photos()
+		#self.AvatarGraphicsThread.start()
 
+		self.Avatar.commenting_photos()
 
 
 
@@ -110,51 +118,11 @@ class TherapyPlugin(object):
 		self.AvatarCaptureThread.start()
 
 
+	def update_AvatarGraphics(self):
 
-	
-		
+		#data = self.Lowerlevel.update_sounddata()
 
-
-		'''
-		self.Lowerlevel.set_modules(work = True, sound = True)
-
-		#Lauch WS module
-		self.Lowerlevel.launch_wsmodule()
-		#self.imageData = self.Lowerlevel.image_data()
-		#print(self.imageData)
-		'''
-
-	def randomizing_topic(self):
-
-		pass
-
-
-	'''	
-
-	def who_conversation(self, m):
-
-		persons = int(m['person'])
-		dog = int(m['dog'])
-		cat = int(m['cat'])
-
-		if persons > 0:
-
-			flag_persons = 1
-
-			self.
-
-
-
-
-		who = {"persons": persons, "dog": dog, "cat": cat}
-
-	'''
-
-
-
-
-
-	
+		self.ReminiscenceWindow.update_sound()
 
 
 
@@ -164,11 +132,7 @@ class TherapyPlugin(object):
 
 
 
-		
 
-
-
-		
 
 
 
@@ -194,9 +158,10 @@ class AvatarCaptureThread(QtCore.QThread):
 
 
 
+
 class SensorCaptureThread(QtCore.QThread):
 
-     def __init__(self, parent = None, sample = 1, interface = None):
+     def __init__(self, parent = None, sample = 0.5, interface = None):
         super(SensorCaptureThread,self).__init__()
         self.on = False
         self.interface = interface
@@ -212,11 +177,32 @@ class SensorCaptureThread(QtCore.QThread):
 
 
 
+class AvatarGraphicsThread(QtCore.QThread):
+
+	def __init__(self, parent = None, f = None, sample = 0.5):
+		super(AvatarGraphicsThread,self).__init__()
+		self.f = f
+		self.Ts = sample
+		self.ON = True
+
+	def run(self):
+
+		if self.f:
+
+			while self.ON:
+
+				self.f()
+				time.sleep(self.Ts)
+
+	def shutdown(self):
+
+		self.ON = False
+
 
 
 		
 
-
+'''
 def main():
 
 	app = QtGui.QApplication(sys.argv)
@@ -227,7 +213,7 @@ def main():
 	sys.exit(app.exec_())
 
 A = main()
-
+'''
 
 
 

@@ -10,6 +10,7 @@ import time
 import threading
 import os 
 import resources.dialogs as dialogs
+import queue
 
 
 class Avatar_Speech(object):
@@ -38,6 +39,10 @@ class Avatar_Speech(object):
 		self.sound_data = []
 
 		self.flag_topic = "Who"
+
+		self.q = queue.Queue()
+
+		self.tts_thread = TTSThread(self.q)
 
 
 
@@ -82,24 +87,38 @@ class Avatar_Speech(object):
 
 		self.voices = self.engine.getProperty('voices')
 
-		self.engine.setProperty('voice', self.voices[1].id) 
+		self.engine.setProperty('voice', self.voices[1].id)
+		self.engine.connect('started-utterance', self.onStart) 
+		self.engine.connect('finished-utterance', self.onEnd)
+
+
+	def onStart(self):
+
+
+		print('starting')
+
+
+	def onEnd(name, completed):
+
+   		print('finishing')
+
+
 
 
 	def welcome_sentence(self):
 
 		s = self.dialogs.welcome_sentence
-		self.engine.say(s)
+		self.q.put(s)
 		time.sleep(0.1)
 
 		s = self.dialogs.welcome_sentence2
-		self.engine.say(s)
+		self.q.put(s)
 		time.sleep(0.1)
 
 		s = self.dialogs.welcome_sentence3
-		self.engine.say(s)
+		self.q.put(s)
 		time.sleep(0.1)
 
-		self.engine.runAndWait()
 		#self.engine.stop()
 
 
@@ -109,47 +128,238 @@ class Avatar_Speech(object):
 
 		if m == True:
 			s = self.dialogs.image_validationbad
-			self.engine.say(s)
+			self.q.put(s)
 			time.sleep(0.1)
 			s = self.dialogs.image_validationbad1
-			self.engine.say("You want to continue?, or, You want to upload a new image?")
-			self.engine.runAndWait()
+			self.q.put("You want to continue?, or, You want to upload a new image?")
+			
 
 		else:
 			s = self.dialogs.image_validationgreat
-			self.engine.say(s)
+			self.q.put(s)
 			time.sleep(0.1)
 			s = self.dialogs.image_validationgreat1
-			self.engine.say(s)
+			self.q.put(s)
 			time.sleep(0.1)
 			s = self.dialogs.choose_photo
-			self.engine.say(s)
-			self.engine.runAndWait()
+			self.q.put(s)
 
 
-	def who_questions(self):
-
-		s = self.dialogs.get_whoquestion()
-		self.engine.say(s)
-		self.engine.runAndWait()
 
 
+	def set_petrecognized(self, num_dog, num_cat):
+
+		print('dog', num_dog)
+		print('cat', num_cat)
+
+
+		if ((num_dog > 0) and (num_cat > 0)):
+
+			s = self.dialogs.get_petWho()
+			s = s.replace('XX', str(num_dog))
+			s = s.replace('SS', str(num_cat))
+			self.q.put(s)
+
+			time.sleep(0.5)
+
+		elif num_dog == 1 and num_cat ==0:
+
+			s = self.dialogs.get_dogWho()
+			self.q.put(s)
+
+
+		elif num_dog > 1 and num_cat == 0:
+			s = self.dialogs.dog_whos
+			self.q.put(s)
+
+		elif num_dog == 0 and num_cat ==1:
+
+			s = self.dialogs.cat_who
+			self.q.put(s)
+
+		elif num_dog == 0 and num_cat > 1:
+
+			s = self.dialogs.cat_whos
+			self.q.put(s)
+		
+
+
+
+	def questions_pet(self, num_dog, num_cat, cont):
+
+
+		if ((num_dog > 0) and (num_cat > 0)):
+
+			if cont == 1 :
+				s = self.dialogs.petQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			if cont == 2 :
+				s = self.dialogs.petQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 3:
+
+				s = self.dialogs.petQ2
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 4:
+
+				s = self.dialogs.petQ3
+				self.q.put(s)
+				time.sleep(0.5)
+				
+
+			elif cont ==5:
+				s = self.dialogs.petQ4
+				self.q.put(s)
+				time.sleep(0.5)
+				self.whoVal.remove('dog')
+				self.whoVal.remove('cat')
+
+
+
+
+		elif num_dog == 1 and num_cat ==0:
+
+			if cont == 1 :
+				s = self.dialogs.dogQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			if cont == 2:
+
+				s = self.dialogs.dogQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 3:
+
+				s = self.dialogs.dogQ2
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 4:
+
+				s = self.dialogs.dogQ3
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 5:
+				s = self.dialogs.dogQ4
+				self.q.put(s)
+				time.sleep(0.5)
+				self.whoVal.remove('dog')
+
+				
+
+		elif num_dog > 1 and num_cat == 0:
+
+			if cont == 1 :
+				s = self.dialogs.petQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			if cont == 2:
+
+				s = self.dialogs.dogsQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 3:
+
+				s = self.dialogs.dogsQ2
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 4:
+
+				s = self.dialogs.dogsQ3
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont ==5:
+				s = self.dialogs.dogsQ4
+				self.q.put(s)
+				time.sleep(0.5)
+				self.whoVal.remove('dog')
+	
+
+
+
+		elif num_dog == 0 and num_cat ==1:
+
+			if cont == 2:
+				s = self.dialogs.catQ1
+				self.q.put(s)
+				time.sleep(0.5)
+
+			elif cont == 3:
+
+				s = self.dialogs.catQ2
+				self.talk(s)
+				time.sleep(0.5)
+
+			elif cont == 4:
+
+				s = self.dialogs.catQ3
+				self.talk(s)
+				time.sleep(0.5)
+		
+
+			elif cont ==5:
+				s = self.dialogs.catQ4
+				self.talk(s)
+				time.sleep(0.5)
+				self.whoVal.remove('cat')
+
+
+
+		elif num_dog == 0 and num_cat > 1:
+
+
+			if cont == 2:
+
+				s = self.dialogs.catsQ1
+				self.talk(s)
+				time.sleep(0.5)
+
+			elif cont == 3:
+
+				s = self.dialogs.catQ2
+				self.talk(s)
+				time.sleep(0.5)
+
+			elif cont == 4:
+
+				s = self.dialogs.catsQ3
+				self.talk(s)
+				time.sleep(0.5)
+	
+			elif cont == 5:
+				s = self.dialogs.catsQ4
+				self.talk(s)
+				time.sleep(0.5)
+				self.whoVal.remove('cat')
 
 
 
 	def set_personrecognized(self, num):
 
 		if num == 1:
-			s = self.dialogs.get_persons_sentence()
+
+			s = self.dialogs.get_person_sentence()
 			s = s.replace('XX', str(num))
-			self.engine.say(s)
-			self.engine.runAndWait()
+			self.q.put(s)
+
 
 			time.sleep(0.5)
 
 			s = self.dialogs.get_whoquestion()
-			self.engine.say(s)
-			self.engine.runAndWait()
+			self.q.put(s)
 
 
 
@@ -157,25 +367,26 @@ class Avatar_Speech(object):
 
 			s = self.dialogs.get_numpersons_sentence()
 			s = s.replace('XX', str(num))
-			self.engine.say(s)
-			self.engine.runAndWait()
+			self.q.put(s)
 
 			time.sleep(0.5)
 
 			s = self.dialogs.get_whoquestions()
-			self.engine.say(s)
-			self.engine.runAndWait()
+			self.q.put(s)
 
 
 	def commenting_photos(self):
 
+		print('Commenting the photos')
+
 		s = self.dialogs.commenting_photo
-		self.engine.say(s)
+		self.q.put(s)
 		time.sleep(0.1)
+
 		s = self.dialogs.analizing_photo
-		self.engine.say(s)
-		self.engine.runAndWait()
-		self.engine.stop()
+		self.q.put(s)
+		time.sleep(0.1)
+		
 
 
 
@@ -222,13 +433,7 @@ class Avatar_Speech(object):
 
 	def coversation_beginning(self):
 
-		self.engine.say("Please say yes if you want to continue")
-		self.engine.runAndWait()
-
-
-	def talk(self, s):
-		self.engine.say(s)
-		self.engine.runAndWait()
+		self.q.put("Please say yes if you want to continue")
 
 
 	def set_Dialog(self, data):
@@ -263,44 +468,73 @@ class Avatar_Speech(object):
 
 						
 						elif self.cont == 2:
-							#time.sleep(10)
+							time.sleep(1)
+
 
 							if self.who['persons'] ==1:
-								s = self.dialogs.get_whoquestion()
-								self.talk(s)
+								s = self.dialogs.get_connectiveWho1()
+								self.q.put(s)
 							else:
-								s = self.dialogs.get_whoquestions()
-								self.talk(s)
+								s = self.dialogs.get_connectiveWhos1()
+								self.q.put(s)
+								print('plural1')
 
 
 						elif self.cont == 3:
 
 							if self.who['persons']==1:
-								s = self.dialogs.get_connectiveWho1()
-								self.talk(s)
+								s = self.dialogs.get_connectiveWho2()
+								self.q.put(s)
 							else:
-								s = self.dialogs.get_connectiveWhos1()
-								self.talk(s)
+								s = self.dialogs.get_connectiveWhos2()
+								self.q.put(s)
 
-							
+						
 
 						elif self.cont == 4:
 
-							pass
+							if self.who['persons']==1:
+								s = self.dialogs.get_connectiveWho3()
+								self.q.put(s)
+								s = "Oh! It seem very interesting."
+								self.whoVal.remove('persons')
+								self.cont = 0 
+							else:
+								s = self.dialogs.get_connectiveWhos3()
+								self.q.put(s)
+								self.whoVal.remove('persons')
+								self.cont = 0 
+	
+
+					elif ("dog" in self.whoVal) or ("cat" in self.whoVal):
 
 
-							'''
+						if self.cont == 1:
 
-							s = self.dialogs.connective_dialogueswho2
-							print(s)
-							self.engine.say(s)
-							self.engine.runAndWait()
-							#time.sleep(4)
-							self.flag_topic = "When"
+							self.set_petrecognized(self.who['dog'], self.who['cat'])
+							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+							time.sleep(1)
+
+						if self.cont == 2:
+
+							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+
+						if self.cont == 3:
+
+							print("dogs 2")
+
+							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+
+						if self.cont == 4:
+							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+						if self.cont == 5:
+							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 							self.cont = 0
-							'''
-
-
+							self.flag_topic = "When"
 
 
 				else:
@@ -316,43 +550,18 @@ class Avatar_Speech(object):
 				if self.cont == 1:
 
 					#time.sleep(10)
-					s = 'Can you tell me when this photo was taken?'
+
+					s = self.dialogs.get_When1()
 					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
+					self.q.put(s)
 					#time.sleep(4)
-
-
-				if self.cont == 2:
-
-					#time.sleep(10)
-					s = 'Can you tell me the time when this photo was taken?'
-					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
-					#time.sleep(4)
-
-				if self.cont == 3:
-
-					#time.sleep(10)
-					s = 'Can you tell me when this photo was taken?'
-					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
-					#time.sleep(4)
-
-				if self.cont == 4:
-
-					#time.sleep(10)
-					s = 'Can you tell me when this photo was taken?'
-					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
-					#time.sleep(4)
-					self.flag_topic = "Where"
 					self.cont = 0
+					self.flag_topic = "Where"
+
 
 			if self.flag_topic == "Where":
+
+				time.sleep(1)
 
 				if (len(self.whereVal)>0):
 
@@ -362,8 +571,7 @@ class Avatar_Speech(object):
 
 					s = 'Oh, I cannot identify an specific place. Where this photo was taken?'
 					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
+					self.q.put(s)
 					#time.sleep(4)
 					self.flag_topic = "Other"
 					self.cont = 0
@@ -379,49 +587,24 @@ class Avatar_Speech(object):
 
 					s = 'Can you talk about other things about this photo?'
 					print(s)
-					self.engine.say(s)
-					self.engine.runAndWait()
+					self.q.put(s)
 					#time.sleep(4)
 					self.flag_topic = "Other"
 					self.cont = 0
-
-
-
-
-
-
-
-
-							
-
-	
-				
-
-
-
-
 
 		elif flag == 0:
 
 			self.cont1 = self.cont1 +1
 
-			print('Here cont1', self.cont1)
 
-			if self.cont1 == 12:
+			if self.cont1 == 50:
 
-				self.engine.say("Sorry, I couldn't  hear that")
-				self.engine.runAndWait()
+				self.q.put("Sorry, I couldn't  hear that")
 				self.cont1 = 0
 
 
 
-			pass
-
-		
-
-
-		
-
+	
 	def test(self,m):
 
 		new_value = m
@@ -433,12 +616,12 @@ class Avatar_Speech(object):
 
 				self.change = 1
 
-				print('False to True')
+				#print('False to True')
 
 			else:
 
 				self.change = 2
-				print('True to False')
+				#print('True to False')
 
 		else:
 
@@ -448,7 +631,7 @@ class Avatar_Speech(object):
 		self.last_value = new_value
 
 
-		print('change from testing', self.change)
+		#print('change from testing', self.change)
 
 		return self.change
 
@@ -479,9 +662,43 @@ class Avatar_Speech(object):
 
 
 
+class TTSThread(threading.Thread):
+
+	def __init__(self, queue):
+
+		threading.Thread.__init__(self)
+
+		print("TTSThread_crated")
 
 
-	
+		self.queue = queue
+		self.daemon = True
+		self.start()
+
+	def run(self):
+		tts_engine = pyttsx3.init()
+		tts_engine.startLoop(False)
+		t_running = True
+		print('AvatarThread')
+
+		while t_running:
+
+			#print(tts.engine.isBusy())
+
+			if self.queue.empty():
+				tts_engine.iterate()
+			else:
+				data = self.queue.get()
+
+				if data == "exit":
+					t_running = False
+				else:
+					tts_engine.say(data)
+
+
+
+		tts_engine.endLoop()
+
 
 
 

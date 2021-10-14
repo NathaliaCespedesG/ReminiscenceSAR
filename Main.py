@@ -1,110 +1,59 @@
-import Upper_layer.MenuWindow as MenuWindow
-import Upper_layer.RegisterWindow as RegisterWindow
-import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
-import Middle_layer.SpeechAvatar as SpeechAvatar
-import Lower_layer.Lowerlevel_Main as Lower_level
-import threading
-import time
-import threading
-import sys
+import threading 
+#import GUI elements
+import Interface_Plugins.Upper_layer.MenuWindow as MenuWindow
+import Interface_Plugins.Upper_layer.RegisterWindow as RegisterWindow
+import Interface_Plugins.Upper_layer.ReminiscenceWindow as ReminiscenceWindow
+# import Plugins
+import Interface_Plugins.TherapyPlugin as TherapyPlugin
+import Interface_Plugins.MenuPlugin as MenuPlugin
+
 from PyQt4 import QtCore, QtGui
 
+import time
+import sys
 
-class Reminiscence_Therapy(object):
+class MainController(object):
 
 	def __init__(self):
 
-		#Seting Upper, Middle and Lower layers
+		self.ImgPath = 'Workspace_Understanding/Images/Photo_1.jpeg'
 
 		self.MenuWindow = MenuWindow.MenuWindow()
 
-		self.RegisterWindow = RegisterWindow.RegisterWindow()
-
 		self.ReminiscenceWindow = ReminiscenceWindow.ReminiscenceWindow()
 
-		self.SpeechAvatar  = SpeechAvatar.Avatar_Speech()
 
-		self.photo = None
+		self.MenuPlugin = MenuPlugin.MenuPlugin()
+
+		self.TherapyPlugin = TherapyPlugin.TherapyPlugin(settings = self.ImgPath)
 
 		self.set_signals()
 
+
+
 	def set_signals(self):
 
-		self.MenuWindow.registerButton(self.RegisterWindow.show)
-		self.MenuWindow.reminiscenceButton(self.ReminiscenceWindow.show)
-		self.ReminiscenceWindow.playButton(self.SpeechAvatar.welcome_sentence)
-		self.ReminiscenceWindow.upload_images(self.image_validation)
+		self.TherapyPlugin.image_processing()
 
+		self.MenuWindow.show()
 
-	def image_validation(self):
+		self.MenuWindow.reminiscenceButton(self.onLaunch_Therapy)
 
-		self.ReminiscenceWindow.show_images()
-		m = self.ReminiscenceWindow.get_imageNull()
-		if m == True:
-			self.SpeechAvatar.image_validation(m)
-		else:
-			self.SpeechAvatar.image_validation(m)
-			self.on_start()
-
-	def on_start(self):
-
-		self.ReminiscenceWindow.photo_buttons()
-
-		self.ReminiscenceWindow.set_Photo1()
-
-		#self. ReminiscenceWindow.set_signals(self.ReminiscenceWindow.get_path)
-
-
-		#print('start a ')
-
-		#a = self.ReminiscenceWindow.update_data()
-
-
-		#print(a)
-
-
-		pass
+		self.MenuWindow.reminiscenceButton(self.MenuWindow.hideButton)
 
 
 
 
+	def onLaunch_Therapy(self):
 
-
-
-	#def reminisce_start(self):
-
-		#self.ReminiscenceWindow.playButton(self.SpeechAvatar.welcome_sentence)
-
-		#print(self.ReminiscenceWindow.imageNull)
-
-		#pass
-
-
-
-
-
+		self.TherapyPlugin.launch_view()
 
 
 def main():
 
 	app = QtGui.QApplication(sys.argv)
-	rem = Reminiscence_Therapy()
-	#rem.buttons_menu()
-	#rem.reminisce_start()
+	menu = MainController()
 	sys.exit(app.exec_())
+
 
 A = main()
-
-
-
-
-'''
-
-if __name__ == "__main__":
-	app = QtGui.QApplication(sys.argv)
-	a = Reminiscence_Therapy()
-	sys.exit(app.exec_())
-
-'''
-
-

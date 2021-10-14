@@ -75,7 +75,7 @@ class Sound_Detection(object):
         self.stream = self.p.open(format=self.FORMAT,
                 channels=self.channels,
                 rate=self.freq,
-                input=True,
+                input= True,
                 output=True,
                 frames_per_buffer=self.chunk_size)
         self.frames = []
@@ -209,10 +209,7 @@ class Sound_Detection(object):
         self.t = threading.Thread(target = self.process)
         self.t.start()
 
-
-
 '''
-   
 def main():
 
     sound = Sound_Detection()
@@ -240,9 +237,6 @@ def main():
 
 A = main()
 '''
-
-
-
 
 
 

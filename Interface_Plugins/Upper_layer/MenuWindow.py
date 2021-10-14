@@ -41,7 +41,7 @@ class MenuWindow(QtGui.QMainWindow):
 		# Setting background image
 		self.background = QtGui.QLabel(self)
 		self.background.setGeometry(QtCore.QRect(0,0,self.winsize_h,self.winsize_v))
-		self.background.setPixmap(QtGui.QPixmap("Upper_layer/ImgGui/black_menu.png"))
+		self.background.setPixmap(QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/black_menu.png"))
 		self.background.setScaledContents(True)
 
 		# Graphics Labels
@@ -49,7 +49,7 @@ class MenuWindow(QtGui.QMainWindow):
 			# Label
 		self.gxlabels["date"] = QtGui.QLabel(self)
 		self.gxlabels["date"].setGeometry(QtCore.QRect(self.winsize_h*0.03,self.winsize_v*0.08,self.winsize_h*0.5 ,self.winsize_v*0.08))
-		icon_date = QtGui.QPixmap("Upper_layer/ImgGui/date_main.png")
+		icon_date = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/date_main.png")
 		icon_date = icon_date.scaled(self.winsize_h*0.5,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["date"].setPixmap(icon_date)
 
@@ -68,7 +68,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["hide"] = QtGui.QLabel(self)
 		self.gxlabels["hide"].setGeometry(QtCore.QRect(self.winsize_h*0.9,self.winsize_v*0.04,self.winsize_h*0.04 ,self.winsize_v*0.04))
-		icon_hide = QtGui.QPixmap("Upper_layer/ImgGui/hide_main.png")
+		icon_hide = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/hide_main.png")
 		icon_hide = icon_hide.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["hide"].setPixmap(icon_hide)
 
@@ -76,7 +76,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["close"] = QtGui.QLabel(self)
 		self.gxlabels["close"].setGeometry(QtCore.QRect(self.winsize_h*0.95,self.winsize_v*0.04,self.winsize_h*0.04 ,self.winsize_v*0.04))
-		icon_close = QtGui.QPixmap("Upper_layer/ImgGui/close_main.png")
+		icon_close = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/close_main.png")
 		icon_close = icon_close.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["close"].setPixmap(icon_close)
 
@@ -85,7 +85,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["register"] = QtGui.QLabel(self)
 		self.gxlabels["register"].setGeometry(QtCore.QRect(self.winsize_h*0.22,self.winsize_v*0.35,self.winsize_h*0.17 ,self.winsize_v*0.17))
-		icon_register = QtGui.QPixmap("Upper_layer/ImgGui/register_menu.png")
+		icon_register = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/register_menu.png")
 		icon_register = icon_register.scaled(self.winsize_h*0.17,self.winsize_v*0.17,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["register"].setPixmap(icon_register)
 
@@ -99,7 +99,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["avatar"] = QtGui.QLabel(self)
 		self.gxlabels["avatar"].setGeometry(QtCore.QRect(self.winsize_h*0.45,self.winsize_v*0.35,self.winsize_h*0.17 ,self.winsize_v*0.17))
-		icon_avatar = QtGui.QPixmap("Upper_layer/ImgGui/avatar_menu.png")
+		icon_avatar = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/avatar_menu.png")
 		icon_avatar = icon_avatar.scaled(self.winsize_h*0.17,self.winsize_v*0.17,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["avatar"].setPixmap(icon_avatar)
 
@@ -113,7 +113,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["statistics"] = QtGui.QLabel(self)
 		self.gxlabels["statistics"].setGeometry(QtCore.QRect(self.winsize_h*0.67,self.winsize_v*0.35,self.winsize_h*0.17 ,self.winsize_v*0.17))
-		icon_statis = QtGui.QPixmap("Upper_layer/ImgGui/stati_menu.png")
+		icon_statis = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/stati_menu.png")
 		icon_statis = icon_statis.scaled(self.winsize_h*0.17,self.winsize_v*0.17,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["statistics"].setPixmap(icon_statis)
 
@@ -127,7 +127,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["db"] = QtGui.QLabel(self)
 		self.gxlabels["db"].setGeometry(QtCore.QRect(self.winsize_h*0.32,self.winsize_v*0.60,self.winsize_h*0.17 ,self.winsize_v*0.17))
-		icon_db = QtGui.QPixmap("Upper_layer/ImgGui/db_menu.png")
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/db_menu.png")
 		icon_db = icon_db.scaled(self.winsize_h*0.17,self.winsize_v*0.17,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["db"].setPixmap(icon_db)
 
@@ -141,12 +141,12 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["rem"] = QtGui.QLabel(self)
 		self.gxlabels["rem"].setGeometry(QtCore.QRect(self.winsize_h*0.58,self.winsize_v*0.60,self.winsize_h*0.17 ,self.winsize_v*0.17))
-		icon_r = QtGui.QPixmap("Upper_layer/ImgGui/rem_menu.png")
+		icon_r = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/rem_menu.png")
 		icon_r = icon_r.scaled(self.winsize_h*0.17,self.winsize_v*0.17,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["rem"].setPixmap(icon_r)
 
 		self.fontlabels["rem"] = QtGui.QLabel(self)
-		self.fontlabels["rem"].setText("Upper_layer/Reminisicence Session")
+		self.fontlabels["rem"].setText("Reminisicence Session")
 		self.fontlabels["rem"] .setStyleSheet("color:white;font-size:17px; Sans Serif")
 		self.fontlabels["rem"] .setGeometry(QtCore.QRect(self.winsize_h*0.57,self.winsize_v*0.75,self.winsize_h*0.3 ,self.winsize_h*0.05))
 
@@ -155,31 +155,31 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["mini_re"] = QtGui.QLabel(self)
 		self.gxlabels["mini_re"].setGeometry(QtCore.QRect(self.winsize_h*0.1,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_register = QtGui.QPixmap("Upper_layer/ImgGui/register_menu.png")
+		icon_register = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/register_menu.png")
 		icon_register = icon_register.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_re"].setPixmap(icon_register)
 
 		self.gxlabels["mini_sta"] = QtGui.QLabel(self)
 		self.gxlabels["mini_sta"].setGeometry(QtCore.QRect(self.winsize_h*0.25,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_statis = QtGui.QPixmap("Upper_layer/ImgGui/stati_menu.png")
+		icon_statis = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/stati_menu.png")
 		icon_statis = icon_statis.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_sta"].setPixmap(icon_statis)
 
 		self.gxlabels["mini_rem"] = QtGui.QLabel(self)
 		self.gxlabels["mini_rem"].setGeometry(QtCore.QRect(self.winsize_h*0.4,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_r = QtGui.QPixmap("Upper_layer/ImgGui/rem_menu.png")
+		icon_r = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/rem_menu.png")
 		icon_r = icon_r.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_rem"].setPixmap(icon_r)
 		
 		self.gxlabels["mini_avatar"] = QtGui.QLabel(self)
 		self.gxlabels["mini_avatar"].setGeometry(QtCore.QRect(self.winsize_h*0.55,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_avatar = QtGui.QPixmap("Upper_layer/ImgGui/avatar_menu.png")
+		icon_avatar = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/avatar_menu.png")
 		icon_avatar = icon_avatar.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_avatar"].setPixmap(icon_avatar)
 
 		self.gxlabels["mini_db"] = QtGui.QLabel(self)
 		self.gxlabels["mini_db"].setGeometry(QtCore.QRect(self.winsize_h*0.7,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_db = QtGui.QPixmap("Upper_layer/ImgGui/db_menu.png")
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/db_menu.png")
 		icon_db = icon_db.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_db"].setPixmap(icon_db)
 
@@ -201,7 +201,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.gxlabels["mini_sun"] = QtGui.QLabel(self)
 		self.gxlabels["mini_sun"].setGeometry(QtCore.QRect(self.winsize_h*0.875,self.winsize_v*0.905,self.winsize_h*0.04,self.winsize_v*0.04))
-		icon_sun = QtGui.QPixmap("Upper_layer/ImgGui/sun_main.png")
+		icon_sun = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/sun_main.png")
 		icon_sun = icon_sun.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_sun"].setPixmap(icon_sun)
 
@@ -322,6 +322,7 @@ class MenuWindow(QtGui.QMainWindow):
 
 		self.controlButtons["rem"].clicked.connect(f)
 		self.controlButtons["mini_rem"].clicked.connect(f)
+		#self.hide()
 
 	def set_date(self):
 

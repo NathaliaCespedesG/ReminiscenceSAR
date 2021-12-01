@@ -6,6 +6,7 @@ import ctypes
 from time import strftime
 import os
 import time
+import cv2
 
 class ReminiscenceWindow(QtGui.QMainWindow):
 
@@ -15,13 +16,18 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 	onAvatar = QtCore.pyqtSignal()
 
 
-	def __init__(self):
+	def __init__(self, settings = None):
 		super(ReminiscenceWindow, self).__init__()
 
 		#Setting tools
 		self.gxlabels = {}
 
-		self.path = "C:/Users/natha/Desktop/Reminiscence_Interface/Interface_Plugins/Lower_layer/Workspace_Understanding/Images"
+
+		print('Hereeeeeeeeeeeeeee settings')
+		print(settings)
+		self.path = settings
+
+
 
 		self.fontlabels = {}
 
@@ -122,32 +128,41 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 			#Photos Display 
 
 
-		self.gxlabels["photo1"] = QtGui.QLabel(self)
-		self.gxlabels["photo1"].setGeometry(QtCore.QRect(self.winsize_h*0.5,self.winsize_v*0.25,self.winsize_h*0.3 ,self.winsize_v*0.27))
+		self.gxlabels["photo1_b"] = QtGui.QLabel(self)
+		self.gxlabels["photo1_b"].setGeometry(QtCore.QRect(self.winsize_h*0.445,self.winsize_v*0.28,self.winsize_h*0.3 ,self.winsize_v*0.45))
 		icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
-		icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.27,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		self.gxlabels["photo1"].setPixmap(icon)
+		icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.45,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		self.gxlabels["photo1_b"].setPixmap(icon)
+
+
+		self.gxlabels["photo2_b"] = QtGui.QLabel(self)
+		self.gxlabels["photo2_b"].setGeometry(QtCore.QRect(self.winsize_h*0.72,self.winsize_v*0.28,self.winsize_h*0.3 ,self.winsize_v*0.45))
+		icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
+		icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.45,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		self.gxlabels["photo2_b"].setPixmap(icon)
+
+
+
+		self.gxlabels["photo1"] = QtGui.QLabel(self)
+		self.gxlabels["photo1"].setGeometry(QtCore.QRect(self.winsize_h*0.455,self.winsize_v*0.11,self.winsize_h*0.8 ,self.winsize_v*0.8))
+		
 
 
 		self.gxlabels["photo2"] = QtGui.QLabel(self)
-		self.gxlabels["photo2"].setGeometry(QtCore.QRect(self.winsize_h*0.75,self.winsize_v*0.25,self.winsize_h*0.3 ,self.winsize_v*0.27))
-		icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
-		icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.27,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		self.gxlabels["photo2"].setPixmap(icon)
+		self.gxlabels["photo2"].setGeometry(QtCore.QRect(self.winsize_h*0.73,self.winsize_v*0.11,self.winsize_h*0.8 ,self.winsize_v*0.8))
+	
 
+		#self.gxlabels["photo3"] = QtGui.QLabel(self)
+		#self.gxlabels["photo3"].setGeometry(QtCore.QRect(self.winsize_h*0.5,self.winsize_v*0.55,self.winsize_h*0.3 ,self.winsize_v*0.27))
+		#icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
+		#icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.27,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		#self.gxlabels["photo3"].setPixmap(icon)
 
-		self.gxlabels["photo3"] = QtGui.QLabel(self)
-		self.gxlabels["photo3"].setGeometry(QtCore.QRect(self.winsize_h*0.5,self.winsize_v*0.55,self.winsize_h*0.3 ,self.winsize_v*0.27))
-		icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
-		icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.27,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		self.gxlabels["photo3"].setPixmap(icon)
-
-
-		self.gxlabels["photo4"] = QtGui.QLabel(self)
-		self.gxlabels["photo4"].setGeometry(QtCore.QRect(self.winsize_h*0.75,self.winsize_v*0.55,self.winsize_h*0.3 ,self.winsize_v*0.27))
-		icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
-		icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.27,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		self.gxlabels["photo4"].setPixmap(icon)
+		#self.gxlabels["photo4"] = QtGui.QLabel(self)
+		#self.gxlabels["photo4"].setGeometry(QtCore.QRect(self.winsize_h*0.75,self.winsize_v*0.55,self.winsize_h*0.3 ,self.winsize_v*0.27))
+		#icon = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/photo_rem.png")
+		#icon = icon.scaled(self.winsize_h*0.3,self.winsize_v*0.27,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		#self.gxlabels["photo4"].setPixmap(icon)
 
 
 
@@ -203,15 +218,17 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 		self.controlButtons["photo1"] =  QtGui.QCommandLinkButton(self)
 		self.controlButtons['photo1'].setIconSize(QSize(0,0))
-		self.controlButtons['photo1'].setGeometry(QtCore.QRect(self.winsize_h*0.49,self.winsize_v*0.25,self.winsize_h*0.15 ,self.winsize_v*0.27))
+		self.controlButtons['photo1'].setGeometry(QtCore.QRect(self.winsize_h*0.435,self.winsize_v*0.26,self.winsize_h*0.255 ,self.winsize_v*0.48))
 		self.controlButtons['photo1'].hide()
 
 		self.controlButtons["photo2"] =  QtGui.QCommandLinkButton(self)
 		self.controlButtons['photo2'].setIconSize(QSize(0,0))
-		self.controlButtons['photo2'].setGeometry(QtCore.QRect(self.winsize_h*0.74,self.winsize_v*0.25,self.winsize_h*0.15 ,self.winsize_v*0.27))
+		self.controlButtons['photo2'].setGeometry(QtCore.QRect(self.winsize_h*0.715,self.winsize_v*0.26,self.winsize_h*0.255 ,self.winsize_v*0.48))
 		self.controlButtons['photo2'].hide()
 
 
+
+		'''
 		self.controlButtons["photo3"] =  QtGui.QCommandLinkButton(self)
 		self.controlButtons['photo3'].setIconSize(QSize(0,0))
 		self.controlButtons['photo3'].setGeometry(QtCore.QRect(self.winsize_h*0.49,self.winsize_v*0.55,self.winsize_h*0.15 ,self.winsize_v*0.27))
@@ -221,10 +238,11 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		self.controlButtons['photo4'].setIconSize(QSize(0,0))
 		self.controlButtons['photo4'].setGeometry(QtCore.QRect(self.winsize_h*0.74,self.winsize_v*0.55,self.winsize_h*0.15 ,self.winsize_v*0.27))
 		self.controlButtons['photo4'].hide()
+		'''
 
 
 
-		self.closeButton(self.confirm_close)
+		#self.closeButton(self.confirm_close)
 		self.hideButton()
 		self.set_date()
 		self.set_time()
@@ -299,27 +317,34 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		print('Validating_images')
 
 		self.photos = os.listdir(self.path)
+		size = (1280,962)
 
-		self.icon = QtGui.QPixmap(self.path + "/" + self.photos[2])
-		self.icon = self.icon.scaled(self.winsize_h*0.25,self.winsize_v*0.25,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		img = cv2.imread(self.path + "/" + self.photos[0])
+		img = cv2.resize(img, size, interpolation = cv2.INTER_AREA )
+
+		img1 = cv2.imread(self.path + "/" + self.photos[1])
+		img1 = cv2.resize(img1, size, interpolation = cv2.INTER_AREA )
+
+		rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+		h, w, ch = rgb_image.shape
+		bytes_per_line = ch * w
+
+		rgb_image1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+		h1, w1, ch1 = rgb_image1.shape
+		bytes_per_line1 = ch1 * w1
+
+		self.icon = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+		self.icon = self.icon.scaled(self.winsize_h*0.78,self.winsize_v*0.3, Qt.KeepAspectRatio)
+		self.icon1 = QtGui.QImage(rgb_image1.data, w1, h1, bytes_per_line1, QtGui.QImage.Format_RGB888)
+		self.icon1 = self.icon1.scaled(self.winsize_h*0.78,self.winsize_v*0.3, Qt.KeepAspectRatio)
 		
-		self.icon1 = QtGui.QPixmap(self.path + "/" + self.photos[3])
-		self.icon1 = self.icon1.scaled(self.winsize_h*0.25,self.winsize_v*0.25,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		
-
-		self.icon2 = QtGui.QPixmap(self.path + "/" + self.photos[4])
-		self.icon2 = self.icon2.scaled(self.winsize_h*0.25,self.winsize_v*0.25,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		
-
-		
-		self.icon3 = QtGui.QPixmap(self.path + "/" + self.photos[5])
-		#print(icon3.isNull())
-		self.icon3 = self.icon3.scaled(self.winsize_h*0.25,self.winsize_v*0.25,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		
 
 
 
-		if (self.icon.isNull() or self.icon1.isNull() or self.icon2.isNull() or self.icon3.isNull()) == True:
+
+
+
+		if (self.icon.isNull() or self.icon1.isNull()) == True:
 
 			self.imageNull = True
 
@@ -337,10 +362,10 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		print('In show Images')
 
 		
-		self.gxlabels["photo1"].setPixmap(self.icon)
-		self.gxlabels["photo2"].setPixmap(self.icon1)
-		self.gxlabels["photo3"].setPixmap(self.icon2)
-		self.gxlabels["photo4"].setPixmap(self.icon3)
+		self.gxlabels["photo1"].setPixmap(QPixmap.fromImage(self.icon))
+		self.gxlabels["photo2"].setPixmap(QPixmap.fromImage(self.icon1))
+		#self.gxlabels["photo3"].setPixmap(self.icon2)
+		#self.gxlabels["photo4"].setPixmap(self.icon3)
 
 		self.photo_buttons()
 
@@ -356,14 +381,14 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 		self.controlButtons['photo1'].show()
 		self.controlButtons['photo2'].show()
-		self.controlButtons['photo3'].show()
-		self.controlButtons['photo4'].show()
+		#self.controlButtons['photo3'].show()
+		#self.controlButtons['photo4'].show()
 
 
 		self.controlButtons["photo1"].clicked.connect(lambda: self.hide_images(m=1))
 		self.controlButtons["photo2"].clicked.connect(lambda: self.hide_images(m=2))
-		self.controlButtons["photo3"].clicked.connect(lambda: self.hide_images(m=3))
-		self.controlButtons["photo4"].clicked.connect(lambda: self.hide_images(m=4))
+		#self.controlButtons["photo3"].clicked.connect(lambda: self.hide_images(m=3))
+		#self.controlButtons["photo4"].clicked.connect(lambda: self.hide_images(m=4))
 
 	def set_pathPhoto1(self,f):
 
@@ -373,6 +398,7 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 		self.controlButtons["photo2"].clicked.connect(f)
 
+	'''
 	def set_pathPhoto3(self,f):
 
 		self.controlButtons["photo3"].clicked.connect(f)
@@ -380,6 +406,8 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 	def set_pathPhoto4(self,f):
 
 		self.controlButtons["photo4"].clicked.connect(f)
+
+	'''
 		
 
 
@@ -389,14 +417,18 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 
 
 		self.controlButtons["upload"].hide()
+
 		self.controlButtons["photo1"].hide()
 		self.controlButtons["photo2"].hide()
-		self.controlButtons["photo3"].hide()
-		self.controlButtons["photo4"].hide()
+		#self.controlButtons["photo3"].hide()
+		#self.controlButtons["photo4"].hide()
+		self.gxlabels["photo1_b"].hide()
+		self.gxlabels["photo2_b"].hide()
 		self.gxlabels["photo1"].hide()
 		self.gxlabels["photo2"].hide()
-		self.gxlabels["photo3"].hide()
-		self.gxlabels["photo4"].hide()
+
+		#self.gxlabels["photo3"].hide()
+		#self.gxlabels["photo4"].hide()
 
 		icon_stop = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/stop_rem.png")
 		icon_stop = icon_stop.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
@@ -410,13 +442,14 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		elif m == 2:
 			self.reminiscenceImage = self.path + "/" + self.photos[3]
 
+		'''
 		elif m ==3:
 			self.reminiscenceImage = self.path + "/" + self.photos[4]
 
 		elif m == 4:
 			self.reminiscenceImage = self.path + "/" + self.photos[5]
 
-
+		'''
 
 		self.set_recognImage()
 

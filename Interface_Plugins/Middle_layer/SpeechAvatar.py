@@ -11,11 +11,11 @@ import threading
 import os 
 import resources.dialogs as dialogs
 import queue
-
+import speech_recognition as sr 
 
 class Avatar_Speech(object):
 
-	def __init__(self):
+	def __init__(self, Datahandler = None):
 
 
 		#Configuring talk engine 
@@ -42,7 +42,23 @@ class Avatar_Speech(object):
 
 		self.q = queue.Queue()
 
-		self.tts_thread = TTSThread(self.q)
+		self.tts_thread = TTSThread(self.q, interface = self)
+
+		# Initializing recognizer
+
+		self.r = sr.Recognizer()
+
+		self.word_recognized = None
+
+		self.c = 0
+
+
+		# Loading DB details
+
+		self.DB = Datahandler
+
+		self.flag = 2
+
 
 
 
@@ -119,6 +135,8 @@ class Avatar_Speech(object):
 		self.q.put(s)
 		time.sleep(0.1)
 
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "WelcomingSentence", v ="True")
+
 		#self.engine.stop()
 
 
@@ -141,8 +159,10 @@ class Avatar_Speech(object):
 			s = self.dialogs.image_validationgreat1
 			self.q.put(s)
 			time.sleep(0.1)
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="True")
 			s = self.dialogs.choose_photo
 			self.q.put(s)
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageSelection", v ="True")
 
 
 
@@ -386,6 +406,8 @@ class Avatar_Speech(object):
 		s = self.dialogs.analizing_photo
 		self.q.put(s)
 		time.sleep(0.1)
+
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Commenting Photos", v ="True")
 		
 
 
@@ -433,20 +455,78 @@ class Avatar_Speech(object):
 
 	def coversation_beginning(self):
 
+		print('In coversation_beginning')
+
 		self.q.put("Please say yes if you want to continue")
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "StartingSentence", v ="True")
+
+
+
+	def sr_beginning(self):
+
+
+
+		# Speech recognition implementation
+		while(self.word_recognized == None):
+
+			try:
+				with sr.Microphone() as source2:
+
+					self.r.adjust_for_ambient_noise(source2, duration = 0.2)
+					self.audio2 = self.r.listen(source2)
+					self.word_recognized = self.r.recognize_google(self.audio2)
+					self.word_recognized = self.word_recognized.lower()
+					print(self.word_recognized)
+
+
+			except sr.RequestError as e:
+
+				print("Could not request results")
+
+			except sr.UnknownValueError:
+
+				self.c = self.c+1
+				
+				if self.c == 5:
+					self.q.put('I cannot understan you, could you repeat please?')
+					time.sleep(0.1)
+					self.c = 0
+
+
+		return(self.word_recognized)
+
+
+
+	def no_beginning(self):
+
+		s = self.dialogs.no_begin()
+		print(s)
+		self.q.put(s)
+		time.sleep(0.1)
+
 
 
 	def set_Dialog(self, data):
 
 
-		flag = self.test(data)
-		print('flag', flag)
+		#flag = self.test(data)
+		#print('flag', flag)
+
+
+		#self.sr_beginning()
+
+		
 
 
 
-		if flag == 2:
 
-			print(data)
+		if self.flag == 2:
+
+			self.flag = self.test(data)
+			print('flag', flag)
+
+
+			#print(data)
 
 			self.cont = self.cont + 1
 			self.cont1 = 0
@@ -459,8 +539,12 @@ class Avatar_Speech(object):
 
 					if ("persons" in self.whoVal):
 
+
+
 						#Questions regarding WHO
 						if self.cont == 1:
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q1")
 
 							time.sleep(1)
 							self.set_personrecognized(self.who['persons'])
@@ -468,6 +552,9 @@ class Avatar_Speech(object):
 
 						
 						elif self.cont == 2:
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
+
 							time.sleep(1)
 
 
@@ -482,6 +569,8 @@ class Avatar_Speech(object):
 
 						elif self.cont == 3:
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3")
+
 							if self.who['persons']==1:
 								s = self.dialogs.get_connectiveWho2()
 								self.q.put(s)
@@ -492,6 +581,8 @@ class Avatar_Speech(object):
 						
 
 						elif self.cont == 4:
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4")
 
 							if self.who['persons']==1:
 								s = self.dialogs.get_connectiveWho3()
@@ -511,6 +602,8 @@ class Avatar_Speech(object):
 
 						if self.cont == 1:
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q1")
+
 							self.set_petrecognized(self.who['dog'], self.who['cat'])
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
@@ -518,10 +611,14 @@ class Avatar_Speech(object):
 
 						if self.cont == 2:
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q2")
+
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
 
 						if self.cont == 3:
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q3")
 
 							print("dogs 2")
 
@@ -529,9 +626,15 @@ class Avatar_Speech(object):
 
 
 						if self.cont == 4:
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q4")
+
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
 						if self.cont == 5:
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q5")
+							
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 							self.cont = 0
 							self.flag_topic = "When"
@@ -592,7 +695,7 @@ class Avatar_Speech(object):
 					self.flag_topic = "Other"
 					self.cont = 0
 
-		elif flag == 0:
+		elif self.flag == 0:
 
 			self.cont1 = self.cont1 +1
 
@@ -664,7 +767,7 @@ class Avatar_Speech(object):
 
 class TTSThread(threading.Thread):
 
-	def __init__(self, queue):
+	def __init__(self, queue, interface = None):
 
 		threading.Thread.__init__(self)
 
@@ -673,6 +776,7 @@ class TTSThread(threading.Thread):
 
 		self.queue = queue
 		self.daemon = True
+		self.interface = interface
 		self.start()
 
 	def run(self):
@@ -692,8 +796,10 @@ class TTSThread(threading.Thread):
 
 				if data == "exit":
 					t_running = False
+					self.interface.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Avatar_Speech", v ="False")
 				else:
 					tts_engine.say(data)
+					self.interface.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Avatar_Speech", v ="True")
 
 
 

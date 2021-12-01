@@ -1,3 +1,4 @@
+
 import sys
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import*
@@ -6,6 +7,13 @@ import ctypes
 from time import strftime
 
 class RegisterWindow(QtGui.QMainWindow):
+
+	#signals Register Window
+
+	onEmpty = QtCore.pyqtSignal()
+	onData = QtCore.pyqtSignal()
+	onAlreadyRegistered = QtCore.pyqtSignal()
+	onNotRegistered = QtCore.pyqtSignal()
 
 	def __init__(self):
 		super(RegisterWindow, self).__init__()
@@ -43,15 +51,15 @@ class RegisterWindow(QtGui.QMainWindow):
 		# Setting background image
 		self.background = QtGui.QLabel(self)
 		self.background.setGeometry(QtCore.QRect(0,0,self.winsize_h,self.winsize_v))
-		self.background.setPixmap(QtGui.QPixmap("Upper_layer/ImgGui/black_menu.png"))
+		self.background.setPixmap(QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/black_menu.png"))
 		self.background.setScaledContents(True)
 
 		# Graphics Labels
 
-			# Label
+		# Label
 		self.gxlabels["date"] = QtGui.QLabel(self)
 		self.gxlabels["date"].setGeometry(QtCore.QRect(self.winsize_h*0.03,self.winsize_v*0.08,self.winsize_h*0.5 ,self.winsize_v*0.08))
-		icon_date = QtGui.QPixmap("Upper_layer/ImgGui/date_main.png")
+		icon_date = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/date_main.png")
 		icon_date = icon_date.scaled(self.winsize_h*0.5,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["date"].setPixmap(icon_date)
 
@@ -70,7 +78,7 @@ class RegisterWindow(QtGui.QMainWindow):
 
 		self.gxlabels["hide"] = QtGui.QLabel(self)
 		self.gxlabels["hide"].setGeometry(QtCore.QRect(self.winsize_h*0.9,self.winsize_v*0.04,self.winsize_h*0.04 ,self.winsize_v*0.04))
-		icon_hide = QtGui.QPixmap("Upper_layer/ImgGui/hide_main.png")
+		icon_hide = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/hide_main.png")
 		icon_hide = icon_hide.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["hide"].setPixmap(icon_hide)
 
@@ -78,7 +86,7 @@ class RegisterWindow(QtGui.QMainWindow):
 
 		self.gxlabels["close"] = QtGui.QLabel(self)
 		self.gxlabels["close"].setGeometry(QtCore.QRect(self.winsize_h*0.95,self.winsize_v*0.04,self.winsize_h*0.04 ,self.winsize_v*0.04))
-		icon_close = QtGui.QPixmap("Upper_layer/ImgGui/close_main.png")
+		icon_close = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/close_main.png")
 		icon_close = icon_close.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["close"].setPixmap(icon_close)
 
@@ -86,37 +94,37 @@ class RegisterWindow(QtGui.QMainWindow):
 
 		self.gxlabels["mini_re"] = QtGui.QLabel(self)
 		self.gxlabels["mini_re"].setGeometry(QtCore.QRect(self.winsize_h*0.1,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_register = QtGui.QPixmap("Upper_layer/ImgGui/save_re.png")
+		icon_register = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/save_re.png")
 		icon_register = icon_register.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_re"].setPixmap(icon_register)
 
 		self.gxlabels["mini_sta"] = QtGui.QLabel(self)
 		self.gxlabels["mini_sta"].setGeometry(QtCore.QRect(self.winsize_h*0.25,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_statis = QtGui.QPixmap("Upper_layer/ImgGui/stati_menu.png")
+		icon_statis = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/stati_menu.png")
 		icon_statis = icon_statis.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_sta"].setPixmap(icon_statis)
 
 		self.gxlabels["mini_rem"] = QtGui.QLabel(self)
 		self.gxlabels["mini_rem"].setGeometry(QtCore.QRect(self.winsize_h*0.4,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_r = QtGui.QPixmap("Upper_layer/ImgGui/rem_menu.png")
+		icon_r = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/rem_menu.png")
 		icon_r = icon_r.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_rem"].setPixmap(icon_r)
 		
 		self.gxlabels["mini_avatar"] = QtGui.QLabel(self)
 		self.gxlabels["mini_avatar"].setGeometry(QtCore.QRect(self.winsize_h*0.55,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_avatar = QtGui.QPixmap("Upper_layer/ImgGui/avatar_menu.png")
+		icon_avatar = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/avatar_menu.png")
 		icon_avatar = icon_avatar.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_avatar"].setPixmap(icon_avatar)
 
 		self.gxlabels["mini_db"] = QtGui.QLabel(self)
 		self.gxlabels["mini_db"].setGeometry(QtCore.QRect(self.winsize_h*0.7,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_db = QtGui.QPixmap("Upper_layer/ImgGui/db_menu.png")
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/db_menu.png")
 		icon_db = icon_db.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_db"].setPixmap(icon_db)
 
 		self.gxlabels["mini_sun"] = QtGui.QLabel(self)
 		self.gxlabels["mini_sun"].setGeometry(QtCore.QRect(self.winsize_h*0.875,self.winsize_v*0.905,self.winsize_h*0.04,self.winsize_v*0.04))
-		icon_sun = QtGui.QPixmap("Upper_layer/ImgGui/sun_main.png")
+		icon_sun = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/sun_main.png")
 		icon_sun = icon_sun.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_sun"].setPixmap(icon_sun)
 
@@ -125,7 +133,7 @@ class RegisterWindow(QtGui.QMainWindow):
 
 		self.gxlabels["register"] = QtGui.QLabel(self)
 		self.gxlabels["register"].setGeometry(QtCore.QRect(self.winsize_h*0.2,self.winsize_v*0.3,self.winsize_h*0.4 ,self.winsize_v*0.4))
-		icon_re = QtGui.QPixmap("Upper_layer/ImgGui/re_rewindow.png")
+		icon_re = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/re_rewindow.png")
 		icon_re = icon_re.scaled(self.winsize_h*0.4,self.winsize_v*0.4,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["register"].setPixmap(icon_re)
 
@@ -133,7 +141,7 @@ class RegisterWindow(QtGui.QMainWindow):
 
 		self.gxlabels["name"] = QtGui.QLabel(self)
 		self.gxlabels["name"].setGeometry(QtCore.QRect(self.winsize_h*0.5,self.winsize_v*0.35,self.winsize_h*0.3 ,self.winsize_v*0.08))
-		icon_date = QtGui.QPixmap("ImgGui/date_main.png")
+		icon_date = QtGui.QPixmap("Interface_Plugins/ImgGui/date_main.png")
 		icon_date = icon_date.scaled(self.winsize_h*0.3,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["name"].setPixmap(icon_date)
 
@@ -224,8 +232,8 @@ class RegisterWindow(QtGui.QMainWindow):
 		self.getData['gender'] = QtGui.QComboBox(self)
 		self.getData['gender'].setStyleSheet("font-size:18px; Sans Serif")
 		self.getData['gender'].setGeometry(QtCore.QRect(self.winsize_h*0.65,self.winsize_v*0.553,self.winsize_h*0.2 ,self.winsize_h*0.04))
-		self.getData['gender'].addItem("Masc")
-		self.getData['gender'].addItem("Fem")
+		self.getData['gender'].addItem("M")
+		self.getData['gender'].addItem("F")
 
 		self.timer = QtCore.QTimer(self)
 		self.timer.timeout.connect(self.set_time)
@@ -278,13 +286,13 @@ class RegisterWindow(QtGui.QMainWindow):
 	def get_patient_data(self):
 
 		name      = str(self.getData['name'].text())
-		age       = str(self.getData['Age'].text())
-		gender    = str(self.getData['Gender'].currentText())
-		pathology = str(self.getData['Pathology'].text())
+		age       = str(self.getData['age'].text())
+		gender    = str(self.getData['gender'].currentText())
 		id_number = str(self.getData['ID'].text())
 
-		self.patient = {'name' : name ,'id' : id_number,'age':age,'gender':gender,'pathology': pathology}
-		return(self.patient)
+		self.patient = {'name' : name ,'id' : id_number,'age':age,'gender':gender}
+		#print('GET', self.patient)
+		return self.patient
 
 
 	def registerButton(self,f):
@@ -307,6 +315,8 @@ class RegisterWindow(QtGui.QMainWindow):
 
 		self.controlButtons["mini_rem"].clicked.connect(f)
 
+		print('Register Reminisicence')
+
 	def set_date(self):
 
 		today = QtCore.QDate.currentDate()
@@ -318,6 +328,7 @@ class RegisterWindow(QtGui.QMainWindow):
 def main():
     app=QtGui.QApplication(sys.argv)
     GUI=RegisterWindow()
+    GUI.registerButton(GUI.get_patient_data)
     sys.exit(app.exec_())
 A=main()
 '''

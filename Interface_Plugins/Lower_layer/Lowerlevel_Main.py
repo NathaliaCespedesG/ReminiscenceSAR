@@ -10,11 +10,14 @@ import random
 
 class LowerLevel(object):
 
-	def __init__(self, path = None):
+	def __init__(self, path = None, Datahandler = None):
 
 
 		# Modules setting configuration
 		self.settings_work = path 
+
+		self.DB = Datahandler
+
 
 		
 
@@ -37,7 +40,7 @@ class LowerLevel(object):
 		if self.WS:
 			self.workspace = workspace.WorkspaceManager(imgpath = self.settings_work)
 		if self.SND:
-			self.speech = speech.Sound_Detection()
+			self.speech = speech.Sound_Detection(Datahandler = self.DB)
 
 		# Function to activate interface Workspace Understanding
 
@@ -58,6 +61,11 @@ class LowerLevel(object):
 		if self.SND:
 			self.speech.pause()
 			self.speech.close()
+
+
+	def write_audio(self,path):
+
+		self.speech.write_audio(path)
 
 
 

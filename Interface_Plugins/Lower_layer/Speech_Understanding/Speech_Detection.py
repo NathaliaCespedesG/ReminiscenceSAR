@@ -19,10 +19,12 @@ import matplotlib.pyplot as plt
 
 class Sound_Detection(object):
 
-    def __init__(self):
+    def __init__(self, Datahandler):
 
 
         # File to save the recorded audio
+
+        self.DB = Datahandler
         self.filename = "Voice_record.wav"
         self.vad_excel = "Voice_activity.csv"
 
@@ -177,9 +179,9 @@ class Sound_Detection(object):
         # terminate pyaudio object
         self.p.terminate()
 
-    def write_audio(self):
+    def write_audio(self,path):
         # open the file in 'write bytes' mode
-        self.wf = wave.open(self.filename, "wb")
+        self.wf = wave.open(path +'/'+ self.filename, "wb")
         # set the channels
         self.wf.setnchannels(self.channels)
         # set the sample format
@@ -194,7 +196,7 @@ class Sound_Detection(object):
         # Write voice activity to an excel file
         self.voice_acd= np.array(self.voice_activity)
         #print(self.voice_acd)
-        pd.DataFrame(self.voice_acd).to_csv(self.vad_excel)
+        pd.DataFrame(self.voice_acd).to_csv(path + '/'+ self.vad_excel)
 
     def getData(self):
 

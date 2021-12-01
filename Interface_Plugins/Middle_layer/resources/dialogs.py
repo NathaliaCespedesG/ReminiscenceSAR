@@ -85,7 +85,7 @@ class Dialogs(object):
 
         self.whenq1 = ["Please tell me when this photo was taken?", "This photo seems a little old. When it was taken?", "Did you remember when this photo was taken? Please tell me!"]
 
-
+        self.noanswer = ["That's a shame. hope you have a good day", "Maybe next time we willwork together", " No problem. see you next time", "That's a shame. See you around!"]
 
 
 
@@ -158,6 +158,12 @@ class Dialogs(object):
 
         i = random.randint(0, len(self.whenq1) - 1)
         return self.whenq1[i]
+
+
+    def no_begin(self):
+
+        i = random.randint(0, len(self.noanswer) - 1)
+        return self.noanswer[i]
 
 
 

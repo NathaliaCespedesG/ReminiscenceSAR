@@ -13,22 +13,32 @@ import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 import sys
 from collections import Counter
 import numpy as np
+import datetime
 
 
 class TherapyPlugin(object):
 
-	def __init__(self, settings = 'Workspace_Understanding/Images/Photo_1.jpeg'):
+	def __init__(self, settings = 'Images/Photo_1.jpeg', DataHandler = None):
 
 		#Loading interface settings
 		self.settings = settings
+		#print('Setting from TherapyPlugin', self.settings)
 
 		self.useAvatar = True
 
+		#Load database manager
+
+		self.DB = DataHandler
+
+		self.date = datetime.datetime.now()
+
+		
+
 		#Loading libraries for TherapyPlugin
 
-		self.Lowerlevel = Lowerlevel.LowerLevel()
-		self.Avatar = Avatar.Avatar_Speech()
-		self.ReminiscenceWindow = ReminiscenceWindow.ReminiscenceWindow()
+		self.Lowerlevel = Lowerlevel.LowerLevel(Datahandler = self.DB)
+		self.Avatar = Avatar.Avatar_Speech(Datahandler = self.DB)
+		self.ReminiscenceWindow = ReminiscenceWindow.ReminiscenceWindow(settings = self.settings)
 
 		self.launch_sensors()
 		self.launch_avatar()
@@ -49,6 +59,7 @@ class TherapyPlugin(object):
 		self.ReminiscenceWindow.playButton(self.Avatar.welcome_sentence)
 		self.ReminiscenceWindow.playButton(self.SensorCaptureThread.start)
 		self.ReminiscenceWindow.playButton(self.AvatarGraphicsThread.start)
+		self.ReminiscenceWindow.closeButton(self.onShutdown)
 
 
 		# Internal Signals
@@ -56,21 +67,28 @@ class TherapyPlugin(object):
 		#self.ReminiscenceWindow.onUpload(self.onStart)
 		
 		# Lower level signals
-		#self.ReminiscenceWindow.set_pathPhoto1(lambda: self.Lowerlevel.set_path('C:/Users/natha/Desktop/Reminiscence_Interface/Interface_Plugins/Lower_layer/Workspace_Understanding/Images/Photo_1.jpeg'))
-		#self.ReminiscenceWindow.set_pathPhoto2(lambda: self.Lowerlevel.set_path('Workspace_Understanding/Images/Photo_2.jpeg'))
-		#self.ReminiscenceWindow.set_pathPhoto3(lambda: self.Lowerlevel.set_path('Workspace_Understanding/Images/Photo_3.jpeg'))
-		#self.ReminiscenceWindow.set_pathPhoto4(lambda: self.Lowerlevel.set_path('Workspace_Understanding/Images/Photo_4.jpeg'))
 		self.ReminiscenceWindow.set_pathPhoto1(self.onStart)
 		self.ReminiscenceWindow.set_pathPhoto2(self.onStart)
-		self.ReminiscenceWindow.set_pathPhoto3(self.onStart)
-		self.ReminiscenceWindow.set_pathPhoto4(self.onStart)
+		#self.ReminiscenceWindow.set_pathPhoto3(self.onStart)
+		#self.ReminiscenceWindow.set_pathPhoto4(self.onStart)
+
+
+	def user_data(self, user):
+
+		self.user = user
 
 
 
 	def image_processing(self):
 
 
-		self.Lowerlevel.set_path('C:/Users/natha/Desktop/Reminiscence_Interface/Interface_Plugins/Lower_layer/Workspace_Understanding/Images/Photo_0.jpeg')
+		# Available photos in Lower layer level
+		self.photos = os.listdir(self.settings)
+		# Photos name in the directory
+		photo1 = self.photos[0]
+		photo2 = self.photos[1]
+		#Setting paths in the Lower level 
+		self.Lowerlevel.set_path(self.settings +'/' + photo1)
 		self.Lowerlevel.set_modules(work = True, sound = True)
 		self.Lowerlevel.launch_wsmodule()
 
@@ -103,14 +121,18 @@ class TherapyPlugin(object):
 
 
 
+
+
 		self.ReminiscenceWindow.set_recognImage()
 
 		m = self.Lowerlevel.get_data()
 
+		self.DB.General.SM.loadSensor(recog_obj = m)
+
+
 		time.sleep(5)
 
 		self.Avatar.conversation_topics(m)
-
 		self.Avatar.coversation_beginning()
 
 
@@ -123,6 +145,22 @@ class TherapyPlugin(object):
 		#data = self.Lowerlevel.update_sounddata()
 
 		self.ReminiscenceWindow.update_sound()
+
+
+
+	def onShutdown(self):
+		print('Here shutdown')
+
+		path = 'C:/Users/natha/Desktop/Reminiscence_Interface/db/general'+'/'+ self.user['id'] + '/'+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)
+		
+		self.Lowerlevel.write_audio(path)
+		
+		self.AvatarCaptureThread.shutdown()
+		self.SensorCaptureThread.shutdown()
+		self.AvatarGraphicsThread.shutdown()
+
+
+		
 
 
 
@@ -142,15 +180,60 @@ class AvatarCaptureThread(QtCore.QThread):
         super(AvatarCaptureThread,self).__init__()
         self.Ts = sample
         self.ON = True
-        self.interface = interface   
+        self.interface = interface
+        self.c = 0 
          
     def run(self):
         #self.interface.robotController.posture.goToPosture("StandZero", 1.0)
         while self.ON:
-            d = self.interface.Lowerlevel.update_sounddata()
-            #print('data from thread',d)
-            self.interface.Avatar.set_Dialog(d)
-            time.sleep(self.Ts)
+
+
+        	if self.c == 0:
+
+        		n = self.interface.Avatar.sr_beginning()
+        		print('Speech recognition from avatar', n)
+
+        		if n == "yes":
+
+        			self.c = 1
+
+        		if n =='no':
+
+        			self.c = 2
+
+        		else:
+        			pass
+
+        	if self.c == 1:
+
+        		if (n == 'yes'):
+        			
+        			d = self.interface.Lowerlevel.update_sounddata()
+        			#loading sound data in the interface
+        			self.interface.DB.General.SM.loadSensor(voice = d)
+        			#print('data from thread',d)
+        			self.interface.Avatar.set_Dialog(d)
+        			time.sleep(self.Ts)
+
+        	if self. c == 2:
+
+
+        		self.interface.Avatar.no_beginning()
+
+        		self.ON = False
+
+        		time.sleep(10)
+
+        		self.interface.onShutdown()
+
+
+
+        	else:
+
+        		pass
+           
+
+            
             
                 
     def shutdown(self):

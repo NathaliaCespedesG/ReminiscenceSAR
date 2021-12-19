@@ -24,7 +24,7 @@ class Avatar_Speech(object):
 
 		self.dialogs = dialogs.Dialogs()
 
-		self.cont = 0
+		self.cont = 1
 
 		self.cont1 = 0
 
@@ -50,7 +50,7 @@ class Avatar_Speech(object):
 
 		self.word_recognized = None
 
-		self.c = 0
+		self.cc = 0
 
 
 		# Loading DB details
@@ -58,6 +58,8 @@ class Avatar_Speech(object):
 		self.DB = Datahandler
 
 		self.flag = 2
+
+		self.y = 0
 
 
 
@@ -320,19 +322,19 @@ class Avatar_Speech(object):
 			elif cont == 3:
 
 				s = self.dialogs.catQ2
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.catQ3
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 		
 
 			elif cont ==5:
 				s = self.dialogs.catQ4
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 				self.whoVal.remove('cat')
 
@@ -344,26 +346,83 @@ class Avatar_Speech(object):
 			if cont == 2:
 
 				s = self.dialogs.catsQ1
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 
 			elif cont == 3:
 
 				s = self.dialogs.catQ2
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.catsQ3
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 	
 			elif cont == 5:
 				s = self.dialogs.catsQ4
-				self.talk(s)
+				self.q.put(s)
 				time.sleep(0.5)
 				self.whoVal.remove('cat')
+
+	def questions_where(self, num_wineglass, num_cup, num_fork, num_spoon, num_car, num_bus, num_trlig, num_stopsig, cont):
+
+		print('where_function')
+
+
+		if num_wineglass>0 and num_cup >0 and num_fork>0 and num_spoon>0:
+
+			if cont == 1:
+				s = self.dialogs.whereq1
+				self.q.put(s)
+				time.sleep(2)
+				self.whereVal.remove('wine_glass')
+				self.whereVal.remove('cup')
+				self.whereVal.remove('fork')
+				self.whereVal.remove('spoon')
+				self.whereVal.remove('knife')
+
+
+		elif num_wineglass>0 or num_cup >0 or num_fork>0 or num_spoon>0:
+
+			print('num_cup', num_cup)
+
+			#print('This option')
+
+			if cont == 1:
+				#print('This option 1')
+				s = self.dialogs.whereq11
+				print(s)
+				self.q.put(s)
+				time.sleep(2)
+				if num_wineglass > 0:
+					self.whereVal.remove('wine_glass')
+				if num_cup > 0:
+					self.whereVal.remove('cup')
+				if num_fork > 0:
+					self.whereVal.remove('fork')
+				if num_spoon > 0:
+					self.whereVal.remove('spoon')
+
+
+
+		elif num_car>0 and num_bus>0 and num_trlig>0 and num_stopsig>0:
+			# Is there a  street or a crowded place
+
+			if cont == 1:
+				pass
+
+
+		
+
+
+
+
+
+
+
 
 
 
@@ -430,17 +489,28 @@ class Avatar_Speech(object):
 
 
 
-		bird = int(m['bird'])
+		#Food Places
 		whine_glass = int(m['wine glass'])
 		cup = int(m['cup'])
+		fork = int(m['fork'])
+		spoon = int(m['spoon'])
+		knife = int(m['knife'])
+
+
+		# Transport - Street Places
 		car = int(m['car'])
 		bus = int(m['bus'])
+		traffic_light = int(m['traffic light'])
+		stop_sign = int(m['stop sign'])
 
-		self.where = {"bird": bird, "cup": cup, "car": car, "bus": bus}
+
+
+
+		self.where = {"wine_glass": whine_glass, "cup": cup, "fork": fork, "spoon": spoon, "knife": knife, "car": car, "bus": bus, "traffic_light": traffic_light, "stop_sign": stop_sign}
 
 		self.whereVal = [word for word, occurrences in self.where.items() if occurrences > 0]
 
-		#print(self.whereVal)
+		print(self.whereVal)
 		#print(len(self.whereVal))
 
 		book = int(m['book'])
@@ -455,28 +525,34 @@ class Avatar_Speech(object):
 
 	def coversation_beginning(self):
 
-		print('In coversation_beginning')
+		#print('In coversation_beginning')
 
-		self.q.put("Please say yes if you want to continue")
+		self.q.put("Please say yes if you want to continue, if you don't please say no")
 		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "StartingSentence", v ="True")
+
+
+	def no_understanding(self):
+
+		self.q.put('I caugh another word, could you repeat?')
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "StartingSentence", v ="Other-word")
+
+
 
 
 
 	def sr_beginning(self):
-
-
 
 		# Speech recognition implementation
 		while(self.word_recognized == None):
 
 			try:
 				with sr.Microphone() as source2:
-
+					print('here, heariiiing')
 					self.r.adjust_for_ambient_noise(source2, duration = 0.2)
 					self.audio2 = self.r.listen(source2)
 					self.word_recognized = self.r.recognize_google(self.audio2)
 					self.word_recognized = self.word_recognized.lower()
-					print(self.word_recognized)
+					#print(self.word_recognized)
 
 
 			except sr.RequestError as e:
@@ -485,12 +561,12 @@ class Avatar_Speech(object):
 
 			except sr.UnknownValueError:
 
-				self.c = self.c+1
+				self.cc = self.cc+1
 				
-				if self.c == 5:
-					self.q.put('I cannot understan you, could you repeat please?')
+				if self.cc == 2:
+					self.q.put('I cannot understand you, could you repeat please?')
 					time.sleep(0.1)
-					self.c = 0
+					self.cc = 0
 
 
 		return(self.word_recognized)
@@ -508,29 +584,73 @@ class Avatar_Speech(object):
 
 	def set_Dialog(self, data):
 
+		print('HEREEEEEEEE')
 
-		#flag = self.test(data)
-		#print('flag', flag)
+		self.y = self.y + 1
+
+		self.flag = self.test(data)
+		print('flag', self.flag)
+
+
+		if self.y == 1:
+
+			if (len(self.whoVal)>0):
+
+				if ("persons" in self.whoVal):
+
+					self.set_personrecognized(self.who['persons'])
+					time.sleep(1)
+
+
+				elif ("dog" in self.whoVal) or ("cat" in self.whoVal):
+
+					self.set_petrecognized(self.who['dog'], self.who['cat'])
+					self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+					time.sleep(1)
+
+			elif (len(self.whereVal)>0):
+
+				if ("wine_glass" in self.whereVal) and ("cup" in self.whereVal) and ("fork" in self.whereVal) and ("spoon" in self.whereVal):
+
+					s = self.dialogs.get_whereq1()
+					self.q.put(s)
+					time.sleep(1)
+
+				if ("wine_glass" in self.whereVal) or ("cup" in self.whereVal) or ("fork" in self.whereVal) or ("spoon" in self.whereVal):
+
+					s = self.dialogs.get_whereq11()
+					self.q.put(s)
+					time.sleep(1)
+
+			else:
+
+				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When")
+				s = self.dialogs.get_When1()
+				print(s)
+				self.q.put(s)
+				pass
+
+
+
+
+
+		
+		#print('CONTADOR', self.cont)
 
 
 		#self.sr_beginning()
 
+
+		if self.flag == 2 and self.y > 1:
+
 		
-
-
-
-
-		if self.flag == 2:
-
-			self.flag = self.test(data)
-			print('flag', flag)
-
-
 			#print(data)
 
 			self.cont = self.cont + 1
 			self.cont1 = 0
 			time.sleep(5)
+
+			print('CONTADOR.......', self.cont)
 
 
 			if self.flag_topic == "Who":
@@ -542,16 +662,9 @@ class Avatar_Speech(object):
 
 
 						#Questions regarding WHO
-						if self.cont == 1:
-
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q1")
-
-							time.sleep(1)
-							self.set_personrecognized(self.who['persons'])
-							#time.sleep(4)
 
 						
-						elif self.cont == 2:
+						if self.cont == 3:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
 
@@ -567,7 +680,7 @@ class Avatar_Speech(object):
 								print('plural1')
 
 
-						elif self.cont == 3:
+						elif self.cont == 5:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3")
 
@@ -580,7 +693,8 @@ class Avatar_Speech(object):
 
 						
 
-						elif self.cont == 4:
+						elif self.cont == 7:
+
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4")
 
@@ -589,7 +703,7 @@ class Avatar_Speech(object):
 								self.q.put(s)
 								s = "Oh! It seem very interesting."
 								self.whoVal.remove('persons')
-								self.cont = 0 
+								self.cont = 0
 							else:
 								s = self.dialogs.get_connectiveWhos3()
 								self.q.put(s)
@@ -636,30 +750,36 @@ class Avatar_Speech(object):
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q5")
 							
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
-							self.cont = 0
+							self.cont = 1
 							self.flag_topic = "When"
 
 
 				else:
 
-					# Cannot see people in the photos, let me ask another quesrion
+					# Cannot see people in the photos, let me ask another question
 
 					self.flag_topic = "When"
-					self.cont = 0
+					#self.cont = 1
 
 				
 			if self.flag_topic == "When":
 
 				if self.cont == 1:
 
-					#time.sleep(10)
-
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1")
 					s = self.dialogs.get_When1()
-					print(s)
 					self.q.put(s)
 					#time.sleep(4)
-					self.cont = 0
+
+				if self.cont == 2:
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q2")
+					s = self.dialogs.get_When2()
+					self.q.put(s)
 					self.flag_topic = "Where"
+					self.cont = 0
+					#time.sleep(4)				
+					
 
 
 			if self.flag_topic == "Where":
@@ -668,16 +788,48 @@ class Avatar_Speech(object):
 
 				if (len(self.whereVal)>0):
 
-					pass
 
-				else:
+					if self.cont == 1:
 
-					s = 'Oh, I cannot identify an specific place. Where this photo was taken?'
-					print(s)
-					self.q.put(s)
-					#time.sleep(4)
-					self.flag_topic = "Other"
-					self.cont = 0
+						print('HERE Where 1')
+
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="where-q1")
+						#Put the dialogs here for the first question depends on the data acquire from the images
+						self.questions_where(self.where['wine_glass'], self.where['cup'],self.where['fork'], self.where['spoon'], self.where['car'], self.where['bus'], self.where['traffic_light'], self.where['stop_sign'], self.cont)
+						print(self.whereVal)
+						print(len(self.whereVal))
+				else:	
+
+					if self.cont == 1:
+
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n")
+
+						s = 'Oh, I cannot identify a specific place. Where this photo was taken?'
+						print(s)
+						self.q.put(s)
+						#time.sleep(4)
+						
+
+					if self.cont == 2:
+
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
+						s = self.dialogs.get_whereq()
+						self.q.put(s)
+						time.sleep(0.5)
+
+
+
+					if self.cont == 3:
+						
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
+						s = self.dialogs.get_where1q()
+						self.q.put(s)
+						time.sleep(0.5)
+						self.flag_topic = "Other"
+						self.cont = 0
+
+
+
 
 			if self.flag_topic == "Other":
 
@@ -688,24 +840,46 @@ class Avatar_Speech(object):
 
 				else:
 
-					s = 'Can you talk about other things about this photo?'
-					print(s)
-					self.q.put(s)
-					#time.sleep(4)
-					self.flag_topic = "Other"
-					self.cont = 0
+					if self.cont == 1:
+						s = 'One last question. Can you talk about other things about this photo?'
+						print(s)
+						self.q.put(s)
+						#time.sleep(4)
+						
+
+					if self.cont == 2:
+
+						s = 'Ahhh that is interesting.'
+						print(s)
+						self.q.put(s)
+						self.flag_topic = "End"
+
 
 		elif self.flag == 0:
 
 			self.cont1 = self.cont1 +1
 
 
-			if self.cont1 == 50:
+			if self.cont1 == 30:
 
 				self.q.put("Sorry, I couldn't  hear that")
 				self.cont1 = 0
 
 
+
+
+	def end_phrase(self):
+
+		self.q.put("Was nice to talk with you. Hope we can talk togheter soon")
+		time.sleep(1)
+		self.q.put("See ya")
+
+
+
+
+	def topic_Status(self):
+
+		return(self.flag_topic)
 
 	
 	def test(self,m):

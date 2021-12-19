@@ -17,8 +17,8 @@ class Object_Detection(object):
         # Detector Initialization
         self.detector = ObjectDetection()
         self.setting_model()
-        print('Hereeeeeeeeeeeeeeeee')
-        print(self.photoPath)
+        #print('Hereeeeeeeeeeeeeeeee')
+        #print(self.photoPath)
 
         self.data = []
 

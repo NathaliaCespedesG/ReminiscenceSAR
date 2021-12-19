@@ -85,8 +85,15 @@ class Dialogs(object):
 
         self.whenq1 = ["Please tell me when this photo was taken?", "This photo seems a little old. When it was taken?", "Did you remember when this photo was taken? Please tell me!"]
 
+        self.whenq2 = ["Did you enjoy the time when this photo was taken?", "Was a good time when this photo was taken?"]
+
         self.noanswer = ["That's a shame. hope you have a good day", "Maybe next time we willwork together", " No problem. see you next time", "That's a shame. See you around!"]
 
+
+        self.whereq1 = "It looks like  you were in a food place, I can see some cups and cutlery. Where you were when the photo was taken?"
+        self.whereq11 = "I cannot identify well the place, but it seems it is a food place. Where you were in the photo?"
+        self.where =  ["Is this a place you visit usually ?", "Have you ever been more times in this place?"]
+        self.where1 = ["What's the think you most appreciate about this place?", "Whats your favorite thing about this place?", "Would you plan to visit this place in the future?"]
 
 
 
@@ -160,10 +167,31 @@ class Dialogs(object):
         return self.whenq1[i]
 
 
+    def get_When2(self):
+
+        i = random.randint(0, len(self.whenq2) - 1)
+        return self.whenq2[i]
+
+
     def no_begin(self):
 
         i = random.randint(0, len(self.noanswer) - 1)
         return self.noanswer[i]
+
+
+
+
+
+    def get_whereq(self):
+
+        i = random.randint(0, len(self.where) - 1)
+        return self.where[i]
+
+
+    def get_where1q(self):
+
+        i = random.randint(0, len(self.where1) - 1)
+        return self.where1[i]
 
 
 

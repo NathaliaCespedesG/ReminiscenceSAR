@@ -109,10 +109,17 @@ class LowerLevel(object):
 		car = data['Objects'].count('car')
 		bus = data['Objects'].count('bus')
 		book = data['Objects'].count('book')
+		fork = data['Objects'].count('fork')
+		spoon = data['Objects'].count('spoon')
+		knife = data['Objects'].count('knife')
+		traffic_light = data['Objects'].count('traffic light')
+		stop_sign = data['Objects'].count('stop sign')
+
 
 		
 
-		count_data =  {'person': persons,'cat': cat ,'dog': dog,'bird': bird, 'wine glass':wine_glass, 'cup': cup, "car": car, "bus": bus, "book": book}
+		count_data =  {'person': persons,'cat': cat ,'dog': dog,'bird': bird, 'wine glass':wine_glass, 'cup': cup, "car": car, "bus": bus, "book": book,
+						'fork': fork, 'spoon': spoon, 'knife': knife, 'traffic light': traffic_light, 'stop sign': stop_sign}
 
 
 		return(count_data)

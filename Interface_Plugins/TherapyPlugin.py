@@ -154,6 +154,8 @@ class TherapyPlugin(object):
 		path = 'C:/Users/natha/Desktop/Reminiscence_Interface/db/general'+'/'+ self.user['id'] + '/'+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)
 		
 		self.Lowerlevel.write_audio(path)
+
+		time.sleep(10)
 		
 		self.AvatarCaptureThread.shutdown()
 		self.SensorCaptureThread.shutdown()
@@ -190,19 +192,34 @@ class AvatarCaptureThread(QtCore.QThread):
 
         	if self.c == 0:
 
+
         		n = self.interface.Avatar.sr_beginning()
-        		print('Speech recognition from avatar', n)
+
+        		print('word from recognized', n)
+
 
         		if n == "yes":
 
+        			print('Here, when says yes')
+
         			self.c = 1
 
+
         		if n =='no':
+        			#print('Here')
 
         			self.c = 2
 
-        		else:
-        			pass
+        		elif(n != "yes" and n != "no"):
+
+        			print('Different word')
+        			self.interface.Avatar.no_understanding()
+        			self.interface.Avatar.word_recognized = None
+        			self.c = 0
+
+
+        	print(self.c)
+
 
         	if self.c == 1:
 
@@ -214,6 +231,12 @@ class AvatarCaptureThread(QtCore.QThread):
         			#print('data from thread',d)
         			self.interface.Avatar.set_Dialog(d)
         			time.sleep(self.Ts)
+        			topic = self.interface.Avatar.topic_Status()
+        			if topic == "End":
+        				time.sleep(5)
+        				self.interface.Avatar.end_phrase()
+        				time.sleep(5)
+        				self.interface.onShutdown()
 
         	if self. c == 2:
 
@@ -222,15 +245,11 @@ class AvatarCaptureThread(QtCore.QThread):
 
         		self.ON = False
 
-        		time.sleep(10)
+        		time.sleep(5)
 
         		self.interface.onShutdown()
 
 
-
-        	else:
-
-        		pass
            
 
             

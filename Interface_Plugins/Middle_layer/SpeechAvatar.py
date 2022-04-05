@@ -10,7 +10,7 @@ import time
 import threading
 import os 
 import resources.dialogs as dialogs
-import queue
+#import Queue
 import speech_recognition as sr 
 
 class Avatar_Speech(object):
@@ -32,6 +32,8 @@ class Avatar_Speech(object):
 
 		self.last_value = False
 
+		self.onVoice = False
+
 		self.change = 0
 
 		self.person_topic = 0
@@ -40,9 +42,9 @@ class Avatar_Speech(object):
 
 		self.flag_topic = "Who"
 
-		self.q = queue.Queue()
+		#self.q = queue.Queue()
 
-		self.tts_thread = TTSThread(self.q, interface = self)
+		#self.tts_thread = TTSThread(self.q, interface = self)
 
 		# Initializing recognizer
 
@@ -61,7 +63,9 @@ class Avatar_Speech(object):
 
 		self.y = 0
 
+		self.voice_act = 0
 
+		self.voice_deac = 0
 
 
 		self.set_properties()
@@ -106,19 +110,30 @@ class Avatar_Speech(object):
 		self.voices = self.engine.getProperty('voices')
 
 		self.engine.setProperty('voice', self.voices[1].id)
-		self.engine.connect('started-utterance', self.onStart) 
-		self.engine.connect('finished-utterance', self.onEnd)
 
 
-	def onStart(self):
 
 
-		print('starting')
+	def Talk(self, phrase):
 
 
-	def onEnd(name, completed):
+		print('Talkiiiiiiiing')
+		self.onVoice = True
+		self.engine.say(phrase)
+		self.engine.runAndWait()
 
-   		print('finishing')
+
+
+	def getVoice(self):
+
+		return(self.onVoice)
+
+
+	def TalkingInit(self, phrase):
+
+		self.engine.say(phrase)
+		self.engine.runAndWait()
+
 
 
 
@@ -126,20 +141,22 @@ class Avatar_Speech(object):
 	def welcome_sentence(self):
 
 		s = self.dialogs.welcome_sentence
-		self.q.put(s)
+		self.Talk(s)
 		time.sleep(0.1)
 
 		s = self.dialogs.welcome_sentence2
-		self.q.put(s)
+		self.Talk(s)
 		time.sleep(0.1)
 
 		s = self.dialogs.welcome_sentence3
-		self.q.put(s)
+		self.Talk(s)
 		time.sleep(0.1)
 
 		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "WelcomingSentence", v ="True")
 
 		#self.engine.stop()
+
+		self.onVoice = False
 
 
 
@@ -148,23 +165,27 @@ class Avatar_Speech(object):
 
 		if m == True:
 			s = self.dialogs.image_validationbad
-			self.q.put(s)
+			self.Talk(s)
 			time.sleep(0.1)
 			s = self.dialogs.image_validationbad1
-			self.q.put("You want to continue?, or, You want to upload a new image?")
+			self.Talk("You want to continue?, or, You want to upload a new image?")
 			
 
 		else:
 			s = self.dialogs.image_validationgreat
-			self.q.put(s)
+			self.Talk(s)
 			time.sleep(0.1)
 			s = self.dialogs.image_validationgreat1
-			self.q.put(s)
+			self.Talk(s)
 			time.sleep(0.1)
 			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="True")
 			s = self.dialogs.choose_photo
-			self.q.put(s)
+			self.Talk(s)
 			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageSelection", v ="True")
+
+
+
+		self.onVoice = False
 
 
 
@@ -180,29 +201,29 @@ class Avatar_Speech(object):
 			s = self.dialogs.get_petWho()
 			s = s.replace('XX', str(num_dog))
 			s = s.replace('SS', str(num_cat))
-			self.q.put(s)
+			self.Talk(s)
 
 			time.sleep(0.5)
 
 		elif num_dog == 1 and num_cat ==0:
 
 			s = self.dialogs.get_dogWho()
-			self.q.put(s)
+			self.Talk(s)
 
 
 		elif num_dog > 1 and num_cat == 0:
 			s = self.dialogs.dog_whos
-			self.q.put(s)
+			self.Talk(s)
 
 		elif num_dog == 0 and num_cat ==1:
 
 			s = self.dialogs.cat_who
-			self.q.put(s)
+			self.Talk(s)
 
 		elif num_dog == 0 and num_cat > 1:
 
 			s = self.dialogs.cat_whos
-			self.q.put(s)
+			self.Talk(s)
 		
 
 
@@ -214,30 +235,30 @@ class Avatar_Speech(object):
 
 			if cont == 1 :
 				s = self.dialogs.petQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			if cont == 2 :
 				s = self.dialogs.petQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 3:
 
 				s = self.dialogs.petQ2
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.petQ3
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 				
 
 			elif cont ==5:
 				s = self.dialogs.petQ4
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 				self.whoVal.remove('dog')
 				self.whoVal.remove('cat')
@@ -249,30 +270,30 @@ class Avatar_Speech(object):
 
 			if cont == 1 :
 				s = self.dialogs.dogQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			if cont == 2:
 
 				s = self.dialogs.dogQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 3:
 
 				s = self.dialogs.dogQ2
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.dogQ3
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 5:
 				s = self.dialogs.dogQ4
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 				self.whoVal.remove('dog')
 
@@ -282,30 +303,30 @@ class Avatar_Speech(object):
 
 			if cont == 1 :
 				s = self.dialogs.petQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			if cont == 2:
 
 				s = self.dialogs.dogsQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 3:
 
 				s = self.dialogs.dogsQ2
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.dogsQ3
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont ==5:
 				s = self.dialogs.dogsQ4
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 				self.whoVal.remove('dog')
 	
@@ -316,25 +337,25 @@ class Avatar_Speech(object):
 
 			if cont == 2:
 				s = self.dialogs.catQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 3:
 
 				s = self.dialogs.catQ2
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.catQ3
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 		
 
 			elif cont ==5:
 				s = self.dialogs.catQ4
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 				self.whoVal.remove('cat')
 
@@ -346,24 +367,24 @@ class Avatar_Speech(object):
 			if cont == 2:
 
 				s = self.dialogs.catsQ1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 3:
 
 				s = self.dialogs.catQ2
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 
 			elif cont == 4:
 
 				s = self.dialogs.catsQ3
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 	
 			elif cont == 5:
 				s = self.dialogs.catsQ4
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(0.5)
 				self.whoVal.remove('cat')
 
@@ -376,7 +397,7 @@ class Avatar_Speech(object):
 
 			if cont == 1:
 				s = self.dialogs.whereq1
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(2)
 				self.whereVal.remove('wine_glass')
 				self.whereVal.remove('cup')
@@ -395,7 +416,7 @@ class Avatar_Speech(object):
 				#print('This option 1')
 				s = self.dialogs.whereq11
 				print(s)
-				self.q.put(s)
+				self.Talk(s)
 				time.sleep(2)
 				if num_wineglass > 0:
 					self.whereVal.remove('wine_glass')
@@ -432,13 +453,13 @@ class Avatar_Speech(object):
 
 			s = self.dialogs.get_person_sentence()
 			s = s.replace('XX', str(num))
-			self.q.put(s)
+			self.Talk(s)
 
 
 			time.sleep(0.5)
 
 			s = self.dialogs.get_whoquestion()
-			self.q.put(s)
+			self.Talk(s)
 
 
 
@@ -446,12 +467,12 @@ class Avatar_Speech(object):
 
 			s = self.dialogs.get_numpersons_sentence()
 			s = s.replace('XX', str(num))
-			self.q.put(s)
+			self.Talk(s)
 
 			time.sleep(0.5)
 
 			s = self.dialogs.get_whoquestions()
-			self.q.put(s)
+			self.Talk(s)
 
 
 	def commenting_photos(self):
@@ -459,14 +480,16 @@ class Avatar_Speech(object):
 		print('Commenting the photos')
 
 		s = self.dialogs.commenting_photo
-		self.q.put(s)
+		self.Talk(s)
 		time.sleep(0.1)
 
 		s = self.dialogs.analizing_photo
-		self.q.put(s)
+		self.Talk(s)
 		time.sleep(0.1)
 
 		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Commenting Photos", v ="True")
+
+		self.onVoice = False
 		
 
 
@@ -527,15 +550,16 @@ class Avatar_Speech(object):
 
 		#print('In coversation_beginning')
 
-		self.q.put("Please say yes if you want to continue, if you don't please say no")
+		self.Talk("Please say yes if you want to continue, if you don't please say no")
 		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "StartingSentence", v ="True")
+		self.onVoice = False
 
 
 	def no_understanding(self):
 
-		self.q.put('I caugh another word, could you repeat?')
+		self.Talk('Im sorry I dont understand, can you say it in a different way?')
 		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "StartingSentence", v ="Other-word")
-
+		self.onVoice = False
 
 
 
@@ -548,7 +572,7 @@ class Avatar_Speech(object):
 			try:
 				with sr.Microphone() as source2:
 					print('here, heariiiing')
-					self.r.adjust_for_ambient_noise(source2, duration = 0.2)
+					self.r.adjust_for_ambient_noise(source2)
 					self.audio2 = self.r.listen(source2)
 					self.word_recognized = self.r.recognize_google(self.audio2)
 					self.word_recognized = self.word_recognized.lower()
@@ -564,7 +588,8 @@ class Avatar_Speech(object):
 				self.cc = self.cc+1
 				
 				if self.cc == 2:
-					self.q.put('I cannot understand you, could you repeat please?')
+					self.Talk('I cannot understand you, could you repeat please?')
+					self.onVoice = False
 					time.sleep(0.1)
 					self.cc = 0
 
@@ -577,18 +602,21 @@ class Avatar_Speech(object):
 
 		s = self.dialogs.no_begin()
 		print(s)
-		self.q.put(s)
+		self.Talk(s)
 		time.sleep(0.1)
 
 
 
 	def set_Dialog(self, data):
 
-		print('HEREEEEEEEE')
-
+		
+		print('-----------Not Talkiiiiiiing--------')
+		self.onVoice = False
 		self.y = self.y + 1
 
-		self.flag = self.test(data)
+		[change, voice_act, voice_deac] = self.test(data)
+
+		self.flag = change
 		print('flag', self.flag)
 
 
@@ -613,13 +641,13 @@ class Avatar_Speech(object):
 				if ("wine_glass" in self.whereVal) and ("cup" in self.whereVal) and ("fork" in self.whereVal) and ("spoon" in self.whereVal):
 
 					s = self.dialogs.get_whereq1()
-					self.q.put(s)
+					self.Talk(s)
 					time.sleep(1)
 
 				if ("wine_glass" in self.whereVal) or ("cup" in self.whereVal) or ("fork" in self.whereVal) or ("spoon" in self.whereVal):
 
 					s = self.dialogs.get_whereq11()
-					self.q.put(s)
+					self.Talk(s)
 					time.sleep(1)
 
 			else:
@@ -627,7 +655,7 @@ class Avatar_Speech(object):
 				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When")
 				s = self.dialogs.get_When1()
 				print(s)
-				self.q.put(s)
+				self.Talk(s)
 				pass
 
 
@@ -648,7 +676,7 @@ class Avatar_Speech(object):
 
 			self.cont = self.cont + 1
 			self.cont1 = 0
-			time.sleep(5)
+			time.sleep(0.5)
 
 			print('CONTADOR.......', self.cont)
 
@@ -664,7 +692,7 @@ class Avatar_Speech(object):
 						#Questions regarding WHO
 
 						
-						if self.cont == 3:
+						if self.cont == 2:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
 
@@ -673,40 +701,40 @@ class Avatar_Speech(object):
 
 							if self.who['persons'] ==1:
 								s = self.dialogs.get_connectiveWho1()
-								self.q.put(s)
+								self.Talk(s)
 							else:
 								s = self.dialogs.get_connectiveWhos1()
-								self.q.put(s)
+								self.Talk(s)
 								print('plural1')
 
 
-						elif self.cont == 5:
+						elif self.cont == 3:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3")
 
 							if self.who['persons']==1:
 								s = self.dialogs.get_connectiveWho2()
-								self.q.put(s)
+								self.Talk(s)
 							else:
 								s = self.dialogs.get_connectiveWhos2()
-								self.q.put(s)
+								self.Talk(s)
 
 						
 
-						elif self.cont == 7:
+						elif self.cont == 4:
 
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4")
 
 							if self.who['persons']==1:
 								s = self.dialogs.get_connectiveWho3()
-								self.q.put(s)
+								self.Talk(s)
 								s = "Oh! It seem very interesting."
 								self.whoVal.remove('persons')
 								self.cont = 0
 							else:
 								s = self.dialogs.get_connectiveWhos3()
-								self.q.put(s)
+								self.Talk(s)
 								self.whoVal.remove('persons')
 								self.cont = 0 
 	
@@ -768,14 +796,14 @@ class Avatar_Speech(object):
 
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1")
 					s = self.dialogs.get_When1()
-					self.q.put(s)
+					self.Talk(s)
 					#time.sleep(4)
 
 				if self.cont == 2:
 
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q2")
 					s = self.dialogs.get_When2()
-					self.q.put(s)
+					self.Talk(s)
 					self.flag_topic = "Where"
 					self.cont = 0
 					#time.sleep(4)				
@@ -804,9 +832,9 @@ class Avatar_Speech(object):
 
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n")
 
-						s = 'Oh, I cannot identify a specific place. Where this photo was taken?'
+						s = 'Oh, I cannot tell where the photo was taken. Where was it?'
 						print(s)
-						self.q.put(s)
+						self.Talk(s)
 						#time.sleep(4)
 						
 
@@ -814,7 +842,7 @@ class Avatar_Speech(object):
 
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
 						s = self.dialogs.get_whereq()
-						self.q.put(s)
+						self.Talk(s)
 						time.sleep(0.5)
 
 
@@ -823,7 +851,7 @@ class Avatar_Speech(object):
 						
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
 						s = self.dialogs.get_where1q()
-						self.q.put(s)
+						self.Talk(s)
 						time.sleep(0.5)
 						self.flag_topic = "Other"
 						self.cont = 0
@@ -843,7 +871,7 @@ class Avatar_Speech(object):
 					if self.cont == 1:
 						s = 'One last question. Can you talk about other things about this photo?'
 						print(s)
-						self.q.put(s)
+						self.Talk(s)
 						#time.sleep(4)
 						
 
@@ -851,7 +879,7 @@ class Avatar_Speech(object):
 
 						s = 'Ahhh that is interesting.'
 						print(s)
-						self.q.put(s)
+						self.Talk(s)
 						self.flag_topic = "End"
 
 
@@ -862,7 +890,7 @@ class Avatar_Speech(object):
 
 			if self.cont1 == 30:
 
-				self.q.put("Sorry, I couldn't  hear that")
+				self.Talk("Sorry, I couldn't  hear that")
 				self.cont1 = 0
 
 
@@ -870,9 +898,9 @@ class Avatar_Speech(object):
 
 	def end_phrase(self):
 
-		self.q.put("Was nice to talk with you. Hope we can talk togheter soon")
+		self.Talk("Was nice to talk with you. Hope we can talk togheter soon")
 		time.sleep(1)
-		self.q.put("See ya")
+		self.Talk("See ya")
 
 
 
@@ -894,11 +922,15 @@ class Avatar_Speech(object):
 				self.change = 1
 
 				#print('False to True')
+				self.voice_act = self.voice_act + 1
+				print('Voice active:', self.voice_act)
 
 			else:
 
 				self.change = 2
 				#print('True to False')
+				self.voice_deac = self.voice_deac + 1
+				print('Voice deactive:', self.voice_deac)
 
 		else:
 
@@ -910,34 +942,12 @@ class Avatar_Speech(object):
 
 		#print('change from testing', self.change)
 
-		return self.change
-
-
-	def validation_dataWho(self):
-
-		# Validation of who
-
-		if(self.who['persons'] > 0 and self.person_topic == 0):
-
-			self.set_personrecognized(self.who['persons'])
+		return [self.change, self.voice_act, self.voice_deac]
 
 
 
-			self.Whotopic = 1
 
-
-		elif self.who['dog'] > 0 :
-
-
-			self.Whotopic = 2
-
-
-
-		elif self.who['cat'] > 0:
-
-			self.Whotopic = 3
-
-
+'''
 
 class TTSThread(threading.Thread):
 
@@ -979,6 +989,7 @@ class TTSThread(threading.Thread):
 
 		tts_engine.endLoop()
 
+'''
 
 
 
@@ -989,7 +1000,6 @@ class TTSThread(threading.Thread):
 
 
 '''
-
 def main():
 
     Speech = Avatar_Speech()
@@ -999,11 +1009,19 @@ def main():
     Speech.image_validation(False)
     Speech.set_personrecognized(2)
 
+    time.sleep(2)
+
+    for x in range(100):
+
+    	voice = Speech
+
+
+
 
 A = main()
 
-'''
 
+'''
 
 
 

@@ -1,8 +1,9 @@
+#!/usr/bin/python2.7
 import os, sys
 ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Lower_layer'))
 sys.path.append(ab_path)
 
-from Speech_Understanding import Speech_Detection as speech
+from Speech_Understanding import Speech as speech
 import Workspace_Understanding.WorkspaceManager as workspace
 import threading
 import time
@@ -10,11 +11,10 @@ import random
 
 class LowerLevel(object):
 
-	def __init__(self, path = None, Datahandler = None):
+	def __init__(self, Datahandler = None):
 
 
 		# Modules setting configuration
-		self.settings_work = path 
 
 		self.DB = Datahandler
 
@@ -95,7 +95,7 @@ class LowerLevel(object):
 		pass
 
 
-	def get_data(self):
+	def get_data(self, n):
 
 
 		data = self.workspace.data_extraction()
@@ -116,13 +116,37 @@ class LowerLevel(object):
 		stop_sign = data['Objects'].count('stop sign')
 
 
+		persons1 = data['Objects1'].count('person')
+		dog1 = data['Objects1'].count('dog')
+		cat1 = data['Objects1'].count('cat')
+		bird1 = data['Objects1'].count('bird')
+		wine_glass1 = data['Objects1'].count('wine glass')
+		cup1 = data['Objects1'].count('cup')
+		car1 = data['Objects1'].count('car')
+		bus1 = data['Objects1'].count('bus')
+		book1 = data['Objects1'].count('book')
+		fork1 = data['Objects1'].count('fork')
+		spoon1 = data['Objects1'].count('spoon')
+		knife1 = data['Objects1'].count('knife')
+		traffic_light1 = data['Objects1'].count('traffic light')
+		stop_sign1 = data['Objects1'].count('stop sign')
+
+
+
 		
 
 		count_data =  {'person': persons,'cat': cat ,'dog': dog,'bird': bird, 'wine glass':wine_glass, 'cup': cup, "car": car, "bus": bus, "book": book,
 						'fork': fork, 'spoon': spoon, 'knife': knife, 'traffic light': traffic_light, 'stop sign': stop_sign}
 
 
-		return(count_data)
+		count_data1 = {'person': persons1,'cat': cat1 ,'dog': dog1,'bird': bird1, 'wine glass':wine_glass1, 'cup': cup1, "car": car1, "bus": bus1, "book": book1,
+						'fork': fork1, 'spoon': spoon1, 'knife': knife1, 'traffic light': traffic_light, 'stop sign': stop_sign}
+
+		if n == 1:
+			return(count_data)
+
+		elif n == 2:
+			return(count_data1)
 
 
 '''

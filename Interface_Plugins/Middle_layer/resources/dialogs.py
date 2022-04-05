@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 import time
 import random
 
@@ -12,21 +13,26 @@ class Dialogs(object):
     def load_dialogs(self):
         
         print('here')
-        self.welcome_sentence = "Hello, my name is Ava"
-        self.welcome_sentence2 = "It's great to know you. Today we will talk about you and some of your photos"
+        self.welcome_sentence = "^start(animations/Stand/Gestures/Hey_6) Hello ^wait(animations/Stand/Gestures/Hey_6), ^start(animations/Stand/Gestures/Me_1)my name is Ava!^wait(animations/Stand/Gestures/Me_1)"
+        self.welcome_sentence2 = "^start(animations/Stand/Gestures/Exited_1)It's great to know you ^wait(animations/Stand/Gestures/Exited_1). Today we will talk about you and some of your photos ^start(animations/Stand/Gestures/Enthusiastic_4)"
         self.welcome_sentence3 = "Please push the upload images button, To see what we've got"
 
 
-        self.image_validationbad = "It seems that your photos are not complete"  
-        self.image_validationbad1 = "You want to continue?, or, You want to upload a new image?"
+        self.image_validationbad = "It seems that your photos are not ^start(animations/Stand/Gestures/No_1) complete ^wait(animations/Stand/Gestures/No_1)"  
+        self.image_validationbad1 = "^start(animations/Stand/Gestures/Explain_1) Would you like to continue?, or, Do you want to upload a new image? ^wait(animations/Stand/Gestures/Explain_1)"
 
 
-        self.image_validationgreat = "Cool !, your photos are great!"
+        self.image_validationgreat = "^start(animations/Stand/Gestures/Happy_4) Cool !, your photos are great! ^wait(animations/Stand/Gestures/Happy_4)"
         self.image_validationgreat1 = "Let's continue with the reminiscence"
-        self.choose_photo = "Please choose one"
+        self.choose_photo = "^start(animations/Stand/Gestures/Choice_1)Please choose one ^wait(animations/Stand/Gestures/Choice_1)"
 
         self.commenting_photo = " you have chose a great image!"
-        self.analizing_photo = "Let me analize the photo, then I will talk with you about it"
+        self.analizing_photo = "^start(animations/Stand/Gestures/Thinking_1)Let me analize the photo, then I will talk with you about it ^wait(animations/Stand/Gestures/Thinking_1)"
+
+
+        
+        self.conv_beginning = "^start(animations/Stand/Gestures/Explain_10)Please say yes if you want to continue, if you don't please say no ^wait(animations/Stand/Gestures/Explain_10)"
+        self.yes_beginning = ["^start(animations/Stand/Gestures/Hysterical_1)That's great, then we can start!^wait(animations/Stand/Gestures/Hysterical_1)", "Cool!, let's talk then", "^start(animations/Stand/Gestures/Hysterical_1)Im happy to hear that you want to talk with me!^wait(animations/Stand/Gestures/Hysterical_1)"] 
 
         self.oneperson = ["I see XX  person in the photo", "There is one person in the photo", "I can recognize XX person in the photo", "My eyes see XX person in the photo"]
         self.persons = ["I see XX people in the photo", "There are XX people in the photo", "I can recognize XX people in the photo", "My eyes see XX people in the photo"]
@@ -62,32 +68,32 @@ class Dialogs(object):
         self.catQ1 = "Is the cat yours?"
         self.catsQ1 = "Are those cats yours?"
 
-        self.petQ2 = "What are your pets' names?"
-        self.dogQ2 = "What is the name of your dog?"
-        self.dogsQ2 = "What are the names of your dogs?"
-        self.catQ2 = "What is the name of your cat ?"
-        self.catsQ2 = "What are the names of your cats?"
+        self.petQ2 = "Do you know the names of the animals in the photo?"
+        self.dogQ2 = "What is the name of the dog I recognize in the photo?"
+        self.dogsQ2 = "What are the names of the dogs in the photo?"
+        self.catQ2 = "What is the name of the cat ?"
+        self.catsQ2 = "What are the names of the cats?"
 
 
-        self.petQ3 = "How long have you had your pets?"
-        self.dogQ3 = "How long have you had your dog?"
-        self.dogsQ3 = "How long have you had your dogs?"
-        self.catQ3 = "How long have you had your cat?"
-        self.catsQ3 = "How long have you had your cats?"
+        self.petQ3 = "Are the animals in the photo your favorite?"
+        self.dogQ3 = "What is the breed of the dog in the photo?" 
+        self.dogsQ3 = "What is the breed of the dogs in the photo?"
+        self.catQ3 = "What is the breed of the cat in the photo?"
+        self.catsQ3 = "What is the breed of the cats in the photo?"
 
 
         self.petQ4 = "What is the breed of your pets?"
-        self.dogQ4 = "What is the breed of your dog?"
-        self.dogsQ4 = "What is the breed of your dogs?"
-        self.catQ4 = "What is the breed of your cat?"
-        self.catsQ4 = "What is the breed of your cats?"
+        self.dogQ4 = "Is the dog your favorite animal?"
+        self.dogsQ4 = "Are the dogs your favorite animal?"
+        self.catQ4 = "Is the cat your favorite animal?"
+        self.catsQ4 = "Are the cats your favorite animals?"
 
 
         self.whenq1 = ["Please tell me when this photo was taken?", "This photo seems a little old. When it was taken?", "Did you remember when this photo was taken? Please tell me!"]
 
         self.whenq2 = ["Did you enjoy the time when this photo was taken?", "Was a good time when this photo was taken?"]
 
-        self.noanswer = ["That's a shame. hope you have a good day", "Maybe next time we willwork together", " No problem. see you next time", "That's a shame. See you around!"]
+        self.noanswer = ["That's a shame. Hope you have a good day, see ya!", "Maybe next time we will work together. Bye!", " No problem. See you next time, bye!", "That's a shame. See you around!"]
 
 
         self.whereq1 = "It looks like  you were in a food place, I can see some cups and cutlery. Where you were when the photo was taken?"
@@ -96,11 +102,27 @@ class Dialogs(object):
         self.where1 = ["What's the think you most appreciate about this place?", "Whats your favorite thing about this place?", "Would you plan to visit this place in the future?"]
 
 
+        self.yes_catch = ["Ohh, I think you say yes but I couldn't hear well. Can you repeat?", "Did you say yes?. My ears are wrong today. Can you repeat?"]
+        self.no_catch = ["Ohh, I think you say no but I couldn't hear well. Can you repeat?", "Did you say no?. My ears are wrong today. Can you repeat?"]
+        
+        self.sorry = ""
 
 
+    def yes_bsentence(self):
+
+        i = random.randint(0, len(self.yes_beginning) - 1)
+        return self.yes_beginning[i]
 
 
+    def yes_nocatch(self):
 
+        i = random.randint(0, len(self.yes_catch) - 1)
+        return self.yes_catch[i]
+
+    def no_nocatch(self):
+
+        i = random.randint(0, len(self.no_catch) - 1)
+        return self.no_catch[i]
 
     def get_person_sentence(self):
 

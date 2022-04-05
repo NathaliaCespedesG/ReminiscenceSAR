@@ -1,13 +1,14 @@
+
+#!/usr/bin/python2.7
+import threading
 import os, sys
 ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Interface_Plugins'))
 sys.path.append(ab_path)
-
-
-
 from PyQt4 import QtCore, QtGui
 import time
-import threading
-import Middle_layer.SpeechAvatar as Avatar
+
+#import Middle_layer.SpeechRobot as Robot
+import Middle_layer.robotController as Robot
 import Lower_layer.Lowerlevel_Main as Lowerlevel
 import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 import sys
@@ -24,7 +25,7 @@ class TherapyPlugin(object):
 		self.settings = settings
 		#print('Setting from TherapyPlugin', self.settings)
 
-		self.useAvatar = True
+		self.useRobot = True
 
 		#Load database manager
 
@@ -32,16 +33,21 @@ class TherapyPlugin(object):
 
 		self.date = datetime.datetime.now()
 
+		self.validation = None
+
+		self.onSart_count = 0
+
 		
 
 		#Loading libraries for TherapyPlugin
 
 		self.Lowerlevel = Lowerlevel.LowerLevel(Datahandler = self.DB)
-		self.Avatar = Avatar.Avatar_Speech(Datahandler = self.DB)
+		self.Robot = Robot.Robot(db = self.DB)
+		#self.Avatar = Avatar.Avatar_Speech(Datahandler = self.DB)
 		self.ReminiscenceWindow = ReminiscenceWindow.ReminiscenceWindow(settings = self.settings)
 
 		self.launch_sensors()
-		self.launch_avatar()
+		self.launch_robot()
 	
 	def launch_view(self):
 
@@ -56,19 +62,21 @@ class TherapyPlugin(object):
 		#self.image_validation()
 
 		#  Avatar Interaction signals
-		self.ReminiscenceWindow.playButton(self.Avatar.welcome_sentence)
+		self.ReminiscenceWindow.playButton(self.Robot.welcome_sentence)
 		self.ReminiscenceWindow.playButton(self.SensorCaptureThread.start)
-		self.ReminiscenceWindow.playButton(self.AvatarGraphicsThread.start)
+		#self.ReminiscenceWindow.playButton(self.AvatarGraphicsThread.start)
 		self.ReminiscenceWindow.closeButton(self.onShutdown)
 
 
 		# Internal Signals
 		self.ReminiscenceWindow.onUpload(self.image_validation)
+		self.ReminiscenceWindow.onPhoto.connect(self.comment_photos)
+
 		#self.ReminiscenceWindow.onUpload(self.onStart)
 		
 		# Lower level signals
-		self.ReminiscenceWindow.set_pathPhoto1(self.onStart)
-		self.ReminiscenceWindow.set_pathPhoto2(self.onStart)
+		self.ReminiscenceWindow.set_pathPhoto1(lambda:self.onStart(n=1))
+		self.ReminiscenceWindow.set_pathPhoto2(lambda:self.onStart(n=2))
 		#self.ReminiscenceWindow.set_pathPhoto3(self.onStart)
 		#self.ReminiscenceWindow.set_pathPhoto4(self.onStart)
 
@@ -88,7 +96,7 @@ class TherapyPlugin(object):
 		photo1 = self.photos[0]
 		photo2 = self.photos[1]
 		#Setting paths in the Lower level 
-		self.Lowerlevel.set_path(self.settings +'/' + photo1)
+		self.Lowerlevel.set_path({'path1': self.settings +'/' + photo1, 'path2': self.settings +'/' + photo2})
 		self.Lowerlevel.set_modules(work = True, sound = True)
 		self.Lowerlevel.launch_wsmodule()
 
@@ -96,51 +104,75 @@ class TherapyPlugin(object):
 
 		self.SensorCaptureThread = SensorCaptureThread(interface = self)
 
-	def launch_avatar(self):
+	def launch_robot(self):
 
-		self.AvatarCaptureThread = AvatarCaptureThread(interface = self)
-		self.AvatarGraphicsThread = AvatarGraphicsThread(f = self.update_AvatarGraphics, sample = 0.1)
+		#Launching the robot thread
+		self.RobotCaptureThread = RobotCaptureThread(interface = self)
 
 	def image_validation(self):
+		print('image_validation')
 
-		m = self.ReminiscenceWindow.get_imageNull()
+		self.validation = self.ReminiscenceWindow.validate_images()
+
+		print('Validatiooon', self.validation)
+
+		if self.validation == False:
+			self.comment_photos()
+			#self.ReminiscenceWindow.onPhoto.emit()
+		#time.sleep(10)
+
+
+
+
+
+	def comment_photos(self):
+
+		print('Robot commenting')
+
+		self.Robot.image_validation(self.validation)
+
+
+		
+		'''
 		if m == True:
-			self.Avatar.image_validation(m)
+			time.sleep(4)
+			self.Robot.image_validation(m)
 		else:
-			self.Avatar.image_validation(m)
+			time.sleep(4)
+			self.Robot.image_validation(m)
+		'''
 
-	def onStart(self):
 
+
+	def onStart(self, n):
+
+		img_id = n
+		self.onSart_count += 1
 		# Setting lower layer modules:
 
-		#self.ReminiscenceWindow.set_recognImage()
 
-		#self.AvatarGraphicsThread.start()
+		self.ReminiscenceWindow.set_recognImage(img_id)
 
-		self.Avatar.commenting_photos()
+		self.Robot.commenting_photos(self.onSart_count)
+		
+		m = self.Lowerlevel.get_data(img_id)
 
-
-
-
-
-		self.ReminiscenceWindow.set_recognImage()
-
-		m = self.Lowerlevel.get_data()
+		print('M from onStart', m)
 
 		self.DB.General.SM.loadSensor(recog_obj = m)
 
 
 		time.sleep(5)
 
-		self.Avatar.conversation_topics(m)
-		self.Avatar.coversation_beginning()
+		self.Robot.conversation_topics(m)
+		self.Robot.coversation_beginning()
 
 
 
-		self.AvatarCaptureThread.start()
+		self.RobotCaptureThread.start()
 
 
-	def update_AvatarGraphics(self):
+	def update_RobotGraphics(self):
 
 		#data = self.Lowerlevel.update_sounddata()
 
@@ -148,18 +180,37 @@ class TherapyPlugin(object):
 
 
 
+	def second_Photo(self):
+
+		self.ReminiscenceWindow.onPhoto2.emit()
+		self.RobotCaptureThread.c = 0
+		self.RobotCaptureThread.n = None
+		self.RobotCaptureThread.shutdown()
+		self.Robot.set_topicStatus()
+	
+
+
+
 	def onShutdown(self):
 		print('Here shutdown')
 
-		path = 'C:/Users/natha/Desktop/Reminiscence_Interface/db/general'+'/'+ self.user['id'] + '/'+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)
-		
-		self.Lowerlevel.write_audio(path)
 
-		time.sleep(10)
-		
-		self.AvatarCaptureThread.shutdown()
+
+		time.sleep(5)
+		self.Robot.r.pause()
+		self.RobotCaptureThread.shutdown()
 		self.SensorCaptureThread.shutdown()
-		self.AvatarGraphicsThread.shutdown()
+
+		path = 'C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/db/general'+'/'+ self.user['id'] + '/'+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)
+		self.Lowerlevel.write_audio(path)
+		self.Lowerlevel.close_sensors()
+
+		self.ReminiscenceWindow.close()
+
+		time.sleep(1)
+
+		sys.exit()
+		
 
 
 		
@@ -177,75 +228,112 @@ class TherapyPlugin(object):
 
 
 
-class AvatarCaptureThread(QtCore.QThread):
+class RobotCaptureThread(QtCore.QThread):
     def __init__(self, parent = None, sample = 0.5, interface = None):
-        super(AvatarCaptureThread,self).__init__()
+        super(RobotCaptureThread,self).__init__()
         self.Ts = sample
         self.ON = True
         self.interface = interface
         self.c = 0 
+        self.n = None
+        self.num_threads = 0
+
          
     def run(self):
-        #self.interface.robotController.posture.goToPosture("StandZero", 1.0)
+        #self.cd dinterface.robotController.posture.goToPosture("StandZero", 1.0)
+        self.ON = True
+        d = 0
+        print('c variable', self.c)
+        print('n variable', self.n)
+        print('ON variable', self.ON)
+        self.num_threads = self.num_threads + 1
+        print('Threads', self.num_threads)
+
         while self.ON:
+
 
 
         	if self.c == 0:
 
 
-        		n = self.interface.Avatar.sr_beginning()
+        		self.n = self.interface.Robot.sr_beginning()
 
-        		print('word from recognized', n)
+        		print('word from recognized', self.n)
 
 
-        		if n == "yes":
+        		if self.n == "yes":
 
         			print('Here, when says yes')
+        			self.interface.Robot.yes_beginning()
 
         			self.c = 1
 
 
-        		if n =='no':
+        		elif self.n =='no':
         			#print('Here')
 
         			self.c = 2
 
-        		elif(n != "yes" and n != "no"):
+        		elif(self.n == "yes_dcatch"):
+
+        				self.interface.Robot.bad_catching('yes')
+        				self.interface.Robot.set_wordRecognized()
+        				self.c = 0
+        				
+
+        		elif(self.n == "no_dcatch"):
+
+        				self.interface.Robot.bad_catching('yes')
+        				self.interface.Robot.set_wordRecognized()
+        				self.c = 0
+
+
+
+        		elif(self.n != "yes" and self.n != "no"):
 
         			print('Different word')
-        			self.interface.Avatar.no_understanding()
-        			self.interface.Avatar.word_recognized = None
+        			self.interface.Robot.no_understanding()
+        			self.interface.Robot.set_wordRecognized()
         			self.c = 0
 
 
-        	print(self.c)
 
 
         	if self.c == 1:
 
-        		if (n == 'yes'):
-        			
+        		if (self.n == 'yes'):
+        			#self.interface.Robot.r.pause()
+        			#d = self.interface.Robot.d.update_sound()
         			d = self.interface.Lowerlevel.update_sounddata()
+        			print(d)
         			#loading sound data in the interface
         			self.interface.DB.General.SM.loadSensor(voice = d)
         			#print('data from thread',d)
-        			self.interface.Avatar.set_Dialog(d)
+        			self.interface.Robot.set_Dialog(d)
         			time.sleep(self.Ts)
-        			topic = self.interface.Avatar.topic_Status()
+        			topic = self.interface.Robot.topic_Status()
+        			print('Topic flag', topic)
         			if topic == "End":
-        				time.sleep(5)
-        				self.interface.Avatar.end_phrase()
-        				time.sleep(5)
-        				self.interface.onShutdown()
+
+        				if self.num_threads == 1:
+        					self.n = None
+        					self.c = 0
+        					self.interface.Robot.set_wordRecognized()
+        					self.interface.Robot.second_Photo()
+        					self.interface.second_Photo()
+        				elif self.num_threads ==2:
+        					self.interface.Robot.end_phrase()
+        					time.sleep(5)
+        					self.interface.onShutdown()
 
         	if self. c == 2:
 
-
-        		self.interface.Avatar.no_beginning()
+        		#self.interface.Robot.r.pause()
+        		self.interface.Robot.no_beginning()
 
         		self.ON = False
 
-        		time.sleep(5)
+        		time.sleep(1)
 
         		self.interface.onShutdown()
 
@@ -256,6 +344,7 @@ class AvatarCaptureThread(QtCore.QThread):
             
                 
     def shutdown(self):
+    	print('shutdown')
         self.ON = False
 
 
@@ -267,38 +356,21 @@ class SensorCaptureThread(QtCore.QThread):
         super(SensorCaptureThread,self).__init__()
         self.on = False
         self.interface = interface
+        #self.interface.Robot.d.on_Start()
         
      def run(self):
 
-        self.interface.Lowerlevel.launch_sensors()
+     	#self.interface.Robot.d.launch_thread()
+     	self.interface.Lowerlevel.launch_sensors()
 
      def shutdown(self):
         self.on = False
-        self.interface.Lowerlevel.close_sensors()
+        
+        
 
 
 
 
-class AvatarGraphicsThread(QtCore.QThread):
-
-	def __init__(self, parent = None, f = None, sample = 0.5):
-		super(AvatarGraphicsThread,self).__init__()
-		self.f = f
-		self.Ts = sample
-		self.ON = True
-
-	def run(self):
-
-		if self.f:
-
-			while self.ON:
-
-				self.f()
-				time.sleep(self.Ts)
-
-	def shutdown(self):
-
-		self.ON = False
 
 
 

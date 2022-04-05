@@ -32,12 +32,12 @@ class Sound_Detection(object):
         # Sample format config
         self.FORMAT = pyaudio.paInt16
         # Channels config
-        self.channels = 1
+        self.channels = 2
         # Sampling frequency configuration
         self.freq = 16000
 
         # Chunk duration in ms
-        self.chunk_duration_ms = 30
+        self.chunk_duration_ms = 20
         #chunk to read
         self.chunk_size = int(self.freq * self.chunk_duration_ms/1000)
         #chunk bytes
@@ -72,7 +72,7 @@ class Sound_Detection(object):
     def streaming_object(self):
 
         # Function to set the voice recorder and open the 
-        # input channel
+        # input channelc
 
         self.stream = self.p.open(format=self.FORMAT,
                 channels=self.channels,
@@ -211,10 +211,12 @@ class Sound_Detection(object):
         self.t = threading.Thread(target = self.process)
         self.t.start()
 
+
 '''
+
 def main():
 
-    sound = Sound_Detection()
+    sound = Sound_Detection(Datahandler = None)
     sound.start()
     sound.launch_thread()
     
@@ -234,12 +236,12 @@ def main():
     plt.show
     sound.pause()
     sound.close()
-    sound.write_audio()
+    sound.write_audio(path = 'C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/Speech_Understanding')
 
 
 A = main()
-'''
 
+'''
 
 
 

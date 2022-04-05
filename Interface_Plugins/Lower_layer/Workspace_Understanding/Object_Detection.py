@@ -61,7 +61,6 @@ class Object_Detection(object):
 
         self.go_On = True
 
-
     def shutdown(self):
 
         self.go_On = False

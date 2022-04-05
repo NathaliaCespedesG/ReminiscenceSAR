@@ -1,3 +1,7 @@
+
+import os, sys
+ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Reminiscence_Interface'))
+sys.path.append(ab_path)
 import threading 
 #import GUI elements
 import Interface_Plugins.Upper_layer.MenuWindow as MenuWindow
@@ -23,6 +27,7 @@ class MainController(object):
 
 		#Running file path
 		self.dir = os.getcwd()
+		print(self.dir)
 		# Reminiscence Images Path
 		self.imgDir = self.dir + '/'+'Interface_Plugins' +'/'+ 'Lower_layer' + '/'+'Workspace_Understanding' + '/'+ 'Images'
 		self.database_path = self.dir + '/'+'db'+'/'+'general'

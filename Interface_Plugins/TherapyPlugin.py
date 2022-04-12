@@ -122,25 +122,11 @@ class TherapyPlugin(object):
 		#time.sleep(10)
 
 
-
-
-
 	def comment_photos(self):
 
 		print('Robot commenting')
 
 		self.Robot.image_validation(self.validation)
-
-
-		
-		'''
-		if m == True:
-			time.sleep(4)
-			self.Robot.image_validation(m)
-		else:
-			time.sleep(4)
-			self.Robot.image_validation(m)
-		'''
 
 
 
@@ -157,7 +143,7 @@ class TherapyPlugin(object):
 		
 		m = self.Lowerlevel.get_data(img_id)
 
-		print('M from onStart', m)
+		#print('M from onStart', m)
 
 		self.DB.General.SM.loadSensor(recog_obj = m)
 

@@ -77,20 +77,17 @@ class Object_Detection(object):
 		cv2.imwrite('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/' + 'output' + str(n) + '.jpg', self.image)
 
 
-
 '''
-
 def main():
 
-    Objects = Object_Detection('Images/Photo_1.jpeg')
+    Objects = Object_Detection('Images/Street1.jpg')
     Objects.loading_model()
-    Objects.start()
-    Objects.detection()
-    #m = Objects.getData()
-    #print(m)
+    #Objects.start()
+    Objects.detection(89)
+    m = Objects.getData()
+    print(m)
 
 
 A = main()
-
 
 '''

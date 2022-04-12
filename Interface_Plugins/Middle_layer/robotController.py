@@ -58,6 +58,16 @@ class Robot(object):
 
 		self.flag_0 = False
 
+		self.prob_kitchen = 0
+
+		self.prob_dinner = 0
+
+		self.prob_street = 0
+
+		self.prob_book = 0
+
+		self.prob_indoor = 0
+
 
 
 
@@ -527,54 +537,44 @@ class Robot(object):
 	def conversation_topics(self, m):
 
 		print(m)
-		persons = int(m['person'])
-		dog = int(m['dog'])
-		cat = int(m['cat'])
 
-		self.who = {"persons": persons, "dog": dog, "cat": cat}
+
+		# Who topic 
+		self.who = m['Who']
+		print('Who', self.who)
+		print('Len Who', len(self.who))
 
 		self.whoVal = [word for word, occurrences in self.who.items() if occurrences > 0]
+		print('WhoVal',self.whoVal)
+
+
+
+
+		#Where topic
+
+		self.kitchen = m['Kitchen']
+		self.dinnerPlace = m['Dinner_Place']
+		self.street = m['Street']
+		self.indoorSpace = m['Indoor_space']
+
+		#When topic
+
+		self.birthday = m['Birthday']
+		self.whenVal = [word for word, occurrences in self.birthday.items() if occurrences > 0]
+
+
+		#Other topic
+
+		self.weather = m['Weather']
+		self.sports = m['Sports']
+		self.book = m['Book']
+
+
+		self.otherTopics_weather = [word for word, occurrences in self.weather.items() if occurrences > 0]
+		self.otherTopics_sports = [word for word, occurrences in self.sports.items() if occurrences > 0]
+		self.otherTopics_book = [word for word, occurrences in self.book.items() if occurrences > 0]
 
 		
-		#print(self.whoVal)
-		#print(len(self.whoVal))
-
-
-
-		#Food Places
-		whine_glass = int(m['wine glass'])
-		cup = int(m['cup'])
-		fork = int(m['fork'])
-		spoon = int(m['spoon'])
-		knife = int(m['knife'])
-
-
-		# Transport - Street Places
-		car = int(m['car'])
-		bus = int(m['bus'])
-		traffic_light = int(m['traffic light'])
-		stop_sign = int(m['stop sign'])
-
-
-
-
-		self.where = {"wine_glass": whine_glass, "cup": cup, "fork": fork, "spoon": spoon, "knife": knife, "car": car, "bus": bus, "traffic_light": traffic_light, "stop_sign": stop_sign}
-
-		self.whereVal = [word for word, occurrences in self.where.items() if occurrences > 0]
-
-		print(self.whereVal)
-		#print(len(self.whereVal))
-
-		book = int(m['book'])
-		self.otherTopics = {"book":book}
-
-		self.otherTopics = [word for word, occurrences in self.otherTopics.items() if occurrences > 0]
-
-
-
-		#self.validation_dataWho()
-
-
 	def no_understanding(self):
 
 		self.animated.say('Im sorry I dont understand, can you say it in a different way?')
@@ -584,7 +584,6 @@ class Robot(object):
 	def sr_beginning(self):
 
 		#print('Speech Recognizer beginning')
-		
 
 		#Speech recognition implementation
 		while(self.word_recognized == None):
@@ -612,9 +611,6 @@ class Robot(object):
 
 		self.word_recognized = None
 		self.r.setData()
-
-
-
 
 
 
@@ -683,17 +679,20 @@ class Robot(object):
 
 				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="[Placerecog-q4")
 
-				if ("wine_glass" in self.whereVal) and ("cup" in self.whereVal) and ("fork" in self.whereVal) and ("spoon" in self.whereVal):
+
+
+				if ("wine_glass" in self.whereVal) and ("cup" in self.whereVal) and ("fork" in self.whereVal) and ("spoon" in self.whereVal) and ("dining_table" in self.whereVal):
 
 					s = self.dialogs.get_whereq1()
 					self.animated.say(s)
 					time.sleep(1)
 
-				if ("wine_glass" in self.whereVal) or ("cup" in self.whereVal) or ("fork" in self.whereVal) or ("spoon" in self.whereVal):
+				if ("wine_glass" in self.whereVal) or ("cup" in self.whereVal) or ("fork" in self.whereVal) or ("spoon" in self.whereVal) or ("dining_table" in self.whereVal):
 
 					s = self.dialogs.get_whereq11()
 					self.animated.say(s)
 					time.sleep(1)
+
 
 			else:
 

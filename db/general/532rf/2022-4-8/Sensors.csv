@@ -1,0 +1,2 @@
+Sound_Tag;Objects_Recognized;Timestamp
+None;{'Weather': {'umbrella': 0}, 'Street': {'street_sign': 0, 'stop_sign': 0, 'car': 0, 'traffic_light': 0, 'motorcycle': 0, 'bus': 0}, 'Dinner_Place': {'dining_table': 0}, 'Indoor_space': {'tv': 0, 'remote': 0, 'door': 0, 'bed': 0}, 'Book': {'book': 0}, 'Birthday': {'cake': 0}, 'Who': {'person': 1, 'bird': 0, 'dog': 0, 'cat': 0}, 'Sports': {'baseball_bat': 0, 'snowboard': 0, 'tennis': 0, 'skateboard': 0}, 'Kitchen': {'wine_glass': 0, 'fork': 0, 'plate': 0, 'cup': 0, 'spoon': 0, 'oven': 0, 'knife': 0}};2022-04-08 13:52:09.849000

@@ -8,6 +8,7 @@ import threading
 import resources.P_SpeechRecog as p_sr
 import resources.P_SoundDetect as p_sd
 import logging
+import operator
 
 class Robot(object):
 
@@ -67,6 +68,8 @@ class Robot(object):
 		self.prob_book = 0
 
 		self.prob_indoor = 0
+
+		self.first = 0
 
 
 
@@ -138,9 +141,14 @@ class Robot(object):
 		#Loading Pepper SpeechRecognizer
 		self.r = p_sr.SpeechRecognizer()
 		self.r.start()
-		self.r.launch_thread()
+		#self.r.launch_thread()
 		# Loading Pepper SoundDetector
 		self.d = p_sd.Sound_Detector()
+
+
+	def launch_RobotSR(self):
+
+		self.r.launch_thread()
 
 	def getBehaviors(self):
 
@@ -429,55 +437,6 @@ class Robot(object):
 		
 
 
-
-	def questions_where(self, num_wineglass, num_cup, num_fork, num_spoon, num_car, num_bus, num_trlig, num_stopsig, cont):
-
-		print('where_function')
-
-
-		if num_wineglass>0 and num_cup >0 and num_fork>0 and num_spoon>0:
-
-			if cont == 1:
-				s = self.dialogs.whereq1
-				self.animated.say(s)
-				time.sleep(2)
-				self.whereVal.remove('wine_glass')
-				self.whereVal.remove('cup')
-				self.whereVal.remove('fork')
-				self.whereVal.remove('spoon')
-				self.whereVal.remove('knife')
-
-
-		elif num_wineglass>0 or num_cup >0 or num_fork>0 or num_spoon>0:
-
-			print('num_cup', num_cup)
-
-			#print('This option')
-
-			if cont == 1:
-				#print('This option 1')
-				s = self.dialogs.whereq11
-				print(s)
-				self.animated.say(s)
-				time.sleep(2)
-				if num_wineglass > 0:
-					self.whereVal.remove('wine_glass')
-				if num_cup > 0:
-					self.whereVal.remove('cup')
-				if num_fork > 0:
-					self.whereVal.remove('fork')
-				if num_spoon > 0:
-					self.whereVal.remove('spoon')
-
-
-
-		elif num_car>0 and num_bus>0 and num_trlig>0 and num_stopsig>0:
-			# Is there a  street or a crowded place
-
-			if cont == 1:
-				pass
-
-
 	def set_personrecognized(self, num):
 
 		if num == 1:
@@ -536,19 +495,15 @@ class Robot(object):
 	
 	def conversation_topics(self, m):
 
-		print(m)
-
-
+		#print(m)
 		# Who topic 
 		self.who = m['Who']
-		print('Who', self.who)
-		print('Len Who', len(self.who))
+
+		#print('Who', self.who)
+		#print('Len Who', len(self.who))
 
 		self.whoVal = [word for word, occurrences in self.who.items() if occurrences > 0]
 		print('WhoVal',self.whoVal)
-
-
-
 
 		#Where topic
 
@@ -556,15 +511,21 @@ class Robot(object):
 		self.dinnerPlace = m['Dinner_Place']
 		self.street = m['Street']
 		self.indoorSpace = m['Indoor_space']
+		self.where = {'Kitchen': self.kitchen, 'Dinner_Place': self.dinnerPlace, 'Street': self.street, 'Indoor_Space': self.indoorSpace}
+		self.whereVal = [word for word, occurrences in self.where.items() if occurrences > 0]
+		#calculating the maximun value in the dictionary
+		self.whereMax = max(self.where.iteritems(), key = operator.itemgetter(1))[0]
+		
+		#print(self.where)
+		#print(self.whereVal)
+
 
 		#When topic
-
 		self.birthday = m['Birthday']
 		self.whenVal = [word for word, occurrences in self.birthday.items() if occurrences > 0]
 
 
 		#Other topic
-
 		self.weather = m['Weather']
 		self.sports = m['Sports']
 		self.book = m['Book']
@@ -578,7 +539,6 @@ class Robot(object):
 	def no_understanding(self):
 
 		self.animated.say('Im sorry I dont understand, can you say it in a different way?')
-
 
 
 	def sr_beginning(self):
@@ -640,6 +600,7 @@ class Robot(object):
 
 
 
+
 	def set_Dialog(self, data):
 
 		#print('-----------Not Talkiiiiiiing--------')
@@ -675,26 +636,55 @@ class Robot(object):
 					self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 					time.sleep(1)
 
-			elif (len(self.whereVal)>0):
+			elif (len(self.whereVal)>0 and self.flag_topic == 'Where'):
 
-				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="[Placerecog-q4")
+				print( 'Aqui en la primera vez')
 
+				self.first = True
 
+				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Placerecog-q4")
 
-				if ("wine_glass" in self.whereVal) and ("cup" in self.whereVal) and ("fork" in self.whereVal) and ("spoon" in self.whereVal) and ("dining_table" in self.whereVal):
+				if (self.whereMax == "Kitchen"):
 
-					s = self.dialogs.get_whereq1()
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Kitchen")
+
+					s = self.dialogs.kitchenq1
 					self.animated.say(s)
 					time.sleep(1)
 
-				if ("wine_glass" in self.whereVal) or ("cup" in self.whereVal) or ("fork" in self.whereVal) or ("spoon" in self.whereVal) or ("dining_table" in self.whereVal):
+				elif (self.whereMax == "Dinner_Place"):
 
-					s = self.dialogs.get_whereq11()
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Dinner_Place")
+
+					s = self.dialogs.dinner_placeq1
+					self.animated.say(s)
+					time.sleep(1)
+
+				elif (self.whereMax == "Street"):
+
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Street")
+					s = self.dialogs.streetq1
 					self.animated.say(s)
 					time.sleep(1)
 
 
-			else:
+				elif (self.whereMax == "Indoor_Space"):
+
+
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Indoor_Space")
+					s = self.dialogs.indoorq1
+					self.animated.say(s)
+					time.sleep(1)
+
+				else:
+
+					s = self.dialogs.whereNo
+					self.animated.say(s)
+					time.sleep(1)
+
+			elif(self.flag_topic == 'When'):
 
 				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When")
 				s = self.dialogs.get_When1()
@@ -718,10 +708,11 @@ class Robot(object):
 
 			if self.flag_topic == "Who":
 
+
+
 				if (len(self.whoVal)>0):
 
 					if ("persons" in self.whoVal):
-
 
 
 						#Questions regarding WHO
@@ -730,8 +721,6 @@ class Robot(object):
 						if self.cont == 3:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
-
-							
 
 
 							if self.who['persons'] ==1:
@@ -834,6 +823,8 @@ class Robot(object):
 
 							self.flag_topic = 'When'
 
+							#self.y = 0
+
 
 
 				else:
@@ -842,18 +833,26 @@ class Robot(object):
 
 					self.flag_topic = "When"
 					#self.cont = 1
-
+					#self.y = 0
 				
 			if self.flag_topic == "When":
 
 				if self.cont == 1:
-
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1")
-					s = self.dialogs.get_When1()
-					self.animated.say(s)
-					#time.sleep(4)
 
-					time.sleep(2)
+
+					if (len(self.whenVal)>0):
+						s = self.dialogs.get_Birthday()
+						self.animated.say()
+						self.whenVal.remove('Birthday')
+						time.sleep(2)
+						
+
+					else:
+						s = self.dialogs.get_When1()
+						self.animated.say(s)
+						#time.sleep(4)
+						time.sleep(2)
 
 				if self.cont == 2:
 
@@ -861,7 +860,8 @@ class Robot(object):
 					s = self.dialogs.get_When2()
 					self.animated.say(s)
 					self.flag_topic = "Where"
-					self.cont = 1
+					self.cont = 0
+					self.y = 0
 					#time.sleep(4)
 					time.sleep(2)				
 					
@@ -876,17 +876,26 @@ class Robot(object):
 
 					if self.cont == 2:
 
-						print('HERE Where 1')
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
+						s = self.dialogs.get_whereq()
+						self.animated.say(s)
+						time.sleep(2)
 
-						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="where-q1")
-						#Put the dialogs here for the first question depends on the data acquire from the images
-						self.questions_where(self.where['wine_glass'], self.where['cup'],self.where['fork'], self.where['spoon'], self.where['car'], self.where['bus'], self.where['traffic_light'], self.where['stop_sign'], self.cont)
-						print(self.whereVal)
-						print(len(self.whereVal))
-						time.sleep(3)
-				else:	
+
 
 					if self.cont == 3:
+						
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
+						s = self.dialogs.get_where1q()
+						self.animated.say(s)
+						time.sleep(2)
+						self.flag_topic = "Other"
+						self.cont = 1
+
+
+				else:	
+
+					if self.cont == 2:
 
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n")
 
@@ -897,7 +906,7 @@ class Robot(object):
 						time.sleep(2)
 						
 
-					if self.cont == 5:
+					if self.cont == 3:
 
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
 						s = self.dialogs.get_whereq()
@@ -906,7 +915,7 @@ class Robot(object):
 
 
 
-					if self.cont == 6:
+					if self.cont == 4:
 						
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
 						s = self.dialogs.get_where1q()
@@ -920,8 +929,50 @@ class Robot(object):
 
 			if self.flag_topic == "Other":
 
+				if (len(self.otherTopics_book)>0):
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other-book-q1")
 
 					if self.cont == 2:
+
+						print('Book 1 Aqui')
+
+						s = self.dialogs.otherBook
+						self.animated.say(s)
+						time.sleep(2)
+
+					if self.cont == 4:
+
+						print('Book 2 Aqui')
+
+						s = self.dialogs.otherBook1
+						self.animated.say(s)
+						time.sleep(2)
+						self.otherTopics_book.remove('book')
+						self.cont = 0
+
+				if (len(self.otherTopics_sports)>0):
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other-sport-q1")
+
+					if self.cont == 2:
+
+						s = self.dialogs.otherSport
+						self.animated.say(s)
+						time.sleep(2)
+
+					if self.cont == 4:
+
+						s = self.dialogs.otherSport1
+						self.animated.say(s)
+						time.sleep(2)
+						self.otherTopics_book.remove('sports')
+						self.cont = 0
+
+				elif(len(self.otherTopics_book) == len(self.otherTopics_sports) == 0):
+
+					if self.cont == 2:
+
 						s = 'One last question. Can you talk about other things about this photo?'
 						print(s)
 						self.animated.say(s)
@@ -930,12 +981,15 @@ class Robot(object):
 
 					if self.cont == 4:
 
-						s = 'Ahhh I see.'
+						s = "Ahhh I see. That's fine !"
 						print(s)
 						self.animated.say(s)
-						time.sleep(5)
+						time.sleep(2)
 						self.flag_topic = "End"
 						self.cont = 1
+
+
+
 
 
 		if self.flag == 0 and data == False:
@@ -1014,25 +1068,9 @@ class Robot(object):
 
 
 		self.last_value = new_value
-
-
 		#print('change from testing', self.change)
 
 		return [self.change, self.voice_act, self.voice_deac]
-
-
-
-
-
-
-
-
-
-
-		
-
-
-
 
     	
 '''

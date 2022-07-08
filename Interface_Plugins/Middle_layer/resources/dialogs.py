@@ -36,7 +36,9 @@ class Dialogs(object):
 
         self.oneperson = ["I see XX  person in the photo", "There is one person in the photo", "I can recognize XX person in the photo", "My eyes see XX person in the photo"]
         self.persons = ["I see XX people in the photo", "There are XX people in the photo", "I can recognize XX people in the photo", "My eyes see XX people in the photo"]
-        
+
+        # Who questions
+
         self.whoquestion = ["What is the name of the person in the picture?", "Oh!, that person looks nice, can you tell me the name?", "May I have the name of the person in the picture?", "How you call the person in the photo?", "Could I ask the name of the person in the picture?"]
         self.whoquestions = ["Can you tell me the names of the people in the photo?", "Oh!, that people look nice, can you tell me their names?", "May I have the names of the people in the picture", "Could I ask the names of the people in the picture?"]
 
@@ -89,17 +91,33 @@ class Dialogs(object):
         self.catsQ4 = "Are the cats your favorite animals?"
 
 
+        # When questions
         self.whenq1 = ["Please tell me when this photo was taken?", "This photo seems a little old. When it was taken?", "Did you remember when this photo was taken? Please tell me!"]
-
         self.whenq2 = ["Did you enjoy the time when this photo was taken?", "Was a good time when this photo was taken?"]
-
+        self.whenBirthday =["There is a cake in the image. Was your birthday when this photo was taken?", "I can't identify a cake in your photo. Was your birthday when this photo was taken?"]
+       
         self.noanswer = ["That's a shame. Hope you have a good day, see ya!", "Maybe next time we will work together. Bye!", " No problem. See you next time, bye!", "That's a shame. See you around!"]
 
+
+
+        # Where questions 
+        self.kitchenq1 = "It looks like you were in a kitchen, I can see some cups and cutlery. Where you in a kitchen when the photo was taken?"
+        self.dinner_placeq1 = " Oh! I see a dining table maybe you were in a dinner in this photo. Where this photo was taken?"
+        self.streetq1 = "It seems that you are outside. Maybe in a street! Where was this photo taken?"
+        self.indoorq1 = "I think this image was taken indoors. Where was the photo taken?"
+        self.whereNo = "I cannot identify an specific place in the photo. Could you comment where this photo was taken?"
 
         self.whereq1 = "It looks like  you were in a food place, I can see some cups and cutlery. Where you were when the photo was taken?"
         self.whereq11 = "I cannot identify well the place, but it seems it is a food place. Where you were in the photo?"
         self.where =  ["Is this a place you visit usually ?", "Have you ever been more times in this place?"]
         self.where1 = ["What's the think you most appreciate about this place?", "Whats your favorite thing about this place?", "Would you plan to visit this place in the future?"]
+
+        # Other topic question 
+
+        self.otherBook = "I can recognize some books in the photo. Do you enjoy reading?"
+        self.otherBook1 = "What is your favorite book?"
+        self.otherSport = "Do you like some kind of sport? I like playing tennis"
+        self.otherSport1 = "Do you practice regularly sports?"
 
 
         self.yes_catch = ["Ohh, I think you say yes but I couldn't hear well. Can you repeat?", "Did you say yes?. My ears are wrong today. Can you repeat?"]
@@ -193,6 +211,14 @@ class Dialogs(object):
 
         i = random.randint(0, len(self.whenq2) - 1)
         return self.whenq2[i]
+
+
+    def get_Birthday(self):
+
+        i = random.randint(0,len(self.whenBirthday)-1)
+        return self.whenBirthday[i]
+
+
 
 
     def no_begin(self):

@@ -17,7 +17,7 @@ class SpeechRecognizer(object):
         """
         # Get the memory service
         self.session = qi.Session()
-        self.ip = '10.34.58.142'
+        self.ip = "10.34.58.142"
         self.port = 9559
         try:
             self.session.connect("tcp://" + self.ip + ":" + str(self.port))
@@ -50,7 +50,7 @@ class SpeechRecognizer(object):
 
     def on_words_tracked(self, value):
 
-        print(value)
+        #print('on_words_tracked P_SpeechRecog', value)
 
         if((value[0] == 'no' or value[0] == 'nao')  and (value[1] > 0.5)):
                 
@@ -78,17 +78,6 @@ class SpeechRecognizer(object):
         else:
 
             self.word = None
-
-
-            '''
-            self.else_word += 1
-
-
-            if self.else_word > 4:
-                self.tts.say('Use the correct commands please')
-                self.else_word = 0
-            '''
-
 
 
         #print('value in 1', value[0])

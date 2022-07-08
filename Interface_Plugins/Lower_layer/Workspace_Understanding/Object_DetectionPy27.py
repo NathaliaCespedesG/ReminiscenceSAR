@@ -19,6 +19,10 @@ class Object_Detection(object):
 
 		self.detected_class = []
 
+		self.probabilities =[]
+
+		self.box_area = []
+
 		#loadinf COCO class names
 
 		with open('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/Workspace_Understanding/models/object_detection_classes_coco.txt','r') as f:
@@ -44,10 +48,13 @@ class Object_Detection(object):
 	def detection(self, n):
 
 		num = n
+		cont = 0
 
 		for detection in self.output[0, 0, :, :]:
 
 			confidence = detection[2]
+
+
 
 			if confidence > .4:
 				class_id = detection[1]
@@ -57,9 +64,17 @@ class Object_Detection(object):
 				box_y = detection[4] * self.image_height
 				box_width = detection[5] * self.image_width
 				box_height = detection[6] * self.image_height
+				box_area = (int(box_width)-int(box_x))*(int(box_height)-int(box_y))
 				cv2.rectangle(self.image, (int(box_x), int(box_y)), (int(box_width), int(box_height)), color, thickness=2)
-				cv2.putText(self.image, class_name, (int(box_x), int(box_y - 5)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-				self.detected_class.append(class_name)
+				cv2.putText(self.image, class_name + "  " + str(box_area) + "  ", (int(box_x), int(box_y - 5)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+
+				self.detected_class.append(class_name + str(cont))
+				self.probabilities.append(confidence)
+
+				cont += 1 
+				print(cont)
+		
+
 
 		self.outputImage(num)
 
@@ -69,6 +84,10 @@ class Object_Detection(object):
 		self.t.start()
 
 	def getData(self):
+
+		dataDictionary = dict(zip(self.detected_class, self.probabilities))
+
+		print(dataDictionary)
 
 		return(self.detected_class)
 

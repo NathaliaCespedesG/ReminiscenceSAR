@@ -13,6 +13,7 @@ import Object_DetectionPy27 as Object
 
 import threading
 import time 
+import operator
 
 class WorkspaceManager(object):
 
@@ -72,6 +73,7 @@ class WorkspaceManager(object):
 		self.data = {'Color':self.color_data, 'Objects':self.object_data, 'Objects1': self.object_data1}
 
 
+		print('data',self.object_data)
 		#return(self.data)
 
 	def dictionary_dataCounts(self, n):
@@ -139,7 +141,7 @@ class WorkspaceManager(object):
 
 
 
-		self.image_context = {'Who':{'person': persons,'cat': cat ,'dog': dog,'bird': bird}, 
+		self.image_context = {'Who':{'persons': persons,'cat': cat ,'dog': dog,'bird': bird}, 
 							  'Kitchen':{'wine_glass': wine_glass,'fork': fork ,'spoon': spoon,'knife': knife, 'plate':plate, 'cup':cup, 'oven':oven},
 							  'Dinner_Place':{'dining_table':dining_table},
 							  'Street':{'car':car, 'bus':bus, 'motorcycle': motorcycle, 'traffic_light': traffic_light, 'stop_sign':stop_sign, 'street_sign':street_sign},
@@ -209,7 +211,7 @@ class WorkspaceManager(object):
 		tennis1 = self.data['Objects1'].count('tennis racket')
 
 
-		self.image2_context = {'Who':{'person': persons1,'cat': cat1 ,'dog': dog1,'bird': bird1}, 
+		self.image2_context = {'Who':{'persons': persons1,'cat': cat1 ,'dog': dog1,'bird': bird1}, 
 							  'Kitchen':{'wine_glass': wine_glass1,'fork': fork1 ,'spoon': spoon1,'knife': knife1, 'plate':plate1, 'cup':cup1, 'oven':oven1},
 							  'Dinner_Place':{'dining_table':dining_table1},
 							  'Street':{'car':car1, 'bus':bus1, 'motorcycle': motorcycle1, 'traffic_light': traffic_light1, 'stop_sign':stop_sign1, 'street_sign':street_sign1},
@@ -348,20 +350,25 @@ class WorkspaceManager(object):
 
 
 
-'''
+
 def main():
 	
-	Workspace_manager = WorkspaceManager(imgpath = {'path1':'Images/Street1.jpg',
+	Workspace_manager = WorkspaceManager(imgpath = {'path1':'Images/Test_photo.jpg',
 													'path2': 'Images/Photo_90.jpeg'})
 	Workspace_manager.launch_workspace()
 	Workspace_manager.data_extraction()
-	n = Workspace_manager.dictionary_dataCounts(n=1)
-	Workspace_manager.where_abstraction()
-	#print(n)
+	Workspace_manager.dictionary_dataCounts(n=1)
+	n = Workspace_manager.where_abstraction()
+	where = {'Kitchen': n['Kitchen'], 'Dinner_Place': n['Dinner_Place'], 'Street': n['Street'], 'Indoor_Space': n['Indoor_space']}
+	whereVal = [word for word, occurrences in where.items() if occurrences > 0]
+	print('Where Val', whereVal)
+	#calculating the maximun value in the dictionary
+	whereMax = max(where.iteritems(), key = operator.itemgetter(1))[0]
+	print('Where Max', whereMax)
 
 a = main()
 
-'''
+
 
 
 

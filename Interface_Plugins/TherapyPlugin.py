@@ -134,7 +134,11 @@ class TherapyPlugin(object):
 
 		img_id = n
 		self.onSart_count += 1
-		# Setting lower layer modules:
+
+		#Launching Robot's SR module
+		self.Robot.launch_RobotSR()
+		
+		# Setting lower layer modules
 
 
 		self.ReminiscenceWindow.set_recognImage(img_id)
@@ -143,7 +147,7 @@ class TherapyPlugin(object):
 		
 		m = self.Lowerlevel.get_data(img_id)
 
-		#print('M from onStart', m)
+		print('M from onStart', m)
 
 		self.DB.General.SM.loadSensor(recog_obj = m)
 
@@ -152,8 +156,6 @@ class TherapyPlugin(object):
 
 		self.Robot.conversation_topics(m)
 		self.Robot.coversation_beginning()
-
-
 
 		self.RobotCaptureThread.start()
 
@@ -223,6 +225,8 @@ class RobotCaptureThread(QtCore.QThread):
         self.c = 0 
         self.n = None
         self.num_threads = 0
+        self.cont_yesd = 0
+        self.cont_nod = 0 
 
          
     def run(self):
@@ -248,8 +252,7 @@ class RobotCaptureThread(QtCore.QThread):
 
 
         		if self.n == "yes":
-
-        			print('Here, when says yes')
+        			#print('Here, when says yes')
         			self.interface.Robot.yes_beginning()
 
         			self.c = 1
@@ -257,21 +260,31 @@ class RobotCaptureThread(QtCore.QThread):
 
         		elif self.n =='no':
         			#print('Here')
-
         			self.c = 2
 
         		elif(self.n == "yes_dcatch"):
 
+        			self.interface.Robot.set_wordRecognized()
+
+        			if self.cont_yesd > 1:
+
+        				#print('yes_dcatch 2222')
         				self.interface.Robot.bad_catching('yes')
-        				self.interface.Robot.set_wordRecognized()
-        				self.c = 0
+        	
+        			self.cont_yesd += 1
+        			self.c = 0
         				
 
         		elif(self.n == "no_dcatch"):
 
-        				self.interface.Robot.bad_catching('yes')
-        				self.interface.Robot.set_wordRecognized()
-        				self.c = 0
+        			self.interface.Robot.set_wordRecognized()
+
+        			if self.cont_nod > 1:
+        				#print('no_dcatch 2222')
+        				self.interface.Robot.bad_catching('no')
+
+        			self.cont_nod +=1
+        			self.c = 0
 
 
 
@@ -288,6 +301,7 @@ class RobotCaptureThread(QtCore.QThread):
         	if self.c == 1:
 
         		if (self.n == 'yes'):
+
         			#self.interface.Robot.r.pause()
         			#d = self.interface.Robot.d.update_sound()
         			d = self.interface.Lowerlevel.update_sounddata()

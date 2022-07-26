@@ -21,7 +21,9 @@ class Object_Detection(object):
 
 		self.probabilities =[]
 
-		self.box_area = []
+		self.b_area = []
+
+		self.detected_class_sp = []
 
 		#loadinf COCO class names
 
@@ -37,6 +39,8 @@ class Object_Detection(object):
 		# read the image from disk
 		self.image = cv2.imread(self.photoPath)
 		self.image_height, self.image_width, _ = self.image.shape
+
+		#print('size Photo 1', str(self.image_height) + " " + str(self.image_width))
 		#Creatinf a blob from image
 		blob = cv2.dnn.blobFromImage(image = self.image, size = (300,300), mean = (104,117,123),
 									 swapRB = True)
@@ -68,11 +72,18 @@ class Object_Detection(object):
 				cv2.rectangle(self.image, (int(box_x), int(box_y)), (int(box_width), int(box_height)), color, thickness=2)
 				cv2.putText(self.image, class_name + "  " + str(box_area) + "  ", (int(box_x), int(box_y - 5)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
-				self.detected_class.append(class_name + str(cont))
+				self.detected_class.append(class_name)
+				self.detected_class_sp.append(class_name+ str(cont))
 				self.probabilities.append(confidence)
+				self.b_area.append((float(box_area))/(float(self.image_width*self.image_height)))
 
 				cont += 1 
-				print(cont)
+				#print(cont)
+
+
+
+
+		#print('from Obj', self.probabilities)
 		
 
 
@@ -85,11 +96,18 @@ class Object_Detection(object):
 
 	def getData(self):
 
-		dataDictionary = dict(zip(self.detected_class, self.probabilities))
+		a = self.detected_class_sp
+		b = self.probabilities
+		c = self.b_area
 
-		print(dataDictionary)
+		new_dict = {i:[j, k] for i, j, k in zip(a, b, c)}
 
-		return(self.detected_class)
+
+		#print(new_dict)
+
+		#return(self.detected_class)
+
+		return(self.detected_class, new_dict)
 
 	def outputImage(self, n):
 

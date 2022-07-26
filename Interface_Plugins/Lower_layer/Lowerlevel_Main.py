@@ -109,18 +109,16 @@ class LowerLevel(object):
 		return(data)
 
 		
-
 '''
-
 def main():
 
 	ll = LowerLevel(Datahandler = None)
-	ll.set_path(path = {'path1':'Workspace_Understanding/Images/Street1.jpg',
-						'path2': 'Workspace_Understanding/Images/Photo_90.jpeg'})
+	ll.set_path(path = {'path1':'Workspace_Understanding/Images/Test_photo.jpg',
+						'path2': 'Workspace_Understanding/Images/rueieiye.jpeg'})
 	ll.set_modules(work = True, sound = True)
 	ll.launch_wsmodule()
-	m = ll.get_data(n = 1)
-	print(m)
+	m = ll.get_data(n = 2)
+	print('Data from LowerLevel',m)
 	#time.sleep(1)
 	#ll.launch_sensors()
 	#time.sleep(2)
@@ -131,6 +129,4 @@ def main():
 	#ll.close_sensors()
 
 A = main()
-
 '''
-

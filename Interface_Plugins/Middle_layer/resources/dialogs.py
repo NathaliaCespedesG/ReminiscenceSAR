@@ -36,22 +36,26 @@ class Dialogs(object):
 
         self.oneperson = ["I see XX  person in the photo", "There is one person in the photo", "I can recognize XX person in the photo", "My eyes see XX person in the photo"]
         self.persons = ["I see XX people in the photo", "There are XX people in the photo", "I can recognize XX people in the photo", "My eyes see XX people in the photo"]
-
+        self.peoplebutmain = ["Seems like a crowded place!. However, only a few people seems important in this photo", "I can see a lot of people, but I think  there is a few important people"]
+        
         # Who questions
 
         self.whoquestion = ["What is the name of the person in the picture?", "Oh!, that person looks nice, can you tell me the name?", "May I have the name of the person in the picture?", "How you call the person in the photo?", "Could I ask the name of the person in the picture?"]
         self.whoquestions = ["Can you tell me the names of the people in the photo?", "Oh!, that people look nice, can you tell me their names?", "May I have the names of the people in the picture", "Could I ask the names of the people in the picture?"]
 
         
-        self.connective_dialogueswho2 = ["Are you the person in the photo?","Who is the person in the photo?"]
+        self.connective_dialogueswho1 = ["Are you the person in the photo?","Is that you?", "That person is looking good!. Is it you?"]
         self.connective_dialogueswhos1 = [" Are they your family or your friends?", " Are the people in the photo your relatives?", "Ah I see, Are they your family?", "How do you know them?", "Are the people in the photo your family? ", "How do you meet the people in the photo?"]
 
         
 
-        self.connective_dialogueswho1 = ["About how old were the person when the photo was taken?", "How old is the person in the photo?"]
+        self.connective_dialoguesMe1 = ["About how old were you when the photo was taken?", "How old were you?", "You look nice! How old were you?"]
+        self.connective_dialogueswho2 = ["About how old were the person when the photo was taken?", "How old is the person in the photo?"]
         self.connective_dialogueswhos2 = ["Ah, I see, are the people in the photo close to you?", "How do you feel when you are around this people?", "Do you enjoy the company of this people?" ]
 
 
+        self.connective_dialoguesMe2 = ["What is the best memory you have when this photo was taken?", "What do you like most about this photo?"]
+        #self.connective_dialoguesMe3 = []
         self.connective_dialogueswho3 = ["Is this person close to you?", "Are you close to this person?", "What is your favorite moment with the person in the picture?"]
         self.connective_dialogueswhos3 = ["What is your favorite memory with these people?", "What is the funniest memory with these people?"]
 
@@ -160,10 +164,34 @@ class Dialogs(object):
         return self.whoquestion[i]
 
 
+    def get_mainpeople(self):
+
+        i = random.randint(0, len(self.peoplebutmain) -1)
+        return self.peoplebutmain[i]
+
+
     def get_whoquestions(self):
 
         i = random.randint(0, len(self.whoquestions) - 1)
         return self.whoquestions[i]
+
+
+    def get_connectiveMe1(self):
+
+        i = random.randint(0, len(self.connective_dialoguesMe1) - 1)
+        return self.connective_dialoguesMe1[i]
+
+
+    def get_connectiveMe2(self):
+
+        i = random.randint(0, len(self.connective_dialoguesMe2) - 1)
+        return self.connective_dialoguesMe2[i]
+
+    def get_connectiveMe3(self):
+
+        pass
+
+
 
 
     def get_connectiveWho1(self):

@@ -7,7 +7,7 @@ import os, sys
 ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Workspace_Understanding'))
 sys.path.append(ab_path)
 
-import Color_Detection as Color
+#import Color_Detection as Color
 import Object_DetectionPy27 as Object
 
 
@@ -17,8 +17,7 @@ import operator
 
 class WorkspaceManager(object):
 
-	def __init__(self, imgpath ={"path1" : None,
-								 "path2" : None}):
+	def __init__(self, imgpath = None):
 
 
 		# Extract Image path to pass both objects
@@ -31,11 +30,13 @@ class WorkspaceManager(object):
 		#print(self.impath)
 
 		# Initialize Color_Detection
-		self.color = Color.Color_Detection(path = self.impath)
+		#self.color = Color.Color_Detection(path = self.impath)
 
 		# Initialize Object Detection
 		self.object = Object.Object_Detection(path = self.impath)
 		self.object1 = Object.Object_Detection(path = self.impath1)
+
+
 
 		self.go_On = None
 
@@ -55,25 +56,27 @@ class WorkspaceManager(object):
 	def launch_workspace(self):
 
 
-		print('Hereee')
-		self.color.process()
-		self.color.color_main()
+		#print('Hereee')
+		#self.color.process()
+		#self.color.color_main()
 		self.object.loading_model()
-		self.object1.loading_model()
+		
 		self.object.detection(n = 1)
+
+		self.object1.loading_model()
 		self.object1.detection(n = 2)
 
 
 	def data_extraction(self):
 
 		
-		self.object_data = self.object.getData()
-		self.object_data1 = self.object1.getData()
-		self.color_data = self.color.getData()
-		self.data = {'Color':self.color_data, 'Objects':self.object_data, 'Objects1': self.object_data1}
+		self.object_data, self.properties = self.object.getData()
+		self.object_data1, self.properties1 = self.object1.getData()
+		#self.color_data = self.color.getData()
+		self.data = {'Objects':self.object_data, 'Objects1': self.object_data1}
 
 
-		print('data',self.object_data)
+		#print('data',self.data)
 		#return(self.data)
 
 	def dictionary_dataCounts(self, n):
@@ -230,13 +233,40 @@ class WorkspaceManager(object):
 		elif n ==2:
 			self.dataIm = self.image2_context
 
+		#return(self.dataIm)
+
+
+	def who_abstraction(self):
+
+
+		#Image 1 --- Who topic
+
+		person = [value for key, value in self.properties.items() if 'person' in key.lower()]
+
+		#print('Photo1', person)
+		person_new = [x for x in person if x[1] > 0.01]
+
+		lperson_new = len(person_new)
+
+		self.image_context['Who']['Person_main'] = lperson_new
+
+		#Image 2 -- Who topic
+
+		person1 = [value for key, value in self.properties1.items() if 'person' in key.lower()]
+
+		#print('Photo2', person1)
+		person_new1 = [x for x in person1 if x[1] > 0.01]
+
+		lperson_new1 = len(person_new1)
+
+		self.image2_context['Who']['Person_main'] = lperson_new1
 
 
 
-
-		#return(self.dataIm)		
 
 	def where_abstraction(self):
+
+		self.who_abstraction()
 
 		#Image 1 --- Where Topic
 
@@ -296,7 +326,7 @@ class WorkspaceManager(object):
 				self.prob_street = 0.5
 		elif len(self.whereVal_street)>0 and len(self.whereVal_street) <= 2:
 			if(any(i>= 2 for i in self.street.values())):
-				print('HEREEEEEEEEE')
+				#print('HEREEEEEEEEE')
 				self.prob_street = 0.4
 			else:
 				self.prob_street = 0.2
@@ -321,10 +351,10 @@ class WorkspaceManager(object):
 
 
 		# Displaying probabilities 
-		print('Prob Kitchen', self.prob_kitchen)
-		print('prob_dinner', self.prob_dinner)
-		print('prob_street', self.prob_street)
-		print('prob_indoor', self.prob_indoor)
+		#print('Prob Kitchen', self.prob_kitchen)
+		#print('prob_dinner', self.prob_dinner)
+		#print('prob_street', self.prob_street)
+		#print('prob_indoor', self.prob_indoor)
 
 		
 		self.dataIm['Kitchen'] = self.prob_kitchen
@@ -350,7 +380,7 @@ class WorkspaceManager(object):
 
 
 
-
+'''
 def main():
 	
 	Workspace_manager = WorkspaceManager(imgpath = {'path1':'Images/Test_photo.jpg',
@@ -366,9 +396,11 @@ def main():
 	whereMax = max(where.iteritems(), key = operator.itemgetter(1))[0]
 	print('Where Max', whereMax)
 
+	Workspace_manager.who_abstraction()
+
 a = main()
 
-
+'''
 
 
 

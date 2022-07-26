@@ -37,7 +37,7 @@ class SpeechRecognizer(object):
         self.tts = self.session.service("ALTextToSpeech")
 
         #Adding vocabulary
-        self.vocabulary = ["yes", "no", "nao", "please","Pepper", "yeah"]
+        self.vocabulary = ["yes", "no", "nao", "please","Pepper", "yeah", "me", "mine"]
         self.asr.pause(True)
         self.asr.setVocabulary(self.vocabulary, False)
         time.sleep(5)
@@ -74,6 +74,11 @@ class SpeechRecognizer(object):
         elif(value[0] == 'Pepper' and value[1] > 0.5):
             self.word = 'Pepper'
             #self.tts.say('Pepper')
+
+
+        elif((value[0] == 'me' or value[0] == 'mine') and (value[1] > 0.5)):
+
+            self.word = 'me'
 
         else:
 

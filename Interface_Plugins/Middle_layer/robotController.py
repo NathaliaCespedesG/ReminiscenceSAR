@@ -29,7 +29,10 @@ class Robot(object):
 		self.DB = db
 		#loading resources as dialogs
 		self.dialogs = Dialogs.Dialogs()
+
 		self.word_recognized = None
+
+		self.who_recognized = None
 		
 
 		self.cc = 0
@@ -70,6 +73,10 @@ class Robot(object):
 		self.prob_indoor = 0
 
 		self.first = 0
+
+		self.answer = None
+
+		self.me_flag = False
 
 
 
@@ -437,32 +444,53 @@ class Robot(object):
 		
 
 
-	def set_personrecognized(self, num):
+	def set_personrecognized(self, num, main):
 
 		if num == 1:
+
 
 			s = self.dialogs.get_person_sentence()
 			s = s.replace('XX', str(num))
 			self.animated.say(s)
 
-
 			time.sleep(0.5)
-
 			s = self.dialogs.get_whoquestion()
 			self.animated.say(s)
 
-
-
 		else:
 
-			s = self.dialogs.get_numpersons_sentence()
-			s = s.replace('XX', str(num))
-			self.animated.say(s)
+			if main < num :
 
-			time.sleep(0.5)
+				if main == 1:
 
-			s = self.dialogs.get_whoquestions()
-			self.animated.say(s)
+					s = self.dialogs.get_person_sentence()
+					s = s.replace('XX', str(main))
+					self.animated.say(s)
+
+					time.sleep(0.5)
+					s = self.dialogs.get_whoquestion()
+					self.animated.say(s)
+
+				else:
+					s = self.dialogs.get_mainpeople()
+					self.animated.say(s)
+					time.sleep(0.5)
+					s = self.dialogs.get_whoquestions()
+					self.animated.say(s)
+
+
+			if main == num :
+
+				s = self.dialogs.get_numpersons_sentence()
+				s = s.replace('XX', str(num))
+				self.animated.say(s)
+
+				time.sleep(0.5)
+
+				s = self.dialogs.get_whoquestions()
+				self.animated.say(s)
+
+
 
 	def commenting_photos(self, n):
 
@@ -544,7 +572,6 @@ class Robot(object):
 	def sr_beginning(self):
 
 		#print('Speech Recognizer beginning')
-
 		#Speech recognition implementation
 		while(self.word_recognized == None):
 
@@ -552,6 +579,14 @@ class Robot(object):
 
 		print('WordRecognized', self.word_recognized)
 		return(self.word_recognized)
+
+
+	def sr_yes(self):
+
+		while(self.who_recognized != 'yes'):
+			self.who_recognized = self.r.getData()
+
+		return(self.who_recognized)
 
 
 	def bad_catching(self, word):
@@ -607,6 +642,8 @@ class Robot(object):
 		self.onVoice = False
 		self.y = self.y + 1
 
+		#self.word_recognized = None
+
 		#self.getBehaviors()
 
 		[change, voice_act, voice_deac] = self.test(data)
@@ -618,13 +655,14 @@ class Robot(object):
 
 		if self.y == 1:
 
+
 			if (len(self.whoVal)>0):
 
 				if ("persons" in self.whoVal):
 
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-recognized")
 
-					self.set_personrecognized(self.who['persons'])
+					self.set_personrecognized(self.who['persons'], self.who['Person_main'])
 					time.sleep(1)
 
 
@@ -638,7 +676,7 @@ class Robot(object):
 
 			elif (len(self.whereVal)>0 and self.flag_topic == 'Where'):
 
-				print( 'Aqui en la primera vez')
+				#print( 'Aqui en la primera vez')
 
 				self.first = True
 
@@ -723,27 +761,43 @@ class Robot(object):
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
 
 
-							if self.who['persons'] ==1:
+							if self.who['Person_main'] == 1:
 								s = self.dialogs.get_connectiveWho1()
 								self.animated.say(s)
+								self.answer = self.sr_yes()
+								if self.answer == 'yes':
+									print('aqui')
+									self.me_flag = True
+									s = self.dialogs.get_connectiveMe1()
+									self.animated.say(s)
+
 							else:
 								s = self.dialogs.get_connectiveWhos1()
 								self.animated.say(s)
-								print('plural1')
+								#print('plural1')
 
 
-
-							time.sleep(2)
-
+							time.sleep(1)
 
 
 						elif self.cont == 4:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3")
 
-							if self.who['persons']==1:
-								s = self.dialogs.get_connectiveWho2()
-								self.animated.say(s)
+							if self.who['Person_main']==1:
+
+								if not self.me_flag:
+									print('Im here')
+									s = self.dialogs.get_connectiveWho2()
+									self.animated.say(s)
+								elif self.me_flag:
+									print('I enter here in Me')
+									s = self.dialogs.get_connectiveMe2()
+									self.animated.say(s)
+									self.whoVal.remove('persons')
+									self.whoVal.remove('Person_main')
+									self.cont = 0
+
 							else:
 								s = self.dialogs.get_connectiveWhos2()
 								self.animated.say(s)
@@ -758,16 +812,20 @@ class Robot(object):
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4")
 
-							if self.who['persons']==1:
-								s = self.dialogs.get_connectiveWho3()
-								self.animated.say(s)
-								s = "Oh! It seem very interesting."
-								self.whoVal.remove('persons')
-								self.cont = 0
+							if self.who['Person_main']==1:
+
+								if not self.me_flag:
+									s = self.dialogs.get_connectiveWho3()
+									self.animated.say(s)
+									self.whoVal.remove('persons')
+									self.whoVal.remove('Person_main')
+									self.cont = 0
+
 							else:
 								s = self.dialogs.get_connectiveWhos3()
 								self.animated.say(s)
 								self.whoVal.remove('persons')
+								self.whoVal.remove('Person_main')
 								self.cont = 0
 
 							time.sleep(2)

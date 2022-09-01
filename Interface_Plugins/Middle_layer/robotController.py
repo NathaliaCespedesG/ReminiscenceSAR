@@ -722,7 +722,7 @@ class Robot(object):
 					self.animated.say(s)
 					time.sleep(1)
 
-			elif(self.flag_topic == 'When'):
+			else:
 
 				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When")
 				s = self.dialogs.get_When1()

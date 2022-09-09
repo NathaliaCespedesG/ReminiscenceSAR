@@ -15,7 +15,7 @@ class Sound_Detector(object):
     """
 
     def __init__(self,settings = { 'name'           : "NAO",
-                                   'ip'             : "10.34.58.142",
+                                   'ip'             : "10.34.59.88",
                                    'port'           : 9559,
                                    'UseSpanish'     : True,
                                    'MotivationTime' : 300000000,

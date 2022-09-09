@@ -147,7 +147,7 @@ class TherapyPlugin(object):
 		
 		m = self.Lowerlevel.get_data(img_id)
 
-		print('M from onStart', m)
+		#print('Data from Lower Level Images', m)
 
 		self.DB.General.SM.loadSensor(recog_obj = m)
 
@@ -233,11 +233,11 @@ class RobotCaptureThread(QtCore.QThread):
         #self.cd dinterface.robotController.posture.goToPosture("StandZero", 1.0)
         self.ON = True
         d = 0
-        print('c variable', self.c)
-        print('n variable', self.n)
-        print('ON variable', self.ON)
+        #print('c variable', self.c)
+        #print('n variable', self.n)
+        #print('ON variable', self.ON)
         self.num_threads = self.num_threads + 1
-        print('Threads', self.num_threads)
+        #print('Threads', self.num_threads)
 
         while self.ON:
 
@@ -305,7 +305,7 @@ class RobotCaptureThread(QtCore.QThread):
         			#self.interface.Robot.r.pause()
         			#d = self.interface.Robot.d.update_sound()
         			d = self.interface.Lowerlevel.update_sounddata()
-        			print(d)
+        			print('data from lower level sound', d)
         			#loading sound data in the interface
         			self.interface.DB.General.SM.loadSensor(voice = d)
         			#print('data from thread',d)

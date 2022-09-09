@@ -116,17 +116,17 @@ def main():
 	ll.set_path(path = {'path1':'Workspace_Understanding/Images/Test_photo.jpg',
 						'path2': 'Workspace_Understanding/Images/rueieiye.jpeg'})
 	ll.set_modules(work = True, sound = True)
-	ll.launch_wsmodule()
-	m = ll.get_data(n = 2)
-	print('Data from LowerLevel',m)
-	#time.sleep(1)
-	#ll.launch_sensors()
-	#time.sleep(2)
-	#for i in range(10):
-		#ll.update_data()
-		#time.sleep(0.1)
-		#ll.print_data()
-	#ll.close_sensors()
+	#ll.launch_wsmodule()
+	#m = ll.get_data(n = 2)
+	#print('Data from LowerLevel',m)
+	time.sleep(1)
+	ll.launch_sensors()
+	time.sleep(2)
+	for i in range(10):
+		ll.update_data()
+		time.sleep(0.01)
+		ll.print_data()
+	ll.close_sensors()
 
 A = main()
 '''

@@ -12,7 +12,7 @@ import operator
 
 class Robot(object):
 
-	def __init__(self, settings = { 'IpRobot': "10.34.58.142",
+	def __init__(self, settings = { 'IpRobot': "10.34.59.88",
                                     'port'   : 9559,
                                     'name'   : 'Aba',
                                     'MotivationTime':5,
@@ -642,12 +642,8 @@ class Robot(object):
 		self.onVoice = False
 		self.y = self.y + 1
 
-		#self.word_recognized = None
-
-		#self.getBehaviors()
-
 		[change, voice_act, voice_deac] = self.test(data)
-		#self.waiting(change,data)
+		self.waiting(data)
 
 		self.flag = change
 		print('flag', self.flag)
@@ -663,7 +659,7 @@ class Robot(object):
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-recognized")
 
 					self.set_personrecognized(self.who['persons'], self.who['Person_main'])
-					time.sleep(1)
+					time.sleep(1.5)
 
 
 				elif ("dog" in self.whoVal) or ("cat" in self.whoVal):
@@ -672,7 +668,7 @@ class Robot(object):
 
 					self.set_petrecognized(self.who['dog'], self.who['cat'])
 					self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
-					time.sleep(1)
+					time.sleep(1.5)
 
 			elif (len(self.whereVal)>0 and self.flag_topic == 'Where'):
 
@@ -688,7 +684,7 @@ class Robot(object):
 
 					s = self.dialogs.kitchenq1
 					self.animated.say(s)
-					time.sleep(1)
+					time.sleep(1.5)
 
 				elif (self.whereMax == "Dinner_Place"):
 
@@ -696,7 +692,7 @@ class Robot(object):
 
 					s = self.dialogs.dinner_placeq1
 					self.animated.say(s)
-					time.sleep(1)
+					time.sleep(1.5)
 
 				elif (self.whereMax == "Street"):
 
@@ -704,7 +700,7 @@ class Robot(object):
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Street")
 					s = self.dialogs.streetq1
 					self.animated.say(s)
-					time.sleep(1)
+					time.sleep(1.5)
 
 
 				elif (self.whereMax == "Indoor_Space"):
@@ -714,13 +710,13 @@ class Robot(object):
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Indoor_Space")
 					s = self.dialogs.indoorq1
 					self.animated.say(s)
-					time.sleep(1)
+					time.sleep(1.5)
 
 				else:
 
 					s = self.dialogs.whereNo
 					self.animated.say(s)
-					time.sleep(1)
+					time.sleep(1.5)
 
 			else:
 
@@ -733,9 +729,6 @@ class Robot(object):
 
 
 		if self.flag == 2 and self.y > 1:
-
-		
-			#print(data)
 
 			self.cont = self.cont + 1
 			self.cont1 = 0
@@ -777,7 +770,7 @@ class Robot(object):
 								#print('plural1')
 
 
-							time.sleep(1)
+							time.sleep(2)
 
 
 						elif self.cont == 4:
@@ -1059,7 +1052,7 @@ class Robot(object):
 				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not_User_Voice")
 				self.animated.say("Sorry, I couldn't  hear that")
 				self.cont1 = 0
-				time.sleep(3)
+				time.sleep(1.1)
 				#self.cont = 0
 
 
@@ -1082,20 +1075,9 @@ class Robot(object):
 		return(self.flag_topic)
 
 
-	def waiting(self,m,n):
+	def waiting(self,m):
 
-		#print('Change', m)
-		#print('Voice', n)
-
-		if m ==2:
-			time.sleep(2)
-			self.flag_0 = True
-
-		if self.flag_0:
-
-			if n == True:
-				time.sleep(4)
-				self.flag_0 = False
+		pass
 
 	
 	def test(self,m):

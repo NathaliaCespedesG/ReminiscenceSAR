@@ -32,7 +32,7 @@ class Sound_Detection(object):
         # Sample format config
         self.FORMAT = pyaudio.paInt16
         # Channels config
-        self.channels = 2
+        self.channels = 1
         # Sampling frequency configuration
         self.freq = 16000
 
@@ -56,6 +56,12 @@ class Sound_Detection(object):
         #VAD Config
 
         self.vad = webrtcvad.Vad(3)
+        
+
+        # raw data variable
+        self.data = []
+        #  silce, no silence variable
+        self.voice_activity = []
 
         # Duration  config
         self.duration = 5
@@ -64,10 +70,7 @@ class Sound_Detection(object):
         self.p = pyaudio.PyAudio()
         self.streaming_object()
 
-        # raw data variable
-        self.data = []
-        #  silce, no silence variable
-        self.voice_activity = []
+        
 
     def streaming_object(self):
 
@@ -83,7 +86,7 @@ class Sound_Detection(object):
         self.frames = []
         self.frames_duration = 10 #ms
 
-        self.got_a_sentence = False
+        
 
 
     def normalize(snd):
@@ -103,7 +106,13 @@ class Sound_Detection(object):
 
     def process(self):
 
+
+
         while self.go_on:
+
+            self.got_a_sentence = False
+
+            #print('Dentro del while')
 
             ring_buffer = collections.deque(maxlen = self.num_padding_chunks)
             triggered = False
@@ -130,24 +139,29 @@ class Sound_Detection(object):
                 TimeUse = time.time() - StartTime
 
                 self.active = self.vad.is_speech(self.chunk,self.freq)
-                self.voice_activity.append(1 if self.active else 0)
                 #print(self.active)
-                #sys.stdout.write('1' if self.active else '_')
+                self.voice_activity.append(1 if self.active else 0)
 
                 ring_buffer_flags[ring_buffer_index] = 1 if self.active else 0
+                ring_buffer_index += 1
+                ring_buffer_index %= self.num_window_chunks
+
+                ring_buffer_flags_end[ring_buffer_index_end] = 1 if self.active else 0
                 ring_buffer_index_end += 1
                 ring_buffer_index_end %= self.num_window_chunks_end
 
                 #start point detection
 
                 if not triggered:
+
+                    #print('Inside triggered')
                     ring_buffer.append(self.chunk)
                     self.num_voiced = sum(ring_buffer_flags)
                     if self.num_voiced > 0.8 * self.num_window_chunks:
-                        sys.stdout.write(' Open ')
+                        #sys.stdout.write(' Open ')
                         triggered = True
                         start_point = index - self.chunk_size*20
-                        ring.buffer.clear()
+                        ring_buffer.clear()
 
                 # end point detection
 
@@ -156,14 +170,18 @@ class Sound_Detection(object):
                     ring_buffer.append(self.chunk)
                     self.num_unvoiced = self.num_window_chunks_end -sum(ring_buffer_flags_end)
 
-                    if num_unvoiced > 0.90 * self.num_window_chunks_end or TimeUse> 10 :
+                    #print('num_unvoiced', self.num_unvoiced)
+                    #print('num_chunk_end', self.num_window_chunks_end)
+                    #print('Time', TimeUse)
 
-                        sys.stdout.write(' Close ')
+                    if self.num_unvoiced > 0.90 * self.num_window_chunks_end or TimeUse> 10 :
+                        #print('Outside triggered')
+                        #sys.stdout.write(' Close ')
                         triggered = False
                         self.got_a_sentence = True
 
-                #sys.stdout.flush()
-                #sys.stdout.write('\n')
+                sys.stdout.flush()
+        sys.stdout.write('\n')
 
 
     def pause(self):
@@ -212,20 +230,21 @@ class Sound_Detection(object):
         self.t.start()
 
 
-'''
 
+
+
+'''
 def main():
 
     sound = Sound_Detection(Datahandler = None)
     sound.start()
     sound.launch_thread()
-    
-    
+    #print('Aqui')
     time.sleep(2)
     for x in range(100):
 
         voice = sound.getVoice()
-        data = sound.getData()
+        data= sound.getData()
         plt.scatter(x,data)
         #plt.scatter(x, voice)
         plt.pause(0.01)
@@ -241,9 +260,8 @@ def main():
 
 A = main()
 
+
+
 '''
-
-
-
 
 

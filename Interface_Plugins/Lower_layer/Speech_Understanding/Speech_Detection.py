@@ -65,10 +65,20 @@ class Sound_Detection(object):
 
         # Duration  config
         self.duration = 5
+        self.phrase = 'None'
 
         # PyAudio object initialization
         self.p = pyaudio.PyAudio()
         self.streaming_object()
+
+        #Data
+        self.last_value = False
+        self.change = 0
+
+        self.voice_act = 0
+
+        self.voice_deac = 0
+
 
         
 
@@ -108,9 +118,11 @@ class Sound_Detection(object):
 
 
 
+
         while self.go_on:
 
             self.got_a_sentence = False
+            self.phrase = None
 
             #print('Dentro del while')
 
@@ -130,6 +142,7 @@ class Sound_Detection(object):
             StartTime = time.time()
             print("* recording: ")
             self.stream.start_stream()
+
 
             while not self.got_a_sentence:
                 self.chunk = self.stream.read(self.chunk_size)
@@ -158,6 +171,7 @@ class Sound_Detection(object):
                     ring_buffer.append(self.chunk)
                     self.num_voiced = sum(ring_buffer_flags)
                     if self.num_voiced > 0.8 * self.num_window_chunks:
+                        self.phrase = 'Open'
                         #sys.stdout.write(' Open ')
                         triggered = True
                         start_point = index - self.chunk_size*20
@@ -174,14 +188,57 @@ class Sound_Detection(object):
                     #print('num_chunk_end', self.num_window_chunks_end)
                     #print('Time', TimeUse)
 
-                    if self.num_unvoiced > 0.90 * self.num_window_chunks_end or TimeUse> 10 :
-                        #print('Outside triggered')
+                    if self.num_unvoiced > 0.90 * self.num_window_chunks_end or TimeUse> 8 :
+                        print('Outside triggered')
+                        self.phrase = 'Close'
                         #sys.stdout.write(' Close ')
                         triggered = False
                         self.got_a_sentence = True
 
+
+
+
                 sys.stdout.flush()
         sys.stdout.write('\n')
+
+
+
+
+
+    def test(self,m):
+
+        new_value = m
+
+
+        if new_value is not None and new_value is not self.last_value:
+
+            if new_value:
+
+                self.change = 1
+
+                #print('False to True')
+                self.voice_act = self.voice_act + 1
+                #print('Voice active:', self.voice_act)
+
+            else:
+
+                self.change = 2
+                time.sleep(3)
+
+                #print('True to False')
+                self.voice_deac = self.voice_deac + 1
+                #print('Voice deactive:', self.voice_deac)
+
+        else:
+
+            self.change = 0
+
+
+        self.last_value = new_value
+        #print('change from testing', self.change)
+
+        return [self.change, self.voice_act, self.voice_deac]
+
 
 
     def pause(self):
@@ -216,9 +273,11 @@ class Sound_Detection(object):
         #print(self.voice_acd)
         pd.DataFrame(self.voice_acd).to_csv(path + '/'+ self.vad_excel)
 
+   
     def getData(self):
-
-        return(self.active)
+        
+        [change, voice_act, voice_deac] = self.test(self.active)
+        return [self.active, self.change]
 
     def getVoice(self):
 
@@ -241,11 +300,11 @@ def main():
     sound.launch_thread()
     #print('Aqui')
     time.sleep(2)
-    for x in range(100):
+    for x in range(500):
 
         voice = sound.getVoice()
         data= sound.getData()
-        plt.scatter(x,data)
+        plt.scatter(x,data[0])
         #plt.scatter(x, voice)
         plt.pause(0.01)
         #print(data)
@@ -260,8 +319,7 @@ def main():
 
 A = main()
 
-
-
 '''
+
 
 

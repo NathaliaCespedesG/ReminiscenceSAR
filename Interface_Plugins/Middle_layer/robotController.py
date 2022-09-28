@@ -214,7 +214,7 @@ class Robot(object):
 
 	def welcome_sentence(self):
 
-		s = self.dialogs.welcome_sentence
+		s = self.dialogs.start_welcome_sentence()
 		self.animated.say(s, self.animatedconfig)
 		time.sleep(0.1)
 
@@ -240,7 +240,7 @@ class Robot(object):
 		else:
 			s = self.dialogs.image_validationgreat
 			self.animated.say(s)
-			time.sleep(0.1)
+			time.sleep(3)
 			s = self.dialogs.image_validationgreat1
 			self.animated.say(s)
 			time.sleep(0.1)
@@ -583,7 +583,7 @@ class Robot(object):
 
 	def sr_yes(self):
 
-		while(self.who_recognized != 'yes'):
+		while(self.who_recognized == None):
 			self.who_recognized = self.r.getData()
 
 		return(self.who_recognized)
@@ -642,12 +642,15 @@ class Robot(object):
 		self.onVoice = False
 		self.y = self.y + 1
 
-		[change, voice_act, voice_deac] = self.test(data)
-		self.waiting(data)
+		#[change, voice_act, voice_deac] = self.test(data)
 
-		self.flag = change
+		active = data[0]
+
+		self.flag = data[1]
 		print('flag', self.flag)
-
+		print('Topic flag', self.flag_topic)
+		print('CONTADOR.......', self.cont)
+		print('y', self.y)
 
 		if self.y == 1:
 
@@ -659,7 +662,7 @@ class Robot(object):
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-recognized")
 
 					self.set_personrecognized(self.who['persons'], self.who['Person_main'])
-					time.sleep(1.5)
+					time.sleep(1)
 
 
 				elif ("dog" in self.whoVal) or ("cat" in self.whoVal):
@@ -668,7 +671,7 @@ class Robot(object):
 
 					self.set_petrecognized(self.who['dog'], self.who['cat'])
 					self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
-					time.sleep(1.5)
+					time.sleep(1)
 
 			elif (len(self.whereVal)>0 and self.flag_topic == 'Where'):
 
@@ -684,7 +687,7 @@ class Robot(object):
 
 					s = self.dialogs.kitchenq1
 					self.animated.say(s)
-					time.sleep(1.5)
+					time.sleep(1)
 
 				elif (self.whereMax == "Dinner_Place"):
 
@@ -692,7 +695,7 @@ class Robot(object):
 
 					s = self.dialogs.dinner_placeq1
 					self.animated.say(s)
-					time.sleep(1.5)
+					time.sleep(1)
 
 				elif (self.whereMax == "Street"):
 
@@ -700,7 +703,7 @@ class Robot(object):
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Street")
 					s = self.dialogs.streetq1
 					self.animated.say(s)
-					time.sleep(1.5)
+					time.sleep(1)
 
 
 				elif (self.whereMax == "Indoor_Space"):
@@ -710,20 +713,21 @@ class Robot(object):
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Indoor_Space")
 					s = self.dialogs.indoorq1
 					self.animated.say(s)
-					time.sleep(1.5)
+					time.sleep(1)
 
 				else:
 
 					s = self.dialogs.whereNo
 					self.animated.say(s)
-					time.sleep(1.5)
+					time.sleep(1)
+					self.cont = 2
 
-			else:
+			#else:
 
-				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When")
-				s = self.dialogs.get_When1()
+				#self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When")
+				#s = self.dialogs.get_When1()
 				#print(s)
-				self.animated.say(s)
+				#self.animated.say(s)
 	
 
 
@@ -734,7 +738,7 @@ class Robot(object):
 			self.cont1 = 0
 			
 
-			print('CONTADOR.......', self.cont)
+			#print('CONTADOR.......', self.cont)
 
 
 			if self.flag_topic == "Who":
@@ -749,7 +753,7 @@ class Robot(object):
 						#Questions regarding WHO
 
 						
-						if self.cont == 3:
+						if self.cont == 2:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
 
@@ -758,11 +762,17 @@ class Robot(object):
 								s = self.dialogs.get_connectiveWho1()
 								self.animated.say(s)
 								self.answer = self.sr_yes()
+								print(self.answer)
 								if self.answer == 'yes':
 									print('aqui')
 									self.me_flag = True
 									s = self.dialogs.get_connectiveMe1()
 									self.animated.say(s)
+
+								else:
+									s = self.dialogs.get_connectiveWho2()
+									self.animated.say(s)
+
 
 							else:
 								s = self.dialogs.get_connectiveWhos1()
@@ -770,10 +780,10 @@ class Robot(object):
 								#print('plural1')
 
 
-							time.sleep(2)
+							time.sleep(1)
 
 
-						elif self.cont == 4:
+						elif self.cont == 3:
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3")
 
@@ -781,26 +791,31 @@ class Robot(object):
 
 								if not self.me_flag:
 									print('Im here')
-									s = self.dialogs.get_connectiveWho2()
+									s = self.dialogs.get_connectiveWho3()
 									self.animated.say(s)
+									self.whoVal.remove('persons')
+									self.whoVal.remove('Person_main')
+									#self.flag_topic = "When"
+									self.cont = 1
 								elif self.me_flag:
 									print('I enter here in Me')
 									s = self.dialogs.get_connectiveMe2()
 									self.animated.say(s)
 									self.whoVal.remove('persons')
 									self.whoVal.remove('Person_main')
-									self.cont = 0
+									#self.flag_topic = "When"
+									self.cont = 1
 
 							else:
 								s = self.dialogs.get_connectiveWhos2()
 								self.animated.say(s)
 
 
-							time.sleep(2)
+							time.sleep(1)
 
 						
 
-						elif self.cont == 5:
+						elif self.cont == 4:
 
 
 							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4")
@@ -812,16 +827,16 @@ class Robot(object):
 									self.animated.say(s)
 									self.whoVal.remove('persons')
 									self.whoVal.remove('Person_main')
-									self.cont = 0
+									self.cont = 1
 
 							else:
 								s = self.dialogs.get_connectiveWhos3()
 								self.animated.say(s)
 								self.whoVal.remove('persons')
 								self.whoVal.remove('Person_main')
-								self.cont = 0
+								self.cont = 1
 
-							time.sleep(2)
+							time.sleep(1)
 	
 
 					elif ("dog" in self.whoVal) or ("cat" in self.whoVal):
@@ -836,7 +851,7 @@ class Robot(object):
 							self.set_petrecognized(self.who['dog'], self.who['cat'])
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
-							time.sleep(2)
+							time.sleep(1)
 
 						if self.cont == 3:
 
@@ -846,7 +861,7 @@ class Robot(object):
 
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
-							time.sleep(2)
+							time.sleep(1)
 
 
 						if self.cont == 4:
@@ -857,7 +872,7 @@ class Robot(object):
 
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
-							time.sleep(2)
+							time.sleep(1)
 
 
 						if self.cont == 5:
@@ -868,7 +883,7 @@ class Robot(object):
 
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
-							time.sleep(3)
+							time.sleep(1)
 
 							self.cont = 1
 
@@ -888,7 +903,7 @@ class Robot(object):
 				
 			if self.flag_topic == "When":
 
-				if self.cont == 1:
+				if self.cont == 2:
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1")
 
 
@@ -896,25 +911,25 @@ class Robot(object):
 						s = self.dialogs.get_Birthday()
 						self.animated.say()
 						self.whenVal.remove('Birthday')
-						time.sleep(2)
+						time.sleep(1)
 						
 
 					else:
 						s = self.dialogs.get_When1()
 						self.animated.say(s)
 						#time.sleep(4)
-						time.sleep(2)
+						time.sleep(1)
 
-				if self.cont == 2:
+				if self.cont == 3:
 
 					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q2")
 					s = self.dialogs.get_When2()
 					self.animated.say(s)
 					self.flag_topic = "Where"
-					self.cont = 0
+					self.cont = 1
 					self.y = 0
 					#time.sleep(4)
-					time.sleep(2)				
+					time.sleep(1)				
 					
 
 
@@ -930,7 +945,7 @@ class Robot(object):
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
 						s = self.dialogs.get_whereq()
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 
 
 
@@ -939,7 +954,7 @@ class Robot(object):
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
 						s = self.dialogs.get_where1q()
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 						self.flag_topic = "Other"
 						self.cont = 1
 
@@ -953,8 +968,7 @@ class Robot(object):
 						s = 'Oh, I cannot tell where the photo was taken. Where was it?'
 						print(s)
 						self.animated.say(s)
-						#time.sleep(4)
-						time.sleep(2)
+						time.sleep(1)
 						
 
 					if self.cont == 3:
@@ -962,7 +976,7 @@ class Robot(object):
 						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
 						s = self.dialogs.get_whereq()
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 
 
 
@@ -990,15 +1004,15 @@ class Robot(object):
 
 						s = self.dialogs.otherBook
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 
-					if self.cont == 4:
+					if self.cont == 3:
 
 						print('Book 2 Aqui')
 
 						s = self.dialogs.otherBook1
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 						self.otherTopics_book.remove('book')
 						self.cont = 0
 
@@ -1010,13 +1024,13 @@ class Robot(object):
 
 						s = self.dialogs.otherSport
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 
-					if self.cont == 4:
+					if self.cont == 3:
 
 						s = self.dialogs.otherSport1
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 						self.otherTopics_book.remove('sports')
 						self.cont = 0
 
@@ -1027,15 +1041,15 @@ class Robot(object):
 						s = 'One last question. Can you talk about other things about this photo?'
 						print(s)
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 						
 
-					if self.cont == 4:
+					if self.cont == 3:
 
 						s = "Ahhh I see. That's fine !"
 						print(s)
 						self.animated.say(s)
-						time.sleep(2)
+						time.sleep(1)
 						self.flag_topic = "End"
 						self.cont = 1
 
@@ -1043,12 +1057,12 @@ class Robot(object):
 
 
 
-		if self.flag == 0 and data == False:
+		if self.flag == 0 and active == False:
 
 			self.cont1 = self.cont1 +1
 
 
-			if self.cont1 == 8:
+			if self.cont1 == 6:
 				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not_User_Voice")
 				self.animated.say("Sorry, I couldn't  hear that")
 				self.cont1 = 0
@@ -1079,6 +1093,7 @@ class Robot(object):
 
 		pass
 
+'''
 	
 	def test(self,m):
 
@@ -1112,7 +1127,8 @@ class Robot(object):
 
 		return [self.change, self.voice_act, self.voice_deac]
 
-    	
+'''
+
 '''
 
 #Testing function

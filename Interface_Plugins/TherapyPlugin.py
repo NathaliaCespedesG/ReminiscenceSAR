@@ -217,7 +217,7 @@ class TherapyPlugin(object):
 
 
 class RobotCaptureThread(QtCore.QThread):
-    def __init__(self, parent = None, sample = 0.5, interface = None):
+    def __init__(self, parent = None, sample = 1, interface = None):
         super(RobotCaptureThread,self).__init__()
         self.Ts = sample
         self.ON = True
@@ -310,7 +310,7 @@ class RobotCaptureThread(QtCore.QThread):
         			self.interface.DB.General.SM.loadSensor(voice = d)
         			#print('data from thread',d)
         			self.interface.Robot.set_Dialog(d)
-        			time.sleep(self.Ts)
+        			
         			topic = self.interface.Robot.topic_Status()
         			print('Topic flag', topic)
         			if topic == "End":
@@ -325,6 +325,7 @@ class RobotCaptureThread(QtCore.QThread):
         					self.interface.Robot.end_phrase()
         					time.sleep(5)
         					self.interface.onShutdown()
+        			time.sleep(self.Ts)
 
         	if self. c == 2:
 

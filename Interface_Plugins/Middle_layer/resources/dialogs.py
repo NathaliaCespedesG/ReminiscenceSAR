@@ -12,17 +12,16 @@ class Dialogs(object):
 
     def load_dialogs(self):
         
-        print('here')
-        self.welcome_sentence = "^start(animations/Stand/Gestures/Hey_6) Hello ^wait(animations/Stand/Gestures/Hey_6), ^start(animations/Stand/Gestures/Me_1)my name is Ava!^wait(animations/Stand/Gestures/Me_1)"
+        self.welcome_sentence = [ "^start(animations/Stand/Gestures/Hey_6) Hello ^wait(animations/Stand/Gestures/Hey_6) \\pau = 200\\ ^start(animations/Stand/Gestures/Me_1) my name is Pepper!^wait(animations/Stand/Gestures/Me_1)", "^start(animations/Stand/Gestures/Hey_6) Hello ^wait(animations/Stand/Gestures/Hey_6), \\pau=800\\ ^start(me_lhand-48299c/behavior_1) my name is Pepper! ^wait(me_lhand-48299c/behavior_1)", "^start(animations/Stand/Gestures/Hey_6) Hello ^wait(animations/Stand/Gestures/Hey_6), ^start(animations/Stand/Gestures/Me_1)my name is Ava!^wait(animations/Stand/Gestures/Me_1)"]
         self.welcome_sentence2 = "^start(animations/Stand/Gestures/Exited_1)It's great to know you ^wait(animations/Stand/Gestures/Exited_1). Today we will talk about you and some of your photos ^start(animations/Stand/Gestures/Enthusiastic_4)"
-        self.welcome_sentence3 = "Please push the upload images button, To see what we've got"
+        self.welcome_sentence3 = "^start(animations/Stand/BodyTalk/Thinking_4)Please push the upload images button, To see what we've got ^wait(animations/Stand/BodyTalk/Thinking_4)"
 
 
         self.image_validationbad = "It seems that your photos are not ^start(animations/Stand/Gestures/No_1) complete ^wait(animations/Stand/Gestures/No_1)"  
         self.image_validationbad1 = "^start(animations/Stand/Gestures/Explain_1) Would you like to continue?, or, Do you want to upload a new image? ^wait(animations/Stand/Gestures/Explain_1)"
 
 
-        self.image_validationgreat = "^start(animations/Stand/Gestures/Happy_4) Cool !, your photos are great! ^wait(animations/Stand/Gestures/Happy_4)"
+        self.image_validationgreat = "^start(animations/Stand/Gestures/Happy_4) Cool !, I'm processing your photos! ^wait(animations/Stand/Gestures/Happy_4). \\pau = 200\\ ^start(animations/Stand/BodyTalk/BodyTalk_15) Please wait a few seconds. ^wait(animations/Stand/BodyTalk/BodyTalk_15) \\pau = 800\\   "
         self.image_validationgreat1 = "Let's continue with the reminiscence"
         self.choose_photo = "^start(animations/Stand/Gestures/Choice_1)Please choose one ^wait(animations/Stand/Gestures/Choice_1)"
 
@@ -34,22 +33,22 @@ class Dialogs(object):
         self.conv_beginning = "^start(animations/Stand/Gestures/Explain_10)Please say yes if you want to continue, if you don't please say no ^wait(animations/Stand/Gestures/Explain_10)"
         self.yes_beginning = ["^start(animations/Stand/Gestures/Hysterical_1)That's great, then we can start!^wait(animations/Stand/Gestures/Hysterical_1)", "Cool!, let's talk then", "^start(animations/Stand/Gestures/Hysterical_1)Im happy to hear that you want to talk with me!^wait(animations/Stand/Gestures/Hysterical_1)"] 
 
-        self.oneperson = ["I see XX  person in the photo", "There is one person in the photo", "I can recognize XX person in the photo", "My eyes see XX person in the photo"]
-        self.persons = ["I see XX people in the photo", "There are XX people in the photo", "I can recognize XX people in the photo", "My eyes see XX people in the photo"]
+        self.oneperson = ["^start(animations/Stand/Gestures/Explain_6)I see XX  person in the photo ^wait(animations/Stand/Gestures/Explain_6)", "^start(animations/Stand/Gestures/Explain_7)There is one person in the photo ^wait(animations/Stand/Gestures/Explain_7)", "^start(animations/Stand/Gestures/Explain_11)I can recognize XX person in the photo^wait(animations/Stand/Gestures/Explain_11)", "^start(animations/Stand/Gestures/Explain_7)There is one person in the photo ^wait(animations/Stand/Gestures/Explain_7)", "^start(animations/Stand/Gestures/Explain_11)My eyes see XX person in the photo ^wait(animations/Stand/Gestures/Explain_11)"]
+        self.persons = ["^start(animations/Stand/Gestures/Explain_4) I see XX people in the photo ^wait(animations/Stand/Gestures/Explain_4)", "^start(animations/Stand/Gestures/Explain_6)There are XX people in the photo ^wait(animations/Stand/Gestures/Explain_6)", "^start(animations/Stand/Gestures/YouKnowWhat_5) I can recognize XX people in the photo ^wait(animations/Stand/Gestures/YouKnowWhat_5)", "^start(animations/Stand/Emotions/Positive/Peaceful_1) My eyes see XX people in the photo ^wait(animations/Stand/Emotions/Positive/Peaceful_1)"]
         self.peoplebutmain = ["Seems like a crowded place!. However, only a few people seems important in this photo", "I can see a lot of people, but I think  there is a few important people"]
         
         # Who questions
 
-        self.whoquestion = ["What is the name of the person in the picture?", "Oh!, that person looks nice, can you tell me the name?", "May I have the name of the person in the picture?", "How you call the person in the photo?", "Could I ask the name of the person in the picture?"]
-        self.whoquestions = ["Can you tell me the names of the people in the photo?", "Oh!, that people look nice, can you tell me their names?", "May I have the names of the people in the picture", "Could I ask the names of the people in the picture?"]
+        self.whoquestion = ["^start(animations/Stand/Gestures/Explain_10) What is the name of the person in the picture? ^wait(animations/Stand/Gestures/Explain_10) ", "^start(animations/Stand/Gestures/Explain_10) Oh!, that person looks nice, can you tell me the name? ^wait(animations/Stand/Gestures/Explain_10)", "^start(animations/Stand/Gestures/YouKnowWhat_5) May I have the name of the person in the picture? ^wait(animations/Stand/Gestures/YouKnowWhat_5)", "^start(animations/Stand/Emotions/Positive/Peaceful_1)Could I ask the name of the person in the picture? ^wait(animations/Stand/Emotions/Positive/Peaceful_1)"]
+        self.whoquestions = ["^start(animations/Stand/Gestures/Happy_4) Can you tell me the names of the people in the photo? ^wait(animations/Stand/Gestures/Happy_4)", " ^start(animations/Stand/Gestures/Explain_10)  Oh!, that people look nice, can you tell me their names? ^wait(animations/Stand/Gestures/Explain_10) ", "May I have the names of the people in the picture", "Could I ask the names of the people in the picture?"]
 
         
-        self.connective_dialogueswho1 = ["Are you the person in the photo?","Is that you?", "That person is looking good!. Is it you?"]
-        self.connective_dialogueswhos1 = [" Are they your family or your friends?", " Are the people in the photo your relatives?", "Ah I see, Are they your family?", "How do you know them?", "Are the people in the photo your family? ", "How do you meet the people in the photo?"]
+        self.connective_dialogueswho1 = ["^start(animations/Stand/Gestures/You_4) Are you the person in the photo? ^wait(animations/Stand/Gestures/You_4)","^start(animations/Stand/Gestures/You_1) Is that you? ^wait(animations/Stand/Gestures/You_1) ", "^start(animations/Stand/Gestures/You_4) That person is looking good!. Is it you? ^wait(animations/Stand/Gestures/You_4)"]
+        self.connective_dialogueswhos1 = [" Are they your family or your friends?", "^start(animations/Stand/Gestures/Everything_2) Are the people in the photo your relatives? ^wait(animations/Stand/Gestures/Everything_2) ", "Ah I see, Are they your family?", "How do you know them?", "Are the people in the photo your family? ", "How do you meet the people in the photo?"]
 
         
 
-        self.connective_dialoguesMe1 = ["About how old were you when the photo was taken?", "How old were you?", "You look nice! How old were you?"]
+        self.connective_dialoguesMe1 = ["About how old were you when the photo was taken?", "How old were you?", "How old were you?"]
         self.connective_dialogueswho2 = ["About how old were the person when the photo was taken?", "How old is the person in the photo?"]
         self.connective_dialogueswhos2 = ["Ah, I see, are the people in the photo close to you?", "How do you feel when you are around this people?", "Do you enjoy the company of this people?" ]
 
@@ -96,7 +95,7 @@ class Dialogs(object):
 
 
         # When questions
-        self.whenq1 = ["Please tell me when this photo was taken?", "This photo seems a little old. When it was taken?", "Did you remember when this photo was taken? Please tell me!"]
+        self.whenq1 = ["Please tell me when this photo was taken?", "Do you remember when this photo was taken? Please tell me!", "Can you recall the date when this photo was taken?"]
         self.whenq2 = ["Did you enjoy the time when this photo was taken?", "Was a good time when this photo was taken?"]
         self.whenBirthday =["There is a cake in the image. Was your birthday when this photo was taken?", "I can't identify a cake in your photo. Was your birthday when this photo was taken?"]
        
@@ -128,6 +127,13 @@ class Dialogs(object):
         self.no_catch = ["Ohh, I think you say no but I couldn't hear well. Can you repeat?", "Did you say no?. My ears are wrong today. Can you repeat?"]
         
         self.sorry = ""
+
+
+
+    def start_welcome_sentence(self):
+
+        i = random.randint(0, len(self.welcome_sentence) -1)
+        return self.welcome_sentence[i]
 
 
     def yes_bsentence(self):

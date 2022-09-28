@@ -3,7 +3,7 @@ import os, sys
 ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Lower_layer'))
 sys.path.append(ab_path)
 
-from Speech_Understanding import Speech as speech
+from Speech_Understanding import Speech_Detection as speech
 import Workspace_Understanding.WorkspaceManager as workspace
 import threading
 import time
@@ -90,6 +90,8 @@ class LowerLevel(object):
 		if self.SND:
 			self.sound_data = self.speech.getData()
 			#print(self.data)
+
+		print(self.sound_data)
 
 		return(self.sound_data)
 

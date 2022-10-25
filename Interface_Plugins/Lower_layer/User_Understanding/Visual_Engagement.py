@@ -15,15 +15,18 @@ import time
 class Visual_EngagementTracker(object):
 
 
-	def __init__(self, Datahandler = None):
+	def __init__(self, DataHandler = None, pred_path = None):
 
-		self.DB  = Datahandler
+		self.DB  = DataHandler
 
-		self.cap = cv2.VideoCapture(0)
+		
 
 		self.detector = dlib.get_frontal_face_detector()
 
-		self.predictor = dlib.shape_predictor('predictors/shape_predictor_68_face_landmarks.dat') 
+
+		#predictors/shape_predictor_68_face_landmarks.dat
+
+		self.predictor = dlib.shape_predictor('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/User_Understanding/predictors/shape_predictor_68_face_landmarks.dat') 
 
 		self.gaze_ratio = 0
 
@@ -31,7 +34,14 @@ class Visual_EngagementTracker(object):
 
 		self.gaze = None
 
-		#print('Primero')
+
+		self.gaze_ratio = None
+
+		self.angles = [0] * 4
+
+
+
+		print('Primero')
 
 
 	def get_gazeRatio(self, eye_points, landmarks):
@@ -90,6 +100,11 @@ class Visual_EngagementTracker(object):
 
 	def process(self):
 
+		print('Here in process')
+
+
+		self.cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+
 
 		while self.go_on:
 
@@ -122,7 +137,7 @@ class Visual_EngagementTracker(object):
 				#Calculating angle
 
 				rmat, jac = cv2.Rodrigues(rotation)
-				angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
+				self.angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
 
 
 
@@ -134,13 +149,13 @@ class Visual_EngagementTracker(object):
 				#print(gaze_ratio_left_eye)
 				#print(gaze_ratio_right_eye)
 
-				gaze_ratio = float(gaze_ratio_left_eye + gaze_ratio_right_eye)/ float(2)
+				self.gaze_ratio = float(gaze_ratio_left_eye + gaze_ratio_right_eye)/ float(2)
 				#print(gaze_ratio)
 
-				if gaze_ratio <= 1:
+				if self.gaze_ratio <= 1:
 					self.eye_direction = 'right'
 
-				elif 1 < gaze_ratio < 1.7:
+				elif 1 < self.gaze_ratio < 1.7:
 
 					self.eye_direction ='center'
 
@@ -149,9 +164,9 @@ class Visual_EngagementTracker(object):
 
 				#gaze = "Looking: "
 
-				if angles[1] < -15:
+				if self.angles[1] < -15:
 					self.gaze = "Left"
-				elif angles[1] > 15:
+				elif self.angles[1] > 15:
 					self.gaze = "Right"
 				else:
 					self.gaze = "Forward"
@@ -174,7 +189,7 @@ class Visual_EngagementTracker(object):
 				#break
 
 
-		cap.release()
+		self.cap.release()
 		#cv2.destroyAllWindows()
 
 	def start(self):
@@ -190,6 +205,11 @@ class Visual_EngagementTracker(object):
 	def getData(self):
 
 		return [self.gaze, self.eye_direction]
+
+
+	def get_calibration(self):
+
+		return [self.gaze_ratio, self.angles[1]]
 
 
 	def camera_matrix(self, fl, center):
@@ -230,17 +250,18 @@ class Visual_EngagementTracker(object):
 		return np.array(points, dtype = np.float64)
 
 
+'''
 
 def main():
 
-	a = Visual_EngagementTracker(Datahandler = None)
+	a = Visual_EngagementTracker(DataHandler = None)
 	a.start()
 	a.launch_thread()
-	time.sleep(2)
+	time.sleep(60)
 
 	for x in range(500):
 
-		data = a.getData()
+		data = a.get_calibration()
 		print('data', data)
 		time.sleep(1)
 
@@ -248,3 +269,6 @@ def main():
 	a.pause()
 
 A = main()
+
+'''
+

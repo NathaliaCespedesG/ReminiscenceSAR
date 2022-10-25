@@ -17,7 +17,7 @@ class SpeechRecognizer(object):
         """
         # Get the memory service
         self.session = qi.Session()
-        self.ip = "10.34.59.88"
+        self.ip = "10.34.59.28"
         self.port = 9559
         try:
             self.session.connect("tcp://" + self.ip + ":" + str(self.port))

@@ -3,10 +3,15 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import*
 from PyQt4.QtGui import*
 import ctypes
+import time
 from time import strftime
 
 
 class CalibrationWindow(QtGui.QMainWindow):
+
+	#Signals
+	onCalibration_run = QtCore.pyqtSignal()
+	onCalibration_end = QtCore.pyqtSignal()
 
 	def __init__(self):
 		super(CalibrationWindow, self).__init__()
@@ -38,7 +43,7 @@ class CalibrationWindow(QtGui.QMainWindow):
 		# Setting background image
 		self.background = QtGui.QLabel(self)
 		self.background.setGeometry(QtCore.QRect(0,0,self.winsize_h,self.winsize_v))
-		self.background.setPixmap(QtGui.QPixmap("ImgGui/black_menu.png"))
+		self.background.setPixmap(QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/black_menu.png"))
 		self.background.setScaledContents(True)
 
 
@@ -48,7 +53,7 @@ class CalibrationWindow(QtGui.QMainWindow):
 		# Label
 		self.gxlabels["date"] = QtGui.QLabel(self)
 		self.gxlabels["date"].setGeometry(QtCore.QRect(self.winsize_h*0.03,self.winsize_v*0.08,self.winsize_h*0.5 ,self.winsize_v*0.08))
-		icon_date = QtGui.QPixmap("ImgGui/date_main.png")
+		icon_date = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/date_main.png")
 		icon_date = icon_date.scaled(self.winsize_h*0.5,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["date"].setPixmap(icon_date)
 
@@ -60,7 +65,7 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.gxlabels["hide"] = QtGui.QLabel(self)
 		self.gxlabels["hide"].setGeometry(QtCore.QRect(self.winsize_h*0.9,self.winsize_v*0.04,self.winsize_h*0.04 ,self.winsize_v*0.04))
-		icon_hide = QtGui.QPixmap("ImgGui/hide_main.png")
+		icon_hide = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/hide_main.png")
 		icon_hide = icon_hide.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["hide"].setPixmap(icon_hide)
 
@@ -68,7 +73,7 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.gxlabels["close"] = QtGui.QLabel(self)
 		self.gxlabels["close"].setGeometry(QtCore.QRect(self.winsize_h*0.95,self.winsize_v*0.04,self.winsize_h*0.04 ,self.winsize_v*0.04))
-		icon_close = QtGui.QPixmap("ImgGui/close_main.png")
+		icon_close = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/close_main.png")
 		icon_close = icon_close.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["close"].setPixmap(icon_close)
 
@@ -78,37 +83,37 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.gxlabels["mini_re"] = QtGui.QLabel(self)
 		self.gxlabels["mini_re"].setGeometry(QtCore.QRect(self.winsize_h*0.1,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_register = QtGui.QPixmap("ImgGui/save_re.png")
+		icon_register = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/save_re.png")
 		icon_register = icon_register.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_re"].setPixmap(icon_register)
 
 		self.gxlabels["mini_sta"] = QtGui.QLabel(self)
 		self.gxlabels["mini_sta"].setGeometry(QtCore.QRect(self.winsize_h*0.25,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_statis = QtGui.QPixmap("ImgGui/stati_menu.png")
+		icon_statis = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/stati_menu.png")
 		icon_statis = icon_statis.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_sta"].setPixmap(icon_statis)
 
 		self.gxlabels["mini_rem"] = QtGui.QLabel(self)
 		self.gxlabels["mini_rem"].setGeometry(QtCore.QRect(self.winsize_h*0.4,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_r = QtGui.QPixmap("ImgGui/rem_menu.png")
+		icon_r = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/rem_menu.png")
 		icon_r = icon_r.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_rem"].setPixmap(icon_r)
 		
 		self.gxlabels["mini_avatar"] = QtGui.QLabel(self)
 		self.gxlabels["mini_avatar"].setGeometry(QtCore.QRect(self.winsize_h*0.55,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_avatar = QtGui.QPixmap("ImgGui/avatar_menu.png")
+		icon_avatar = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/avatar_menu.png")
 		icon_avatar = icon_avatar.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_avatar"].setPixmap(icon_avatar)
 
 		self.gxlabels["mini_db"] = QtGui.QLabel(self)
 		self.gxlabels["mini_db"].setGeometry(QtCore.QRect(self.winsize_h*0.7,self.winsize_v*0.88,self.winsize_h*0.08 ,self.winsize_v*0.08))
-		icon_db = QtGui.QPixmap("ImgGui/db_menu.png")
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/db_menu.png")
 		icon_db = icon_db.scaled(self.winsize_h*0.08,self.winsize_v*0.08,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_db"].setPixmap(icon_db)
 
 		self.gxlabels["mini_sun"] = QtGui.QLabel(self)
 		self.gxlabels["mini_sun"].setGeometry(QtCore.QRect(self.winsize_h*0.875,self.winsize_v*0.905,self.winsize_h*0.04,self.winsize_v*0.04))
-		icon_sun = QtGui.QPixmap("ImgGui/sun_main.png")
+		icon_sun = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/sun_main.png")
 		icon_sun = icon_sun.scaled(self.winsize_h*0.04,self.winsize_v*0.04,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["mini_sun"].setPixmap(icon_sun)
 
@@ -117,9 +122,18 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.gxlabels["calibration"] = QtGui.QLabel(self)
 		self.gxlabels["calibration"].setGeometry(QtCore.QRect(self.winsize_h*0.4,self.winsize_v*0.5,self.winsize_h*0.2 ,self.winsize_v*0.1))
-		icon_db = QtGui.QPixmap("ImgGui/calibration.png")
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/calibration.png")
 		icon_db = icon_db.scaled(self.winsize_h*0.2,self.winsize_v*0.1,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["calibration"].setPixmap(icon_db)
+
+
+		self.gxlabels["calibration_white"] = QtGui.QLabel(self)
+		self.gxlabels["calibration_white"].setGeometry(QtCore.QRect(self.winsize_h*0.7,self.winsize_v*0.7,self.winsize_h*0.15 ,self.winsize_v*0.05))
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/calibration_charg.png")
+		icon_db = icon_db.scaled(self.winsize_h*0.15,self.winsize_v*0.05,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		self.gxlabels["calibration_white"].setPixmap(icon_db)
+
+
 
 		#Buttons
 
@@ -168,17 +182,29 @@ class CalibrationWindow(QtGui.QMainWindow):
 		self.lcd.setDigitCount(8)
 
 
-
+		self.set_signals()
 		self.closeButton(self.confirm_close)
 		self.hideButton()
+		self.calibration()
 		self.set_date()
 		self.set_time()
 
-		self.show()
+		#self.show()
+
+
+	def set_signals(self):
+		pass
+
+		#self.onCalibration_run.connect(self.calibration_charging)
 
 	def closeButton(self,f):
 
 		self.controlButtons["close"].clicked.connect(f)
+
+
+	def mini_rem(self,f):
+
+		self.controlButtons["mini_rem"].clicked.connect(f)
 
 	def confirm_close(self):
 
@@ -204,19 +230,36 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.lcd.display(strftime("%H"+":"+"%M"+":"+"%S"))
 
-	def calibration(self,f):
+	def calibration(self):
 
-		self.controlButtons["calibration"].clicked.connect(f)
+		print('calibratioooooon')
 
-
-
-
+		self.controlButtons["calibration"].clicked.connect(self.calibration_charging)
 
 
+	def calibration_charging(self):
+		print('Cambio verde')
 
+
+		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/calibration_blue.png")
+		icon_db = icon_db.scaled(self.winsize_h*0.15,self.winsize_v*0.05,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
+		self.gxlabels["calibration_white"].setPixmap(icon_db)
+		
+
+		self.onCalibration_run.emit()
+
+
+
+
+
+
+
+
+
+'''
 def main():
     app=QtGui.QApplication(sys.argv)
     GUI=CalibrationWindow()
     sys.exit(app.exec_())
 A=main()
-
+'''

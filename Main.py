@@ -8,9 +8,11 @@ import Interface_Plugins.Upper_layer.MenuWindow as MenuWindow
 import Interface_Plugins.Upper_layer.RegisterWindow as RegisterWindow
 import Interface_Plugins.Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 # import Plugins
-import Interface_Plugins.TherapyPlugin as TherapyPlugin
+#import Interface_Plugins.TherapyPlugin as TherapyPlugin
 import Interface_Plugins.MenuPlugin as MenuPlugin
 import Interface_Plugins.RegisterPlugin as RegisterPlugin
+import Interface_Plugins.CalibrationPlugin as CalibrationPlugin
+
 
 from PyQt4 import QtCore, QtGui
 
@@ -46,7 +48,10 @@ class MainController(object):
 
 		self.RegisterPlugin = RegisterPlugin.RegisterPlugin(DataHandler = db) 
 
-		self.TherapyPlugin = TherapyPlugin.TherapyPlugin(settings = self.imgDir, DataHandler = db)
+		#self.TherapyPlugin = TherapyPlugin.TherapyPlugin(settings = self.imgDir, DataHandler = db)
+
+
+		self.CalibrationPlugin = CalibrationPlugin.CalibrationPlugin(DataHandler = db)
 
 		self.set_signals()
 
@@ -54,7 +59,7 @@ class MainController(object):
 
 	def set_signals(self):
 
-		self.TherapyPlugin.image_processing()
+		#self.TherapyPlugin.image_processing()
 
 		self.MenuWindow.show()
 
@@ -68,6 +73,8 @@ class MainController(object):
 
 		self.RegisterWindow.registerButton(self.register_User)
 
+		self.RegisterWindow.statisticsButton(self.calibration)
+
 
 		#MainMenu Logics
 
@@ -76,18 +83,27 @@ class MainController(object):
 		self.MenuWindow.reminiscenceButton(self.MenuWindow.hideButton)
 
 
+		# Calibration Logics
+
+
+	def calibration(self):
+
+		self.CalibrationPlugin.launchView()
+
+
 	def register_User(self):
 
 		m = self.RegisterWindow.get_patient_data()
 
 		self.RegisterPlugin.onDataReceived(m)
 
-		self.TherapyPlugin.user_data(m)
+		#self.TherapyPlugin.user_data(m)
 
 
 	def onLaunch_Therapy(self):
+		pass
 
-		self.TherapyPlugin.launch_view()
+		#self.TherapyPlugin.launch_view()
 
 
 def main():

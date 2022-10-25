@@ -12,7 +12,7 @@ import operator
 
 class Robot(object):
 
-	def __init__(self, settings = { 'IpRobot': "10.34.59.88",
+	def __init__(self, settings = { 'IpRobot': "10.34.59.28",
                                     'port'   : 9559,
                                     'name'   : 'Aba',
                                     'MotivationTime':5,

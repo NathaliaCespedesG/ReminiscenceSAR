@@ -1,14 +1,16 @@
 
 import os, sys
-ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Reminiscence_Interface'))
+ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Reminiscence_Interface_Robot'))
+#print(ab_path)
 sys.path.append(ab_path)
 import threading 
 #import GUI elements
 import Interface_Plugins.Upper_layer.MenuWindow as MenuWindow
 import Interface_Plugins.Upper_layer.RegisterWindow as RegisterWindow
 import Interface_Plugins.Upper_layer.ReminiscenceWindow as ReminiscenceWindow
+import Interface_Plugins.Upper_layer.CalibrationWindow as CalibrationWindow
 # import Plugins
-#import Interface_Plugins.TherapyPlugin as TherapyPlugin
+import Interface_Plugins.TherapyPlugin as TherapyPlugin
 import Interface_Plugins.MenuPlugin as MenuPlugin
 import Interface_Plugins.RegisterPlugin as RegisterPlugin
 import Interface_Plugins.CalibrationPlugin as CalibrationPlugin
@@ -36,11 +38,18 @@ class MainController(object):
 
 		db = database.database(self.database_path)
 
+		# loading interface windows 
+
 		self.MenuWindow = MenuWindow.MenuWindow()
 
 		self.ReminiscenceWindow = ReminiscenceWindow.ReminiscenceWindow(settings = self.imgDir)
 
 		self.RegisterWindow = RegisterWindow.RegisterWindow()
+
+		self.CalibrationWindow = CalibrationWindow.CalibrationWindow()
+
+
+		#loading interface plugins
 
 
 
@@ -48,7 +57,7 @@ class MainController(object):
 
 		self.RegisterPlugin = RegisterPlugin.RegisterPlugin(DataHandler = db) 
 
-		#self.TherapyPlugin = TherapyPlugin.TherapyPlugin(settings = self.imgDir, DataHandler = db)
+		self.TherapyPlugin = TherapyPlugin.TherapyPlugin(settings = self.imgDir, DataHandler = db, path = ab_path)
 
 
 		self.CalibrationPlugin = CalibrationPlugin.CalibrationPlugin(DataHandler = db)
@@ -59,7 +68,7 @@ class MainController(object):
 
 	def set_signals(self):
 
-		#self.TherapyPlugin.image_processing()
+		self.TherapyPlugin.image_processing()
 
 		self.MenuWindow.show()
 
@@ -73,7 +82,10 @@ class MainController(object):
 
 		self.RegisterWindow.registerButton(self.register_User)
 
-		self.RegisterWindow.statisticsButton(self.calibration)
+		self.RegisterWindow.statisticsButton(self.CalibrationWindow.show)
+
+		
+
 
 
 		#MainMenu Logics
@@ -86,9 +98,18 @@ class MainController(object):
 		# Calibration Logics
 
 
+		self.CalibrationWindow.reminiscenceButton(self.onLaunch_Therapy)
+		self.CalibrationWindow.calibration(self.calibration)
+		self.CalibrationWindow.onCalibration_end.connect(self.CalibrationWindow.calibration_charging)
+
+
+
+
 	def calibration(self):
 
-		self.CalibrationPlugin.launchView()
+		self.CalibrationPlugin.calibration()
+		self.CalibrationWindow.onCalibration_end.emit()
+
 
 
 	def register_User(self):
@@ -97,13 +118,16 @@ class MainController(object):
 
 		self.RegisterPlugin.onDataReceived(m)
 
-		#self.TherapyPlugin.user_data(m)
+		self.TherapyPlugin.user_data(m)
 
 
 	def onLaunch_Therapy(self):
-		pass
 
-		#self.TherapyPlugin.launch_view()
+		print('onLaunch_Therapy')
+
+		self.TherapyPlugin.launch_view()
+
+		pass
 
 
 def main():

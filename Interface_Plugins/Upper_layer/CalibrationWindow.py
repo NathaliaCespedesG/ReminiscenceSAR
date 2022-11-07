@@ -23,9 +23,9 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.controlButtons = {}
 
-
 		#Settings the graphics modules
 		self.init_ui()
+
 
 
 	def init_ui(self):
@@ -133,6 +133,8 @@ class CalibrationWindow(QtGui.QMainWindow):
 		icon_db = icon_db.scaled(self.winsize_h*0.15,self.winsize_v*0.05,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["calibration_white"].setPixmap(icon_db)
 
+		
+
 
 
 		#Buttons
@@ -182,10 +184,9 @@ class CalibrationWindow(QtGui.QMainWindow):
 		self.lcd.setDigitCount(8)
 
 
-		self.set_signals()
+		#self.set_signals()
 		self.closeButton(self.confirm_close)
 		self.hideButton()
-		self.calibration()
 		self.set_date()
 		self.set_time()
 
@@ -193,16 +194,21 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 
 	def set_signals(self):
-		pass
-
-		#self.onCalibration_run.connect(self.calibration_charging)
+		self.onCalibration_end.connect(self.calibration_charging)
+	
 
 	def closeButton(self,f):
 
 		self.controlButtons["close"].clicked.connect(f)
 
 
-	def mini_rem(self,f):
+	def statisticsButton(self, f):
+
+		self.controlButtons["mini_sta"].clicked.connect(f)
+
+
+
+	def reminiscenceButton(self,f):
 
 		self.controlButtons["mini_rem"].clicked.connect(f)
 
@@ -230,26 +236,23 @@ class CalibrationWindow(QtGui.QMainWindow):
 
 		self.lcd.display(strftime("%H"+":"+"%M"+":"+"%S"))
 
-	def calibration(self):
+	def calibration(self, f):
 
-		print('calibratioooooon')
+		print('calib defined')
 
-		self.controlButtons["calibration"].clicked.connect(self.calibration_charging)
+		self.controlButtons["calibration"].clicked.connect(f)
 
 
 	def calibration_charging(self):
-		print('Cambio verde')
 
-
+		print('cambio a azul')
+		self.gxlabels["calibration_blue"] = QtGui.QLabel(self)
+		self.gxlabels["calibration_blue"].setGeometry(QtCore.QRect(self.winsize_h*0.7,self.winsize_v*0.7,self.winsize_h*0.15 ,self.winsize_v*0.05))
 		icon_db = QtGui.QPixmap("Interface_Plugins/Upper_layer/ImgGui/calibration_blue.png")
 		icon_db = icon_db.scaled(self.winsize_h*0.15,self.winsize_v*0.05,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-		self.gxlabels["calibration_white"].setPixmap(icon_db)
-		
-
-		self.onCalibration_run.emit()
-
-
-
+		self.gxlabels["calibration_blue"].setPixmap(icon_db)
+		self.gxlabels["calibration_blue"].show()
+	
 
 
 

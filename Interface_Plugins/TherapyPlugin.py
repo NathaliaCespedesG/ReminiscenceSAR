@@ -10,6 +10,7 @@ import time
 #import Middle_layer.SpeechRobot as Robot
 import Middle_layer.robotController as Robot
 import Lower_layer.Lowerlevel_Main as Lowerlevel
+import Lower_layer.User_Understanding.Visual_Engagement as VE
 import Upper_layer.ReminiscenceWindow as ReminiscenceWindow
 import sys
 from collections import Counter
@@ -19,11 +20,14 @@ import datetime
 
 class TherapyPlugin(object):
 
-	def __init__(self, settings = 'Images/Photo_1.jpeg', DataHandler = None):
+	def __init__(self, settings = 'Images/Photo_1.jpeg', DataHandler = None, path = None):
 
 		#Loading interface settings
 		self.settings = settings
 		#print('Setting from TherapyPlugin', self.settings)
+
+		self.path = path
+		#print('Path from therapy', self.path)
 
 		self.useRobot = True
 
@@ -44,10 +48,15 @@ class TherapyPlugin(object):
 		self.Lowerlevel = Lowerlevel.LowerLevel(Datahandler = self.DB)
 		self.Robot = Robot.Robot(db = self.DB)
 		#self.Avatar = Avatar.Avatar_Speech(Datahandler = self.DB)
+		self.VE = VE.Visual_EngagementTracker(DataHandler = self.DB, window = "Therapy")
 		self.ReminiscenceWindow = ReminiscenceWindow.ReminiscenceWindow(settings = self.settings)
+
+
+		#Launching sensor and robot
 
 		self.launch_sensors()
 		self.launch_robot()
+		self.launch_camera()
 	
 	def launch_view(self):
 
@@ -61,9 +70,17 @@ class TherapyPlugin(object):
 
 		#self.image_validation()
 
+
+		# Opening the data from calibration process
+
+		calibration_values = self.calibration_data()
+		self.VE.set_thresholds(ey = calibration_values[0], hp = calibration_values[1])
+
+
 		#  Avatar Interaction signals
 		self.ReminiscenceWindow.playButton(self.Robot.welcome_sentence)
 		self.ReminiscenceWindow.playButton(self.SensorCaptureThread.start)
+		self.ReminiscenceWindow.playButton(self.CameraCaptureThread.start)
 		#self.ReminiscenceWindow.playButton(self.AvatarGraphicsThread.start)
 		self.ReminiscenceWindow.closeButton(self.onShutdown)
 
@@ -72,7 +89,7 @@ class TherapyPlugin(object):
 		self.ReminiscenceWindow.onUpload(self.image_validation)
 		self.ReminiscenceWindow.onPhoto.connect(self.comment_photos)
 
-		#self.ReminiscenceWindow.onUpload(self.onStart)
+		self.ReminiscenceWindow.onUpload(self.onStart)
 		
 		# Lower level signals
 		self.ReminiscenceWindow.set_pathPhoto1(lambda:self.onStart(n=1))
@@ -84,6 +101,17 @@ class TherapyPlugin(object):
 	def user_data(self, user):
 
 		self.user = user
+
+
+	def calibration_data(self):
+
+		f = open(self.path + "/" + "db"+ "/" + "general"+ "/" + str(self.user["id"]) +"/"+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)+"/"+"Calibration.csv")
+		lines = f.readlines()
+		lines = lines[1].split(";")
+		self.eg_thresh = lines[0]
+		self.hp_thresh = lines[1]
+
+		return [self.eg_thresh, self.hp_thresh]
 
 
 
@@ -109,6 +137,13 @@ class TherapyPlugin(object):
 		#Launching the robot thread
 		self.RobotCaptureThread = RobotCaptureThread(interface = self)
 
+	def launch_camera(self):
+
+		#Launching the camera thread
+
+		self.VE.start()
+		self.CameraCaptureThread = CameraCaptureThread(interface = self)
+
 	def image_validation(self):
 		print('image_validation')
 
@@ -127,6 +162,13 @@ class TherapyPlugin(object):
 		print('Robot commenting')
 
 		self.Robot.image_validation(self.validation)
+
+
+
+	def VE_data(self):
+
+		VE_data = self.VE.get_calibration()
+
 
 
 
@@ -366,6 +408,26 @@ class SensorCaptureThread(QtCore.QThread):
 
      def shutdown(self):
         self.on = False
+
+
+class CameraCaptureThread(QtCore.QThread):
+
+	def __init__(self, parent = None, sample = 0.01, interface = None):
+		super(CameraCaptureThread, self).__init__()
+		self.on = False
+		self.interface = interface
+
+	def run(self):
+
+
+		self.interface.VE.launch_thread()
+
+	def shutdown(self):
+
+		self.on = False
+
+
+
         
         
 

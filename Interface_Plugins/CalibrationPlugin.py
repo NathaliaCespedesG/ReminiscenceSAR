@@ -25,7 +25,10 @@ class CalibrationPlugin(object):
 
 		#loading VE module for calibration
 		self.VE = VE.Visual_EngagementTracker(DataHandler = self.DB)
+		#Setting go_on to true
 		self.VE.start()
+		self.CameraCaptureThread = CameraCaptureThread(interface = self)
+
 
 		
 		self.calibration_data = 0
@@ -34,35 +37,13 @@ class CalibrationPlugin(object):
 		self.headpose_cal = []
 		self.data_calibrated = None
 
-		self.set_signals()
 
-
-
-	def set_signals(self):
-		self.CalibrationWindow.onCalibration_run.connect(self.calibration)
-		self.CalibrationWindow.mini_rem(self.get_data)
-		#self.CalibrationWindow.calibration(self.CalibrationWindow.onCalibration_run.emit())
-
-
-
-	def launchView(self):
-		print('Here')
-
-		self.CalibrationWindow.show()
-		self.CameraCaptureThread = CameraCaptureThread(interface = self)
-
-
-
-
-	def charging_colour(self):
-		self.CalibrationWindow.onCalibration_run.emit()
+		self.average_gaze = 0
+		self.average_headpose = 0
 
 
 	def calibration(self):
 		print('In calibration')
-		#elf.CalibrationWindow.onCalibration_run.emit()
-
-		#self.CalibrationWindow.calibration_charging()
 		time.sleep(2)
 
 		self.CameraCaptureThread.start()
@@ -80,14 +61,20 @@ class CalibrationPlugin(object):
 		self.data_calibrated = {'gaze': self.gaze_cal, 'head_pose': self.headpose_cal}
 
 		self.VE.pause()
+		self.CameraCaptureThread.shutdown()
+		#self.CalibrationWindow.onCalibration_end.emit()
+
+		self.get_data()
 
 
 	def get_data(self):
 
+
 		m = self.data()
-		average_gaze = mean(m['gaze'])
-		average_headpose = mean(m['head_pose'])
-		print(str(average_gaze)+","+str(average_headpose))
+		self.average_gaze = mean(m['gaze'])
+		self.average_headpose = mean(m['head_pose'])
+		print(str(self.average_gaze)+","+str(self.average_headpose))
+		self.DB.General.SM.loadCalibration(ag = self.average_gaze, hp = self.average_headpose)
 
 
 
@@ -117,6 +104,7 @@ class CameraCaptureThread(QtCore.QThread):
 	def shutdown(self):
 
 		self.on = False
+
 
 
 

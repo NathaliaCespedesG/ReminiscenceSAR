@@ -31,6 +31,15 @@ class SessionManager(object):
 		self.EventFile.close()
 
 
+
+	def loadCalibration(self, ag = "nd", hp="nd"):
+
+		self.CalibrationFile = open(self.calibration_data, 'a')
+		data = str(ag) + ";" + str(hp) + "\n"
+		self.CalibrationFile.write(data)
+		self.CalibrationFile.close()
+
+
 	def loadAudioFile(self, f):
 
 		Audio = f
@@ -63,13 +72,17 @@ class SessionManager(object):
 		#Create sensors and event files
 		self.sensor_name = folder + "/Sensors.csv"
 		self.event_name = folder + "/Events.csv"
+		self.calibration_data = folder + "/Calibration.csv"
 		self.SensorFile = open(self.sensor_name, 'w+')
 		self.EventFile = open(self.event_name, 'w+')
+		self.CalibrationFile = open(self.calibration_data, "w+")
 		#Headers on each file
 		self.SensorFile.write("Sound_Tag;Objects_Recognized;Timestamp\n")
 		self.EventFile.write("Type;Cause;value;Timestamp\n")
+		self.CalibrationFile.write("Averge_Gaze; Average_Headpose\n")
 		self.SensorFile.close()
 		self.EventFile.close()
+		self.CalibrationFile.close()
 
 
 	def finish_session(self):
@@ -175,6 +188,9 @@ class SessionManager(object):
 			f.write("Id;Name;Gender;Age\n")
 			f.close()
 			return {"name" : self.person['name'], "registered" : False, "id" : self.person['id']}
+
+
+
 
 
 

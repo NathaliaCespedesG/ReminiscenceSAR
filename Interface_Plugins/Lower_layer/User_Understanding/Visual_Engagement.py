@@ -8,18 +8,14 @@ import time
 
 
 
-
-
-
-
 class Visual_EngagementTracker(object):
 
 
-	def __init__(self, DataHandler = None, pred_path = None):
+	def __init__(self, DataHandler = None, pred_path = None, window = None):
 
 		self.DB  = DataHandler
 
-		
+		self.window = window
 
 		self.detector = dlib.get_frontal_face_detector()
 
@@ -40,8 +36,16 @@ class Visual_EngagementTracker(object):
 		self.angles = [0] * 4
 
 
+		#Initializing Thresholds
+		self.ey = 0
+		self.hp = 0
+
+
 
 		print('Primero')
+
+
+
 
 
 	def get_gazeRatio(self, eye_points, landmarks):
@@ -150,8 +154,21 @@ class Visual_EngagementTracker(object):
 				#print(gaze_ratio_right_eye)
 
 				self.gaze_ratio = float(gaze_ratio_left_eye + gaze_ratio_right_eye)/ float(2)
+
+
 				#print(gaze_ratio)
 
+
+				if self.window == "Therapy":
+
+					self.comparison()
+
+				else:
+					pass
+
+
+			
+				'''
 				if self.gaze_ratio <= 1:
 					self.eye_direction = 'right'
 
@@ -171,15 +188,17 @@ class Visual_EngagementTracker(object):
 				else:
 					self.gaze = "Forward"
 
+				'''
+
 
 			
 
-				#cv2.putText(self.frame, eye_direction, (50,100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)
-
+				#cv2.putText(self.frame, str(self.gaze_ratio), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)				
 				#cv2.putText(self.frame, gaze, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)
 				#cv2.putText(frame, str(gaze_ratio_left_eye), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)
 
 
+			
 			#cv2.imshow("Frame", self.frame)
 
 			#key = cv2.waitKey(1)
@@ -191,6 +210,54 @@ class Visual_EngagementTracker(object):
 
 		self.cap.release()
 		#cv2.destroyAllWindows()
+
+
+	def set_thresholds(self, ey = None, hp = None):
+
+		self.ey = ey
+
+		self.hp = hp
+
+
+
+	def comparison(self):
+
+		#print('In comparison from VE')
+		#print(type(self.ey))
+		#print(type(self.hp))
+
+		if self.gaze_ratio <= (float(self.ey)-0.05):
+
+			self.eye_direction = 'right'
+
+		elif (float(self.ey)- 0.05) < self.gaze_ratio < (float(self.ey) + 0.05):
+
+			self.eye_direction ='center'
+
+		else:
+			
+			self.eye_direction = 'left'
+
+		#gaze = "Looking: "
+
+		if self.angles[1] < float(self.hp) - 5.0 :
+
+			self.gaze = "Left"
+		
+		elif self.angles[1] > float(self.hp) + 5.0:
+
+			self.gaze = "Right"
+
+		else:
+			
+			self.gaze = "Forward"
+
+
+
+		#print('Eye direction', self.eye_direction)
+		#print('Head Pose', self.gaze)
+
+		
 
 	def start(self):
 
@@ -233,7 +300,7 @@ class Visual_EngagementTracker(object):
 		return m
 
 
-	def launch_thread(self):
+	def launch_thread(self ):
 
 		self.t = threading.Thread(target = self.process)
 		self.t.start()
@@ -270,5 +337,5 @@ def main():
 
 A = main()
 
-'''
 
+'''

@@ -231,7 +231,7 @@ class TherapyPlugin(object):
 		self.RobotCaptureThread.shutdown()
 		self.SensorCaptureThread.shutdown()
 
-		path = 'C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/db/general'+'/'+ self.user['id'] + '/'+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)
+		path = self.path + "/" + "db"+ "/" + "general"+'/'+ self.user['id'] + '/'+ str(self.date.year) +"-"+ str(self.date.month)+"-"+ str(self.date.day)
 		self.Lowerlevel.write_audio(path)
 		self.Lowerlevel.close_sensors()
 

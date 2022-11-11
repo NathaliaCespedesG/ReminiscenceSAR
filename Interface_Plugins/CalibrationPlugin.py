@@ -72,6 +72,7 @@ class CalibrationPlugin(object):
 
 		m = self.data()
 		self.average_gaze = mean(m['gaze'])
+		self.average_gaze = "{:.10f}".format(self.average_gaze)
 		self.average_headpose = mean(m['head_pose'])
 		print(str(self.average_gaze)+","+str(self.average_headpose))
 		self.DB.General.SM.loadCalibration(ag = self.average_gaze, hp = self.average_headpose)

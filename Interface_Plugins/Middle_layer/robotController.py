@@ -230,21 +230,24 @@ class Robot(object):
 
 
 		if m == True:
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="False-start")
 			s = self.dialogs.image_validationbad
 			self.animated.say(s)
 			time.sleep(0.1)
 			s = self.dialogs.image_validationbad1
 			self.animated.say(s)
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="False-end")
 			
 
 		else:
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="True-start")
 			s = self.dialogs.image_validationgreat
 			self.animated.say(s)
 			time.sleep(3)
 			s = self.dialogs.image_validationgreat1
 			self.animated.say(s)
 			time.sleep(0.1)
-			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="True")
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageValidation", v ="True-end")
 			s = self.dialogs.choose_photo
 			self.animated.say(s)
 			#self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "ImageSelection", v ="True")
@@ -496,9 +499,11 @@ class Robot(object):
 
 		print('Commenting the photos')
 
-		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Commenting-photos")
+		
 
 		if n == 1:
+
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Commenting_photos- start")
 			s = self.dialogs.commenting_photo
 			self.animated.say(s)
 			time.sleep(0.1)
@@ -506,19 +511,24 @@ class Robot(object):
 			s = self.dialogs.analizing_photo
 			self.animated.say(s)
 			time.sleep(0.1)
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Commenting_photos- end")
 
 		elif n > 1:
 
-			self.animated.say("This second photo also looks good. Let's talk!")
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Commenting_2ndphoto- start")
+
+			#self.animated.say("This second photo also looks good. Let's talk!")
+
+			self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Commenting_2ndphoto- end")
 
 
 
 	def coversation_beginning(self):
 
 		#print('In coversation_beginning')
-
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Yes_Starting - start")
 		self.animated.say("Please say yes if you want to continue, if you don't please say no")
-		#self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "StartingSentence", v ="True")
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Yes_Starting - end")
 
 	
 	def conversation_topics(self, m):
@@ -566,7 +576,9 @@ class Robot(object):
 		
 	def no_understanding(self):
 
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="No_understanding - start")
 		self.animated.say('Im sorry I dont understand, can you say it in a different way?')
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="No_understanding - end")
 
 
 	def sr_beginning(self):
@@ -611,27 +623,31 @@ class Robot(object):
 
 	def no_beginning(self):
 
-		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="No-beginning")
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="No_beginning - start")
 
 		s = self.dialogs.no_begin()
 		print(s)
 		self.animated.say(s)
 		time.sleep(0.1)
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="No_beginning - end")
 
 
 	def yes_beginning(self):
-		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Yes-beginning")
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Yes_beginning - start")
 		s = self.dialogs.yes_bsentence()
 		print(s)
 		self.animated.say(s)
 		time.sleep(0.3)
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Yes_beginning - end")
 
 
 	def second_Photo(self):
 
-		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Second-Photo")
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Second_Photo - start")
 
 		self.animated.say('Was interesting talk about this photo, how about if you chose the other one ?')
+
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Second_Photo - end")
 
 
 
@@ -659,19 +675,23 @@ class Robot(object):
 
 				if ("persons" in self.whoVal):
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-recognized")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons recognized - Initialization - start")
 
 					self.set_personrecognized(self.who['persons'], self.who['Person_main'])
 					time.sleep(1)
 
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons recognized - Initialization - end")
+
 
 				elif ("dog" in self.whoVal) or ("cat" in self.whoVal):
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Petsrecog-q4")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Pets recognized - Initialization - start")
 
 					self.set_petrecognized(self.who['dog'], self.who['cat'])
 					self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 					time.sleep(1)
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Pets recognized - Initialization - end")
 
 			elif (len(self.whereVal)>0 and self.flag_topic == 'Where'):
 
@@ -679,48 +699,57 @@ class Robot(object):
 
 				self.first = True
 
-				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Placerecog-q4")
-
 				if (self.whereMax == "Kitchen"):
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Kitchen")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Kitchen - Initialization - start")
 
 					s = self.dialogs.kitchenq1
 					self.animated.say(s)
 					time.sleep(1)
 
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Kitchen - Initialization - end")
+
 				elif (self.whereMax == "Dinner_Place"):
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Dinner_Place")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Dinner_Place - Initialization - start")
 
 					s = self.dialogs.dinner_placeq1
 					self.animated.say(s)
 					time.sleep(1)
 
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Dinner_Place - Initialization - end")
+
 				elif (self.whereMax == "Street"):
 
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Street")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Street - Initialization - start")
 					s = self.dialogs.streetq1
 					self.animated.say(s)
 					time.sleep(1)
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Street - Initialization - end")
 
 
 				elif (self.whereMax == "Indoor_Space"):
 
 
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Indoor_Space")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Indoor_Space - Initialization - start")
 					s = self.dialogs.indoorq1
 					self.animated.say(s)
 					time.sleep(1)
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Indoor_Space - Initialization - end")
 
 				else:
+
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not recognized - Initialization - start")
 
 					s = self.dialogs.whereNo
 					self.animated.say(s)
 					time.sleep(1)
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not recognized - Initialization - end")
+
 					self.cont = 2
+
 
 			#else:
 
@@ -755,7 +784,7 @@ class Robot(object):
 						
 						if self.cont == 2:
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2 - start")
 
 
 							if self.who['Person_main'] == 1:
@@ -780,12 +809,15 @@ class Robot(object):
 								#print('plural1')
 
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q2 - end")
+
+
 							time.sleep(1)
 
 
 						elif self.cont == 3:
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3 - start")
 
 							if self.who['Person_main']==1:
 
@@ -810,6 +842,8 @@ class Robot(object):
 								s = self.dialogs.get_connectiveWhos2()
 								self.animated.say(s)
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q3 - end")
+
 
 							time.sleep(1)
 
@@ -818,7 +852,7 @@ class Robot(object):
 						elif self.cont == 4:
 
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4 -start")
 
 							if self.who['Person_main']==1:
 
@@ -836,6 +870,8 @@ class Robot(object):
 								self.whoVal.remove('Person_main')
 								self.cont = 1
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Persons-q4 - end")
+
 							time.sleep(1)
 	
 
@@ -844,44 +880,54 @@ class Robot(object):
 
 						if self.cont == 2:
 
-							print('Dog 1')
+							#print('Dog 1')
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q1")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q1 - start")
 
 							self.set_petrecognized(self.who['dog'], self.who['cat'])
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q1 - end")
 
 							time.sleep(1)
 
 						if self.cont == 3:
 
-							print('Dog 2')
+							#print('Dog 2')
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q2")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q2 - start")
 
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
 
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q2 - end")
+
 							time.sleep(1)
+
+							
 
 
 						if self.cont == 4:
 
-							print('Dog 3')
+							#print('Dog 3')
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q3")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q3 - start")
 
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q3 - end")
 
 							time.sleep(1)
 
 
 						if self.cont == 5:
 
-							print('Dog 4')
+							#print('Dog 4')
 
-							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q4")
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q4 - start")
 
 							self.questions_pet(self.who['dog'], self.who['cat'], self.cont)
+
+							self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Animals-q4 - end")
 
 							time.sleep(1)
 
@@ -904,7 +950,7 @@ class Robot(object):
 			if self.flag_topic == "When":
 
 				if self.cont == 2:
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1 - start")
 
 
 					if (len(self.whenVal)>0):
@@ -920,16 +966,19 @@ class Robot(object):
 						#time.sleep(4)
 						time.sleep(1)
 
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q1 - end")
+
 				if self.cont == 3:
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q2")
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q2 - start")
 					s = self.dialogs.get_When2()
 					self.animated.say(s)
 					self.flag_topic = "Where"
 					self.cont = 1
 					self.y = 0
 					#time.sleep(4)
-					time.sleep(1)				
+					time.sleep(1)
+					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="When-q2 - end")				
 					
 
 
@@ -942,19 +991,23 @@ class Robot(object):
 
 					if self.cont == 2:
 
-						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2 - start")
+
 						s = self.dialogs.get_whereq()
 						self.animated.say(s)
+
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2 - end")
 						time.sleep(1)
 
 
 
 					if self.cont == 3:
 						
-						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3 - start")
 						s = self.dialogs.get_where1q()
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3 - end")
 						self.flag_topic = "Other"
 						self.cont = 1
 
@@ -963,29 +1016,32 @@ class Robot(object):
 
 					if self.cont == 2:
 
-						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n")
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n - start")
 
 						s = 'Oh, I cannot tell where the photo was taken. Where was it?'
 						print(s)
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n - end")
 						
 
 					if self.cont == 3:
 
-						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2")
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q2n - start")
 						s = self.dialogs.get_whereq()
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q1n - end")
 
 
 
 					if self.cont == 4:
 						
-						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3")
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3 - start")
 						s = self.dialogs.get_where1q()
 						self.animated.say(s)
 						time.sleep(2)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Where-q3 - end")
 						self.flag_topic = "Other"
 						self.cont = 1
 
@@ -996,41 +1052,51 @@ class Robot(object):
 
 				if (len(self.otherTopics_book)>0):
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other-book-q1")
-
+					
 					if self.cont == 2:
 
-						print('Book 1 Aqui')
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_bookq1 - start")
+
+						#print('Book 1 Aqui')
 
 						s = self.dialogs.otherBook
 						self.animated.say(s)
 						time.sleep(1)
 
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_bookq1 - end")
+
+
+
 					if self.cont == 3:
 
-						print('Book 2 Aqui')
-
+						#print('Book 2 Aqui')
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_bookq2 - start")
 						s = self.dialogs.otherBook1
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_bookq2 - end")
 						self.otherTopics_book.remove('book')
 						self.cont = 0
 
 				if (len(self.otherTopics_sports)>0):
 
-					self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other-sport-q1")
 
 					if self.cont == 2:
+
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_sportq1 - start")
 
 						s = self.dialogs.otherSport
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_sportq1 - end")
 
 					if self.cont == 3:
 
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_sportq2 - start")
 						s = self.dialogs.otherSport1
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_sportq2 - end")
 						self.otherTopics_book.remove('sports')
 						self.cont = 0
 
@@ -1038,10 +1104,12 @@ class Robot(object):
 
 					if self.cont == 2:
 
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_topicfinal - start")
 						s = 'One last question. Can you talk about other things about this photo?'
 						print(s)
 						self.animated.say(s)
 						time.sleep(1)
+						self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Other_topicfinal - end")
 						
 
 					if self.cont == 3:
@@ -1055,28 +1123,29 @@ class Robot(object):
 
 
 
-
-
 		if self.flag == 0 and active == False:
 
 			self.cont1 = self.cont1 +1
 
 
 			if self.cont1 == 6:
-				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not_User_Voice")
+				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not_User_Voice - start")
 				self.animated.say("Sorry, I couldn't  hear that")
 				self.cont1 = 0
 				time.sleep(1.1)
+				self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Not_User_Voice - end")
 				#self.cont = 0
 
 
 	def end_phrase(self):
 
-		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Ending_Phrase")
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Ending_Phrase - start")
 
 		self.tts.say("Was nice to talk with you. Hope we can talk together soon")
 		time.sleep(1)
 		self.tts.say("Bye!")
+
+		self.DB.General.SM.loadEvent(t = "AvatarTalking", c = "Dialog", v ="Ending_Phrase - end")
 
 
 	def set_topicStatus(self):

@@ -40,6 +40,14 @@ class SessionManager(object):
 		self.CalibrationFile.close()
 
 
+	def loadVisualEngagement (self, eg = "nd", hp = "hp", tag_eg = "nd", tag_hp ="hd"):
+
+		self.VEFile = open(self.visual_engagement, 'a')
+		data = str(eg)+ ";"+ str(hp)+ ";"+ str(tag_eg) + ";" + str(tag_hp)+ ";" + str(datetime.datetime.now()) + "\n"
+		self.VEFile.write(data)
+		self.VEFile.close()
+
+
 	def loadAudioFile(self, f):
 
 		Audio = f
@@ -73,16 +81,22 @@ class SessionManager(object):
 		self.sensor_name = folder + "/Sensors.csv"
 		self.event_name = folder + "/Events.csv"
 		self.calibration_data = folder + "/Calibration.csv"
+		self.visual_engagement = folder + "/VisualEngagement.csv"
 		self.SensorFile = open(self.sensor_name, 'w+')
 		self.EventFile = open(self.event_name, 'w+')
 		self.CalibrationFile = open(self.calibration_data, "w+")
+		self.VEFile = open(self.visual_engagement, "w+")
 		#Headers on each file
 		self.SensorFile.write("Sound_Tag;Objects_Recognized;Timestamp\n")
 		self.EventFile.write("Type;Cause;value;Timestamp\n")
 		self.CalibrationFile.write("Averge_Gaze; Average_Headpose\n")
+		self.VEFile.write("Eye_gaze; Head_Pose; Tag; Timestamp\n")
+
+		#closing each file
 		self.SensorFile.close()
 		self.EventFile.close()
 		self.CalibrationFile.close()
+		self.VEFile.close()
 
 
 	def finish_session(self):
@@ -90,6 +104,8 @@ class SessionManager(object):
 		#closing files 
 		self.SensorFile.close()
 		self.EventFile.close()
+		self.CalibrationFile.close()
+		self.VEFile.close()
 
 	def set_person(self, p):
 		self.person = p

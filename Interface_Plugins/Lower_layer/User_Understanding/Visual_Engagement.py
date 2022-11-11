@@ -101,6 +101,20 @@ class Visual_EngagementTracker(object):
 		return(gaze_ratio)
 
 
+	def configuring_brightness(self, img, value):
+		hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+		h, s, v = cv2.split(hsv)
+
+		lim = 255 - value
+		v[v > lim] = 255
+		v[v <= lim] += value
+
+		final_hsv = cv2.merge((h, s, v))
+		img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+		return img
+
+
+
 
 	def process(self):
 
@@ -113,6 +127,7 @@ class Visual_EngagementTracker(object):
 		while self.go_on:
 
 			_, self.frame = self.cap.read()
+			self.frame = self.configuring_brightness(self.frame, value = 30)
 			self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 			faces = self.detector(self.gray)
 
@@ -156,7 +171,7 @@ class Visual_EngagementTracker(object):
 				self.gaze_ratio = float(gaze_ratio_left_eye + gaze_ratio_right_eye)/ float(2)
 
 
-				#print(gaze_ratio)
+				#print('GAZE ratio from VE', self.gaze_ratio)
 
 
 				if self.window == "Therapy":
@@ -253,6 +268,7 @@ class Visual_EngagementTracker(object):
 			self.gaze = "Forward"
 
 
+		self.DB.General.SM.loadVisualEngagement(eg = self.gaze_ratio, hp = self.angles[1], tag_eg= self.eye_direction, tag_hp = self.gaze)
 
 		#print('Eye direction', self.eye_direction)
 		#print('Head Pose', self.gaze)

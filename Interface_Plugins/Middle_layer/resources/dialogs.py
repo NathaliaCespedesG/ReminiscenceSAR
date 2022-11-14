@@ -128,6 +128,24 @@ class Dialogs(object):
         
         self.sorry = ""
 
+        # Calibration sentences
+
+        self.calibration_face = ["I will do some calibrations, Could you look at my face please?", "Before starting the session, I will do some calibrations. Could you look at my face please?"]
+
+        self.calibration_tablet = ["Now, could you look at the tablet?", "Wow that was great. Could you look at the tablet now?"]
+
+
+
+    def calibrationFace(self):
+
+        i = random.randint(0, len(self.calibration_face) -1)
+        return self.calibration_face[i]
+
+
+    def calibrationTablet(self):
+
+        i = random.randint(0, len(self.calibration_tablet) -1)
+        return self.calibration_tablet[i]
 
 
     def start_welcome_sentence(self):

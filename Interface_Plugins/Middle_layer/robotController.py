@@ -157,6 +157,20 @@ class Robot(object):
 
 		self.r.launch_thread()
 
+
+
+	def calibration_face(self):
+
+		s = self.dialogs.calibrationFace()
+		self.animated.say(s, self.animatedconfig)
+		time.sleep(0.1)
+
+	def calibration_tablet(self):
+
+		s = self.dialogs.calibrationTablet()
+		self.animated.say(s, self.animatedconfig)
+		time.sleep(0.1)
+
 	def getBehaviors(self):
 
 		#print 'Aqui11'

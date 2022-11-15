@@ -158,6 +158,10 @@ class Robot(object):
 		self.r.launch_thread()
 
 
+	def no_calibration(self):
+
+		self.animated.say("Something wrong happpened with the calibration")
+
 
 	def calibration_face(self):
 

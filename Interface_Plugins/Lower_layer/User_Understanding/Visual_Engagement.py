@@ -30,9 +30,6 @@ class Visual_EngagementTracker(object):
 
 		self.gaze = None
 
-
-		self.gaze_ratio = None
-
 		self.angles = [0] * 4
 
 

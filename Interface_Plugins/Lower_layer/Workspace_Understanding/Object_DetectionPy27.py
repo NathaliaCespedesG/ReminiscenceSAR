@@ -5,6 +5,9 @@ import cv2
 import numpy as np
 import threading
 import time
+import os
+#path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+
 
 
 class Object_Detection(object):
@@ -13,8 +16,10 @@ class Object_Detection(object):
 
 		self.photoPath = path
 
-		self.graph = 'C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/Workspace_Understanding/models/frozen_inference_graph.pb'
-		self.config = 'C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/Workspace_Understanding/models/ssd_mobilenet_v2_coco_2018_03_29.pbtxt.txt'
+		self.path_other = os.path.abspath(os.curdir)
+
+		self.graph = self.path_other + '/Interface_Plugins/Lower_layer/Workspace_Understanding/models/frozen_inference_graph.pb'
+		self.config = self.path_other + '/Interface_Plugins/Lower_layer/Workspace_Understanding/models/ssd_mobilenet_v2_coco_2018_03_29.pbtxt.txt'
 		self.framework = 'TensorFlow'
 
 		self.detected_class = []
@@ -25,9 +30,13 @@ class Object_Detection(object):
 
 		self.detected_class_sp = []
 
-		#loadinf COCO class names
+		#path = os.path.abspath(__file__)
+		
 
-		with open('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/Workspace_Understanding/models/object_detection_classes_coco.txt','r') as f:
+		#loadinf COCO class names
+		print('Here path', path)
+
+		with open( self.path_other + '/Interface_Plugins/Lower_layer/Workspace_Understanding/models/object_detection_classes_coco.txt','r') as f:
 			self.class_names = f.read().split('\n')
 
 		self.COLORS = np.random.uniform(0, 255, size=(len(self.class_names), 3))
@@ -111,7 +120,7 @@ class Object_Detection(object):
 
 	def outputImage(self, n):
 
-		cv2.imwrite('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/' + 'output' + str(n) + '.jpg', self.image)
+		cv2.imwrite(self.path_other +'/' + 'output' + str(n) + '.jpg', self.image)
 
 
 '''

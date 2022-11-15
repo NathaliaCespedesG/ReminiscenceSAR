@@ -70,7 +70,7 @@ class CalibrationPlugin(object):
 				print('Calibration Tablet')
 				self.Robot.calibration_tablet()
 				self.gaze_cal_tablet.append(self.calibration_data[0])
-				self.headpose_cal_face.append(self.calibration_data[1])
+				self.headpose_cal_tablet.append(self.calibration_data[1])
 
 			time.sleep(0.1)
 

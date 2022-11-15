@@ -27,7 +27,7 @@ class TherapyPlugin(object):
 		#print('Setting from TherapyPlugin', self.settings)
 
 		self.path = path
-		#print('Path from therapy', self.path)
+		print('Path from therapy', self.path)
 
 		self.useRobot = True
 

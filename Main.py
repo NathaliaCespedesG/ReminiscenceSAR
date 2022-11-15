@@ -1,6 +1,6 @@
 
 import os, sys
-ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Reminiscence_Interface_Robot'))
+ab_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 #print(ab_path)
 sys.path.append(ab_path)
 import threading 

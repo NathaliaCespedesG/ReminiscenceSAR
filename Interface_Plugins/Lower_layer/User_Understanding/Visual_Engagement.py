@@ -5,6 +5,9 @@ import dlib
 import sys
 import threading
 import time
+import os
+path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+print(path)
 
 
 
@@ -22,7 +25,7 @@ class Visual_EngagementTracker(object):
 
 		#predictors/shape_predictor_68_face_landmarks.dat
 
-		self.predictor = dlib.shape_predictor('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/Interface_Plugins/Lower_layer/User_Understanding/predictors/shape_predictor_68_face_landmarks.dat') 
+		self.predictor = dlib.shape_predictor(path +'/predictors/shape_predictor_68_face_landmarks.dat') 
 
 		self.gaze_ratio = 0
 

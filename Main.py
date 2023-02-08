@@ -127,7 +127,7 @@ class MainController(object):
 
 		self.TherapyPlugin.launch_view()
 
-		pass
+		#pass
 
 
 def main():

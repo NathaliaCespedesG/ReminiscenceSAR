@@ -83,6 +83,8 @@ class CalibrationPlugin(object):
 		self.CameraCaptureThread.shutdown()
 		#self.CalibrationWindow.onCalibration_end.emit()
 
+		print('Tablet', self.data_calibrated_tablet)
+
 		self.get_data()
 
 
@@ -100,9 +102,11 @@ class CalibrationPlugin(object):
 
 
 
-		if self.average_gaze != 0 or self.average_headpose !=0:
-			print(str(self.average_gaze)+","+str(self.average_headpose))
-			self.DB.General.SM.loadCalibration(ag = self.average_gaze, hp = self.average_headpose)
+		if self.average_gaze != 0 or self.average_headpose !=0 or self.average_gaze_t !=0 or self.average_headpose_t !=0:
+			print(str(self.average_gaze)+","+str(self.average_headpose)+","+str(self.average_gaze_t)+","+ str(self.average_headpose_t))
+			self.DB.General.SM.loadCalibration(ag = self.average_gaze, hp = self.average_headpose, ag_t = self.average_gaze_t, hp_t = self.average_headpose_t)
+
+
 		else:
 			print('No data Calibration')
 			self.Robot.no_calibration()

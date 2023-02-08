@@ -171,6 +171,40 @@ class Visual_EngagementTracker(object):
 				self.gaze_ratio = float(gaze_ratio_left_eye + gaze_ratio_right_eye)/ float(2)
 
 
+				if self.gaze_ratio <= 1:
+					self.eye_direction = 'right'
+
+				elif 1 < self.gaze_ratio < 1.7:
+
+					self.eye_direction ='center'
+
+				else:
+					self.eye_direction = 'left'
+
+				#gaze = "Looking: "
+
+				if self.angles[1] < -15:
+					self.gaze = "Left"
+				elif self.angles[1] > 15:
+					self.gaze = "Right"
+				else:
+					self.gaze = "Forward"
+
+				
+
+				cv2.putText(self.frame, str(self.eye_direction), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)
+				cv2.putText(self.frame, str(self.gaze), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)				
+				#cv2.putText(self.frame, str(self.gaze, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)
+				#cv2.putText(frame, str(gaze_ratio_left_eye), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),3)
+
+				cv2.imshow("Frame", self.frame)
+
+				key = cv2.waitKey(1)
+
+				if key == 27:
+					break
+
+
 				#print('GAZE ratio from VE', self.gaze_ratio)
 
 
@@ -273,6 +307,8 @@ class Visual_EngagementTracker(object):
 		#print('Eye direction', self.eye_direction)
 		#print('Head Pose', self.gaze)
 
+
+
 		
 
 	def start(self):
@@ -337,7 +373,7 @@ class Visual_EngagementTracker(object):
 
 def main():
 
-	a = Visual_EngagementTracker(DataHandler = None)
+	a = Visual_EngagementTracker(DataHandler = None, window = 'Therapy')
 	a.start()
 	a.launch_thread()
 	time.sleep(60)
@@ -352,6 +388,5 @@ def main():
 	a.pause()
 
 A = main()
-
 
 '''

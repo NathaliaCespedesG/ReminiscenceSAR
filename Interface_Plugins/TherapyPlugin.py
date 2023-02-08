@@ -89,7 +89,7 @@ class TherapyPlugin(object):
 		self.ReminiscenceWindow.onUpload(self.image_validation)
 		self.ReminiscenceWindow.onPhoto.connect(self.comment_photos)
 
-		self.ReminiscenceWindow.onUpload(self.onStart)
+		#self.ReminiscenceWindow.onUpload(self.onStart)
 		
 		# Lower level signals
 		self.ReminiscenceWindow.set_pathPhoto1(lambda:self.onStart(n=1))
@@ -175,6 +175,8 @@ class TherapyPlugin(object):
 	def onStart(self, n):
 
 		img_id = n
+
+		print('Image ID from therapy', img_id)
 		self.onSart_count += 1
 
 		#Launching Robot's SR module

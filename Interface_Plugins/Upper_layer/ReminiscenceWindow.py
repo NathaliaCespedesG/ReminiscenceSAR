@@ -429,11 +429,13 @@ class ReminiscenceWindow(QtGui.QMainWindow):
 		self.gxlabels["photomain"] = QtGui.QLabel(self)
 		self.gxlabels["photomain"].setGeometry(QtCore.QRect(self.winsize_h*0.32,self.winsize_v*0.17,self.winsize_h*0.6 ,self.winsize_v*0.6))
 		#print('aqui', self.reminiscenceImage)
+		#icon = "None"
+		print('Printing N from icon option', n)
 
 		if n == 1:
-			icon = QtGui.QPixmap('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/output1.jpg')
+			icon = QtGui.QPixmap('C:/Users/natha/Desktop/ReminiscenceSAR/output1.jpg')
 		elif n ==2:
-			icon = QtGui.QPixmap('C:/Users/Nathalia Cespedes/Desktop/Reminiscence_Interface_Robot/output2.jpg')
+			icon = QtGui.QPixmap('C:/Users/natha/Desktop/ReminiscenceSAR/output2.jpg')
 
 		icon = icon.scaled(self.winsize_h*0.6,self.winsize_v*0.6,QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
 		self.gxlabels["photomain"].setPixmap(icon)

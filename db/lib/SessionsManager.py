@@ -32,10 +32,10 @@ class SessionManager(object):
 
 
 
-	def loadCalibration(self, ag = "nd", hp="nd"):
+	def loadCalibration(self, ag = "nd", hp="nd", ag_t = "nd", hp_t = "nd"):
 
 		self.CalibrationFile = open(self.calibration_data, 'a')
-		data = str(ag) + ";" + str(hp) + "\n"
+		data = str(ag) + ";" + str(hp) + ";" + str(ag_t) + ";" + str(hp_t) + "\n"
 		self.CalibrationFile.write(data)
 		self.CalibrationFile.close()
 
@@ -89,7 +89,7 @@ class SessionManager(object):
 		#Headers on each file
 		self.SensorFile.write("Sound_Tag;Objects_Recognized;Timestamp\n")
 		self.EventFile.write("Type;Cause;value;Timestamp\n")
-		self.CalibrationFile.write("Averge_Gaze; Average_Headpose\n")
+		self.CalibrationFile.write("Averge_Gaze; Average_Headpose; Averge_Gaze_Tablet; Average_Headpos_Tablet \n")
 		self.VEFile.write("Eye_gaze; Head_Pose; Tag; Timestamp\n")
 
 		#closing each file
